@@ -22,8 +22,8 @@ return new class extends Migration
             $table->enum('title', ['Mr','Mrs','Miss']);
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone_number');
-            $table->boolean('is_active')->default(false);
+            $table->string('phone_number')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->enum('role', ['admin','staff','agent','applicant'])->default('applicant');
             $table->longText('profile_pic')->nullable();
             $table->timestamp('current_sign_in_at')->nullable();

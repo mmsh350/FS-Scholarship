@@ -28,16 +28,18 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
+            'lastname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
-
+        
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->firstname,
+            'last_name' => $request->lastname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -46,6 +48,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+       // return redirect(RouteServiceProvider::HOME);
+
+       //return redirect('login')->with('status', 'Account Created Succesfully! Sign in to continue..');
+       
+       return response()->json(['status'=>200,"redirect_url"=>url('/login')]);
+
+      
     }
 }

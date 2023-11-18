@@ -147,21 +147,15 @@
                 
                 <li class="profile-nav onhover-dropdown px-0 py-0">
                   <div class="d-flex profile-media align-items-center"><img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
-                    <div class="flex-grow-1"><span>Alen Miller</span>
-                      <p class="mb-0 font-outfit">UI Designer<i class="fa fa-angle-down"></i></p>
+                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }}</span>
+                      <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>
                   <ul class="profile-dropdown onhover-show-div">
                     <li><a href="edit-profile.html"><i data-feather="user"></i><span>Account</span></a></li>
                     <li>
-                        
-                    
-                    <a href="#" id="logout" onclick="logout();"  >
-                    <i data-feather="log-out"> </i><span> Logout</span>  
-                            </a>
-                           
-                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-                
+                     <a href="#" id="logout" onclick="logout();"> <i data-feather="log-out"> </i><span> Logout</span></a>
+                     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
                   </li>
                   </ul>
                 </li>

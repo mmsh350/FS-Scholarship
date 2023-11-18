@@ -41,42 +41,70 @@
         <div class="col-xl-7 p-0"> 
           <div class="login-card login-dark">
             <div>
-              <div><a class="logo text-start" href="index.html"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt="looginpage"><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_dark.png') }}" alt="looginpage"></a></div>
+              <div><a class="logo text-start" href="{{ route('login') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt="looginpage"><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_dark.png') }}" alt="looginpage"></a></div>
               <div class="login-main"> 
                 <form class="theme-form">
+                @if(session()->has('status'))
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            {{ session()->get('status') }}
+                        </div>
+                    @endif
                   <h4>Create your account</h4>
                   <p>Enter your personal details to create account</p>
                   <div class="form-group">
                     <label class="col-form-label pt-0">Your Name</label>
                     <div class="row g-2">
+                    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
                       <div class="col-6">
-                        <input class="form-control" type="text"  name="firstname" placeholder="First name" required>
+                        <input class="form-control" type="text"  id="firstname" name="firstname" placeholder="First name" required>
                       </div>
                       <div class="col-6">
-                        <input class="form-control" type="text"  name="firstname" placeholder="Last name" required>
+                        <input class="form-control" type="text"  id="lastname"  name="lastname" placeholder="Last name" required>
                       </div>
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-form-label">Email Address</label>
-                    <input class="form-control" type="email" required="" placeholder="Test@gmail.com">
+                    <input class="form-control" type="email" id="email"  name="email" required="" placeholder="e.g test@gmail.com">
                   </div>
-                  <div class="form-group">
-                    <label class="col-form-label">Password</label>
-                    <div class="form-input position-relative">
-                      <input class="form-control" type="password" name="password" required="" placeholder="*********">
-                      <div class="show-hide"><span class="show"></span></div>
+                  <div class="form-group g-2">
+                  <div class="row g-2">
+                    <div class="col-6">
+                        <label class="col-form-label">Password</label>
+                        <div class="form-input position-relative">
+                        <input class="form-control" type="password" id="password" name="password" required placeholder="******">
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="col-form-label">Confirm Password</label>
+                        <div class="form-input position-relative">
+                        <input class="form-control" type="password" id="password_confirmation" name="password_confirmation" required placeholder="******">
+                        <div class="show-hide"><span class="show"></span></div>
+                        </div>
+                    </div>
                     </div>
                   </div>
+                  <div  id="error" style="display:none;"></div>
                   <div class="form-group mb-0">
                     <div class="checkbox p-0">
                       <input id="checkbox1" type="checkbox">
                       <label class="text-muted" for="checkbox1">Agree with<a class="ms-2" href="#">Privacy Policy</a></label>
                     </div>
-                    <button class="btn btn-primary btn-block w-100" type="submit">Create Account</button>
+                    <button class="btn btn-primary btn-block w-100" id="register" type="button">Create Account
+                    <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
+                    </button>
                   </div>
                   <p class="mt-4 mb-0 text-center">Already have an account?<a class="ms-2" href="{{ route('login') }}">Sign in</a></p>
                 </form>
+
+                <div class="toast-container position-fixed top-0 end-3 p-5 toast-index toast-rtl">
+                      <div class="toast hide toast fade" id="liveToast22" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div id="errorColor2" class="d-flex justify-content-between alert-primary">
+                          <div class="toast-body"  id="error2">Loading....</div>
+                          <button class="btn-close btn-close-white me-2 m-auto" type="button" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                      </div>
               </div>
             </div>
           </div>
@@ -97,6 +125,8 @@
       <!-- Plugins JS Ends-->
       <!-- Theme js-->
       <script src="{{ asset('js/script.js') }}"></script>
+      <script src="{{ asset('js/notify/custom-notify.js') }}"></script>
+      <script src="{{ asset('js/register.js') }}"></script>
       <!-- Plugin used-->
     </div>
   </body>

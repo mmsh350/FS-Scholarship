@@ -14,6 +14,15 @@
     });
   }
 
+  const toastTrigger22 = document.getElementById("register");
+  const toastLiveExample22 = document.getElementById("liveToast22");
+  if (toastTrigger22) {
+    toastTrigger22.addEventListener("click", () => {
+      const toast22 = new bootstrap.Toast(toastLiveExample22);
+      toast22.show();
+    });
+  }
+
   const toastTrigger2 = document.getElementById("liveToastBtn2");
   const toastLiveExample2 = document.getElementById("liveToast2");
   if (toastTrigger2) {
