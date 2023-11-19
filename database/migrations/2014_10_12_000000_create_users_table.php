@@ -22,9 +22,13 @@ return new class extends Migration
             $table->enum('title', ['Mr','Mrs','Miss']);
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('middle_name')->nullable();;
+            $table->date('dob')->nullable();;
+            $table->string('gender')->nullable();
             $table->string('phone_number')->nullable();
             $table->boolean('is_active')->default(true);
             $table->enum('role', ['admin','staff','agent','applicant'])->default('applicant');
+            $table->longText('address')->nullable();
             $table->longText('profile_pic')->nullable();
             $table->timestamp('current_sign_in_at')->nullable();
             $table->timestamp('last_sign_in_at')->nullable();

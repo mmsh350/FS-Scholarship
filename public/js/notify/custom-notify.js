@@ -23,6 +23,8 @@
     });
   }
 
+  
+
   const toastTrigger2 = document.getElementById("liveToastBtn2");
   const toastLiveExample2 = document.getElementById("liveToast2");
   if (toastTrigger2) {

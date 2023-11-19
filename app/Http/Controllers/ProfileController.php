@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,17 +24,56 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $request->validate([
+            'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
+            'surname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
+            'dob' => ['required','date'],
+            'phone' => 'required|numeric|digits:11',
+            'gender' => ['required', 'string'],
+            'image' => 'image|mimes:jpeg,png,jpg|max:500',
+        ]);
+
+        $requestid = auth()->user()->id;
+
+        $image_path = $request->oldpic;
+
+        if($request->file('image')){
+
+            $path = $request->file('image');
+            $data = file_get_contents($path);
+            $image_path = base64_encode($data); 
         }
 
-        $request->user()->save();
+        $affected = User::where('id', $requestid)
+        ->update([
+            'first_name' => ucwords($request->firstname),
+            'middle_name' =>  ucwords($request->middlename),
+            'last_name' =>  ucwords($request->surname),
+            'dob' => $request->dob,
+            'gender' => $request->gender,
+            'phone_number' => $request->phone,
+            'address' => ucwords($request->address),
+            'profile_pic' => $image_path ,
+             ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $image_path = $request->oldpic;
+
+        if($request->file('image')){
+
+            $path = $request->file('image');
+            $data = file_get_contents($path);
+            $image_path = base64_encode($data); 
+        }
+        
+
+         $request->user()->save();
+         return response()->json(['code'=>'200']);
+
+       
     }
 
     /**

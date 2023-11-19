@@ -55,13 +55,13 @@
     <div class="page-wrapper compact-wrapper" id="pageWrapper">
       <div class="page-header row">
         <div class="header-logo-wrapper col-auto">
-          <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
+          <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
         </div>
         <div class="col-4 col-xl-4 page-title">
           <h4 class="f-w-700"> Applicant Dashboard</h4>
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
-              <li class="breadcrumb-item"><a href="index.html"> <i data-feather="home"> </i></a></li>
+              <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
               <li class="breadcrumb-item f-w-400">Dashboard</li>
               <li class="breadcrumb-item f-w-400 active">Overview</li>
             </ol>
@@ -82,7 +82,7 @@
               </div>
             </form>
             <div class="header-logo-wrapper col-auto p-0">
-              <div class="logo-wrapper"><a href="index.html"><img class="img-fluid" src="{{ asset('images/logo/logo.png') }}" alt=""></a></div>
+              <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('images/logo/logo.png') }}" alt=""></a></div>
               <div class="toggle-sidebar">
                 <svg class="stroke-icon sidebar-toggle status_toggle middle">
                   <use href="{{ asset('svg/icon-sprite.svg#toggle-icon') }}"></use>
@@ -146,13 +146,19 @@
                 </li>
                 
                 <li class="profile-nav onhover-dropdown px-0 py-0">
-                  <div class="d-flex profile-media align-items-center"><img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
+                  <div class="d-flex profile-media align-items-center">
+                    
+                             @if(Auth::user()->profile_pic != '')
+                                 <img class="img-30  rounded-circle" src="{{ 'data:image/;base64,'.Auth::user()->profile_pic }}">
+                               @else
+                                  <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
+                               @endif
                     <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }}</span>
                       <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>
                   <ul class="profile-dropdown onhover-show-div">
-                    <li><a href="edit-profile.html"><i data-feather="user"></i><span>Account</span></a></li>
+                    <li><a href="{{ route('profile.edit') }}"><i data-feather="user"></i><span>Account</span></a></li>
                     <li>
                      <a href="#" id="logout" onclick="logout();"> <i data-feather="log-out"> </i><span> Logout</span></a>
                      <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
@@ -179,7 +185,7 @@
         <!-- Page Sidebar Start-->
         <div class="sidebar-wrapper" data-layout="stroke-svg">
           <div>
-            <div class="logo-wrapper"><a href="index.html"><img class="img-fluid" src="{{ asset('images/logo/logo_light.png') }}" alt=""></a>
+            <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('images/logo/logo_light.png') }}" alt=""></a>
               <div class="back-btn"><i class="fa fa-angle-left"></i></div>
               <div class="toggle-sidebar">
                 <svg class="stroke-icon sidebar-toggle status_toggle middle">
@@ -190,17 +196,17 @@
                 </svg>
               </div>
             </div>
-            <div class="logo-icon-wrapper"><a href="index.html"><img class="img-fluid" src="{{ asset('images/logo/logo-icon.png') }}" alt=""></a></div>
+            <div class="logo-icon-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('images/logo/logo-icon.png') }}" alt=""></a></div>
             <nav class="sidebar-main">
               <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
               <div id="sidebar-menu">
                 <ul class="sidebar-links" id="simple-bar">
-                  <li class="back-btn"><a href="index.html"><img class="img-fluid" src="{{ asset('images/logo/logo-icon.png') }}" alt=""></a>
+                  <li class="back-btn"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('images/logo/logo-icon.png') }}" alt=""></a>
                     <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                   </li>
                    
                   
-                  <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title active" href="javascript:void(0)">
+                  <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title active " href="javascript:void(0)">
                       <svg class="stroke-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#stroke-home') }}"></use>
                       </svg>
@@ -208,29 +214,16 @@
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
                     <ul class="sidebar-submenu">
-                      <li><a class=" active" href="dashboard.html">Overview</a></li>
-                      <li><a class="" href="dashboard-02.html">Application</a></li>
-                      <li><a href="dashboard-03.html" disabled="true">Loans</a></li>
-                      <li><a href="dashboard-04.html">Fund Wallets</a></li>
-                      <li><a href="dashboard-04.html">Transaction History</a></li>
+                      <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                      <li><a class="" href="{{ route('application') }}">Application</a></li>
+                      <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
+                      <li><a href="{{ route('wallet') }}">Fund Wallets</a></li>
+                      <li><a href="{{ route('transactions') }}">Transaction History</a></li>
                     </ul>
                   </li>
                    
-                 
-                  
-                  
-                  
-                  
-                
-                   
                   
                  
-                 
-                 
-                 
-                 
-                 
-                  
                
                
                  
