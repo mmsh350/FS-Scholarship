@@ -252,7 +252,7 @@
                             <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
                             <h6 class="p-b-10">Wallet Balance</h6>
 							
-							  <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; 1,000,000</button>
+							  <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; 0.00</button>
 							</div>
                         </div>
                       </div>
@@ -261,7 +261,7 @@
                           <div class="upcoming-box"> 
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">6</span>
+                             <span class="badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
                           </div>
                         </div>
                       </div>
@@ -271,7 +271,7 @@
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                             <h6 class="p-b-10">Approved Application</h6>
                              
-                           <span class="badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">7</span>
+                           <span class="badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
                           </div>
                         </div>
                       </div>
@@ -281,7 +281,7 @@
                           <div class="upcoming-box mb-0"> 
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
-							<span class="badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">7</span>
+							<span class="badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
                           </div>
                         </div>
                       </div>                       
@@ -330,7 +330,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright 2023 © fee24 Consultant Ltd</p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script> </p>
               </div>
             </div>
           </div>
