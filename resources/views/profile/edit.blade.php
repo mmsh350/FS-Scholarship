@@ -219,7 +219,7 @@
                       <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
                       <li><a class="" href="{{ route('application') }}">Application</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li><a href="{{ route('wallet') }}">Fund Wallets</a></li>
+                      <li><a href="{{ route('wallet') }}"> Wallets</a></li>
                       <li><a href="{{ route('transactions') }}">Transaction History</a></li>
                     </ul>
                   </li>

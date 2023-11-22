@@ -38,6 +38,8 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/sweetalert.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script src="https://js.paystack.co/v1/inline.js"></script> 
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -63,7 +65,7 @@
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
               <li class="breadcrumb-item f-w-400">Dashboard</li>
-              <li class="breadcrumb-item f-w-400 active">Overview</li>
+              <li class="breadcrumb-item f-w-400 active">Wallet</li>
             </ol>
           </nav>
         </div>
@@ -206,7 +208,7 @@
                   </li>
                    
                   
-                  <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title active " href="javascript:void(0)">
+                  <li class="sidebar-list active"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="javascript:void(0)">
                       <svg class="stroke-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#stroke-home') }}"></use>
                       </svg>
@@ -214,10 +216,10 @@
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
                     <ul class="sidebar-submenu">
-                      <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                      <li><a  href="{{ route('dashboard') }}">Overview</a></li>
                       <li><a class="" href="{{ route('application') }}">Application</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li><a href="{{ route('wallet') }}">Wallet</a></li>
+                      <li class="active"><a href="{{ route('wallet') }}">Wallet</a></li>
                       <li><a href="{{ route('transactions') }}">Transaction History</a></li>
                     </ul>
                   </li>
@@ -239,75 +241,157 @@
           <div class="container-fluid dashboard-2">
             <div class="row">
 				 <div class="row"> 
-                      <div class="col-md-3">
+                      <div class="col-md-4">
                         <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('wallet') }}"">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Wallet Balance</h6>
-							            <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; {{ number_format($balance, 2); }}</button>
-                      </a>
-              </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="btn-light1-primary b-r-10"> 
                           <div class="upcoming-box"> 
-                            <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
+                          <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Available Balance</h6>
+                            &#8358;<span class="f-14">{{ number_format($balance, 2); }}</span>
                           </div>
                         </div>
                       </div>
-                      <div class="col-md-3">
-                        <div class="btn-light1-success b-r-10"> 
+                      <div class="col-md-4">
+                        <div class="btn-light1-warning b-r-10"> 
+                          <div class="upcoming-box"> 
+                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/payments.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Total Payments</h6>  
+                            &#8358;<span class="f-14">{{ number_format($deposit - $balance, 2); }}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="btn-light1-primary b-r-10"> 
                           <div class="upcoming-box  "> 
-                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Approved Application</h6>
-                             
-                           <span class="badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
-                          </div>
+                          <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/naira.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Total Deposits</h6>&#8358;<span class="f-14">{{ number_format($deposit, 2); }}</span>
+                          	</div>
                         </div>
-                      </div>
-					  
-					  <div class="col-md-3">
-                        <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box mb-0"> 
-                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Rejected Application</h6>
-							<span class="badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
-                          </div>
                         </div>
-                      </div>                       
-                    </div>
-					
-					<!-------Might remove----->
-               <div class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
-                <div class="card">
-                  <div class="card-header">
-                    <h4>FS-Scholarship &nbsp; <img  class="bg-primary" width="2%" src="{{ asset('images/dashboard-2/svg-icon/verified.png') }}" alt=""> </h4>
+           </div>
 					  
 					 
-                    <p class="f-m-light mt-1">
-                      </p>
-                    <div class="card-header-right">
-                      <ul class="list-unstyled card-option">
-                        <li><i class="icon-more-alt"></i></li>
-                        <li><i class="view-html fa fa-code"></i></li>
-                        <li><i class="icofont icofont-maximize full-card"></i></li>
-                        <li><i class="icofont icofont-minus minimize-card"></i></li>
-                        <li><i class="icofont icofont-refresh reload-card"></i></li>
-                        <li><i class="icofont icofont-error close-card"> </i></li>
-                      </ul>
+					<!-------Might remove----->
+                <div class="row">
+              <div class="col-sm-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-body">
+                    <ul class="nav nav-tabs" id="icon-tab" role="tablist">
+                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark active" id="icon-home-tab" data-bs-toggle="tab" href="#icon-home" role="tab" aria-controls="icon-home" aria-selected="true"> <i class="fa fa-history text-danger"></i>Last 10 Transactions</a></li>
+                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark" id="profile-icon-tabs" data-bs-toggle="tab" href="#profile-icon" role="tab" aria-controls="profile-icon" aria-selected="false" tabindex="-1"><i class="fa fa-money text-primary"></i>Fund my Account</a></li>
+                     </ul>
+                    <div class="tab-content" id="icon-tabContent">
+                      <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">
+                      <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
+                    <table class="table">
+                      <thead>
+                        <tr class="border-bottom-primary">
+                          <th scope="col">Id</th>
+                          <th scope="col">Transaction Date</th>
+                          <th scope="col">Reference Number</th>
+                          <th scope="col">Service Description</th>
+                          <th scope="col"><center>Txn.<br/>Amount (NGN)</center></th>
+                        </tr>
+                      </thead>
+                      
+                        <tbody>
+                        @php $i = 1; @endphp
+                      @foreach($transactions as $data)
+                      <tr class="border-bottom-secondary">
+                          <th scope="row">{{ $i }}</th>
+                          <td>{{ $data->created_at}}</td>
+                          <td>{{ $data->referenceId}}</td>
+                          <td>{{ $data->service_description}}</td>
+                        
+                          <td> 
+                            <center>
+                            @if($data->type == "plus")
+                            <span class="badge badge-light-success">{{ number_format($data->amount, 2)}}</span>
+                            @else
+                            <span class="badge badge-light-danger">{{ number_format($data->amount, 2)}}</span>
+                            @endif
+                            </center>
+                          </td>
+                          
+                      </tr>
+                      @php $i++ @endphp
+                      @endforeach
+                      </tbody>
+                        
+                         
+                      
+                    </table>
+                  </div>
+                    
+                      </div>
+                      <div class="tab-pane fade" id="profile-icon" role="tabpanel" aria-labelledby="profile-icon-tabs">
+                        <div class="pt-3 mb-0">
+                        <div id="error" style="display:none" class="alert alert-danger alert-dismissible" role="alert"></div>  
+                          <div class="flex-space flex-wrap align-items-center">
+                          <div class="card-wrapper border rounded-3 h-100 w-100 checkbox-checked">
+                          <h6 class="sub-title" >payment method</h6>
+                         <span style="text-transform:none">Choose a payment method, enter the funding amount and continue to top up</span>
+                          <div class="payment-wrapper mt-2">
+                            <div class="payment-first">
+                              <div class="form-check radio radio-primary">
+                                <input class="form-check-input" id="ptm11"   type="radio" name="radio1" value="paystack">
+                                <label class="form-check-label mb-0" for="ptm11"><img class="img-fluid"  width="20%" src="{{ asset('images/ecommerce/paystack.png') }}" alt="card"></label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="payment-wrapper">
+                            <div class="payment-first">
+                              <div class="form-check radio radio-primary">
+                                <input class="form-check-input" id="ptm44" type="radio" name="radio1" value="moniepoint">
+                                <label class="form-check-label mb-0" for="ptm44"><img  width="20%" class="img-fluid" src="{{ asset('images/ecommerce/monify.png') }}" alt="card"></label>
+                              </div>
+                            </div>
+                          </div>
+
+                      <form class="row" name="paymentForm" id="paymentForm">
+                      @csrf
+                      @method('post')
+                      <div class="col-4"  hidden> 
+                        <input class="form-control"   id="first-name" name="first-name" type="text" value="{{ Auth::user()->first_name; }}" aria-label="First name" required="">
+                      </div>
+                      <div class="col-4"  hidden> 
+                        <input class="form-control"  id="last-name" name="last-name" type="text" value="{{ Auth::user()->last_name; }}" aria-label="Last name" required="">
+                      </div>
+                      <div class="col-4"  hidden>
+                        <input class="form-control"   id="email" name="email" type="email" value="{{ Auth::user()->email; }}" required="">
+                      </div>
+                      <div class="col-4"  hidden>
+                        <input class="form-control"   id="phone_number" name="phone_number" type="text" value="{{ Auth::user()-> phone_number; }}" required="">
+                      </div>
+                     
+                      <div class="col-4"  hidden>
+                        <input class="form-control" id="desc" type="desc" value="Wallet Top Up" required="">
+                      </div>
+                      <input type="text" hidden id="response" />
+                      <input type="text" hidden id="reference" />
+                      <div class="col-6 "> 
+                        <label class="col-sm-6 col-form-label"  >Top up Amount</label>
+                        <input class="form-control border border-primary" onkeypress="return isNumberKey(event)" type="text" id="amount"  name="amount"    value="">
+                      </div>  
+                      <div class="col-8  ">  
+                      <button class="example-popover btn btn-dark mb-1   mt-3 " id="topup" type="button"><i class="icofont icofont-pay">&nbsp;</i>Top Up</button>                    
+                      </div>
+                    </form>
+                        </div>
+                         
+                          </div>
+                        </div>
+                      </div>
+                       
                     </div>
+                  </div>  
+
+
                   </div>
-                  <div class="card-body">
-                    <p class="mb-1   pb-0 " style="text-align:justify">Welcome to FS-Scholarship – Your Gateway to a Brighter Future! At FS-Scholarship, we believe in nurturing talent, fostering dreams, and empowering the next generation of leaders. Our commitment to excellence and educational advancement is unparalleled. Explore a world of opportunities, unlock your potential, and embark on a journey towards academic success. Join us in shaping a future filled with knowledge, innovation, and endless possibilities. Discover the key to your educational aspirations with FS-Scholarship. Your success story begins here.</p>
-                     <button class="mt-2 example-popover btn btn-dark mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Get started"> Get Started </button>
-                    
-                    
-                  </div>
+                  
                 </div>
               </div>
+            </div>
              
              
              
@@ -330,6 +414,7 @@
         </footer>
       </div>
     </div>
+
     <!-- latest jquery-->
     <script src="{{ asset('js/jquery.min.js') }}"></script>
     <!-- Bootstrap js-->
@@ -361,7 +446,202 @@
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
+     <script>
+  $(document).ready(function() {
     
+    //Default
+    $('#ptm11').prop( "checked", false );
+    $('#ptm44').prop( "checked", false );
+
+    
+    $($("input[name=radio1]")).change(function(){
+   
+    if($('#ptm11').is(':checked')) {
+          $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Paystack');
+     }else{
+           $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Monnify');
+     }
+    
+    });
+
+
+     $('#topup').on('click', function() {
+      let pmt1 = $('#ptm11').val();
+      let pmt2 = $('#ptm44').val();
+      let pmethod ='';
+      let amt = document.getElementById("amount").value    
+ 
+     //get selected option
+        if($('#ptm11').is(':checked')) {
+            pmethod = pmt1;
+        }else if ( $('#ptm44').is(':checked') )
+           pmethod = pmt2;
+      else{
+           
+            $('#error').show();  $('#error').html('Please select a payment method first');
+            setTimeout(function(){ 
+							$("#error").empty();
+							$("#error").hide();
+						}, 2000);
+            return;
+        }
+    
+    if(amt <=0 || amt < 200){
+
+      $('#error').show();  $('#error').html('Amount cannot be Zero or Less than 200 Naira');
+            setTimeout(function(){ 
+							$("#error").empty();
+							$("#error").hide();
+						}, 2000);
+     
+         return;
+    }
+
+    if(pmethod == pmt1)
+    {
+       
+   
+   document.getElementById("paymentForm");
+  let handler = PaystackPop.setup({
+    key: 'pk_test_93b89dcf975d40c3fe1bc2508edb0839b35353d2', // Replace with your public key
+    email: document.getElementById("email").value,
+    amount: document.getElementById("amount").value * 100,
+	currency: "NGN",
+	metadata: {
+         custom_fields: [
+            {
+                display_name: "Mobile Number",
+                variable_name: "mobile_number",
+                value: document.getElementById("phone_number").value
+            },
+			{
+                display_name: "First Name",
+                variable_name: "first_name",
+                value: document.getElementById("first-name").value
+            },
+			{
+                display_name: "Last Name",
+                variable_name: "last_name",
+                value: document.getElementById("last-name").value
+            }
+         ]
+      },
+    onClose: function(){
+     
+	    Swal.fire({
+			  title:'Payment Cancelled',
+			  text:'Wallet Top up request was cancelled.',
+			  icon:'error',
+			  confirmButtonColor: "#aaa",
+			  confirmButtonText: "Close", 
+			  allowOutsideClick: false		
+		}) .then(function() {
+			      //Redirect the user
+		       window.location.reload();
+		   })
+		    setTimeout(function(){  
+                  window.location.reload();   
+            			}, 5000);
+	    
+    },
+    callback: function(response){
+
+	  if(response.success ='success'){
+
+         document.getElementById("response").value= response.success;
+         document.getElementById("reference").value= response.reference;
+         desc = document.getElementById("desc").value;
+
+      var _token = $('#_token').val();
+		  $.ajax({    //create an ajax request to get session data 
+				type: "POST",
+				url: "verifyPayments",
+				data: {ref:response.reference,pmethod, _token,desc},
+				dataType: "json",   //expect json File to be returned                
+				success: function(dataResult){ 
+             
+          if(dataResult.code == 200){
+                  Swal.fire({
+                  title:'Payment Confirmation',
+                  text:'Funds received check your Wallet to confirm the funds ',
+                  icon:'success',
+                  confirmButtonColor: "#2e73b4",
+                  confirmButtonText: "Continue", 
+                  allowOutsideClick: false			  
+                }
+                ).then(function() {
+                      //Redirect the user
+                      window.location.reload();
+                    });
+          }
+          else if(dataResult.code == 201){
+            Swal.fire({
+                  title: 'Error',
+                  text:dataResult.err + ', Contact the administrator if you are debitted',
+                  icon:'error',
+                  confirmButtonColor: "#2e73b4",
+                  allowOutsideClick: false		
+                });
+                setTimeout(function(){  
+                  window.location.reload();   
+            			}, 10000);
+            
+          }
+           
+              
+				 }, 
+         error: function(data) {
+          Swal.fire({
+                  title: 'Something Weird Happened',
+                  text:'Sorry Error Occured while making Transaction.Try again...',
+                  icon:'error',
+                  confirmButtonColor: "#2e73b4",
+                  allowOutsideClick: false		
+                });
+                setTimeout(function(){  
+                 // window.location.reload();   
+            			}, 10000);
+
+         }
+				 });
+		 
+			
+			  
+	}else
+	  {
+		   Swal.fire({
+			  title: 'Something Weird Happened',
+			  text:'Sorry Error Occured while making Transaction.Try again...',
+			  icon:'error',
+			  confirmButtonColor: "#2e73b4",
+			  allowOutsideClick: false		
+		   })
+       setTimeout(function(){  
+                  window.location.reload();   
+            			}, 10000);
+	  }
+}
+  }); 
+ handler.openIframe();
+    }
+
+//payment 2
+
+ 
+     });
+ });
+
+ function isNumberKey(evt)
+      {
+        var e = evt || window.event; //window.event is safer, thanks @ThiefMaster
+        var charCode = e.which || e.keyCode;                        
+        if (charCode > 31 && (charCode < 47 || charCode > 57))
+        return false;
+        if (e.shiftKey) return false;
+        return true;
+     }
+     </script>
+     
     <!-- Plugin used-->
   </body>
 </html>

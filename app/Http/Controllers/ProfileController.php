@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
@@ -69,8 +71,26 @@ class ProfileController extends Controller
             $image_path = base64_encode($data); 
         }
         
+        //create Wallet
 
-         $request->user()->save();
+        if (DB::table('wallets')->where('userid', '=', $requestid)->exists()) {
+            // Wallet Already Exist
+         }else{
+
+            DB::table('wallets')->insert(
+                ['userid' => $requestid, 
+                 'balance' => 0,
+                 'deposit' => 0,
+                 'created_at'=> Carbon::now(),
+                 'updated_at'=> Carbon::now()]
+            );
+         }
+
+        
+
+       
+
+        // $request->user()->save();
          return response()->json(['code'=>'200']);
 
        

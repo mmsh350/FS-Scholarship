@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Action\WalletController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Action\DashboardController;
+
  
 
 /*
@@ -15,35 +18,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
  
-Route::get('/', function () {
-
-    if(Auth::user()->role == 'applicant')
-    {
-            if(Auth::user()->gender == '' || Auth::user()->dob == '')
-                     return view('profile.edit');
-            else
-                     return view('dashboard'); 
-    }
-    else if(Auth::user()->role == 'agent'){
-
-    }
-    else
-    return 404;
-        
-
-   
-})->middleware(['auth','verified'])->name('dashboard');
+Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','verified'])->name('dashboard');
 
 
     Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profileUpdate', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::get('/wallet', [WalletController::class, 'show'])->name('wallet');
+    Route::post('/verifyPayments', [WalletController::class, 'verifyIndividual'])->name('verify');
 });
 
 Route::get('/application', [ProfileController::class, 'edit'])->name('application');
 Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
-Route::get('/wallet', [ProfileController::class, 'edit'])->name('wallet');
+
 Route::get('/transaction', [ProfileController::class, 'edit'])->name('transactions');
 
 require __DIR__.'/auth.php';
