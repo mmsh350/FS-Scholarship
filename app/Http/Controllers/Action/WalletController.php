@@ -57,7 +57,6 @@ class WalletController extends Controller
                                     
                 }else
                 {
-                    
                     //Defaults if Wallet is not created
                     $deposit = 0;
                     $balance = 0;
@@ -101,22 +100,25 @@ class WalletController extends Controller
             $err = curl_error($curl);
             curl_close($curl);
             
-                if ($err) {
+                if ($err) 
+                {
                     
                     return response()->json(['code'=>'201','err'=>$err]);
 
-                } else {
-                
+                } else 
+                {
                     //Decode Json Received
                     $result = json_decode($response, true);  
                     
-                    if($result['status'] == false){
+                    if($result['status'] == false)
+                    {
                         return response()->json([
                             'code'=>'201',
                             'err'=>$result['message']
                         ]);
                     }
-                    else{
+                    else
+                    {
                         $amount = $result['data']['amount']/ 100;
 
                         $userid = auth()->user()->id;
@@ -129,6 +131,7 @@ class WalletController extends Controller
                             'service_description' => $request->desc,  
                             'amount' => $amount,
                             'type' => 'plus',
+                            'gateway' => 'Paystack',
                             'status' => 'Approved',
                         ]);
 
@@ -144,11 +147,7 @@ class WalletController extends Controller
                             return response()->json(['code'=>'200']);
 
                     }
-                    
-                
                 }
-                           
-            
 
         }
         //Monie Point Channel
@@ -165,6 +164,7 @@ class WalletController extends Controller
                             'service_description' => $request->desc,  
                             'amount' => $request->amt,
                             'type' => 'plus',
+                            'gateway' => 'Monify',
                             'status' => 'Approved',
                         ]);
 
@@ -178,9 +178,7 @@ class WalletController extends Controller
                                       'deposit' => $deposit]);
 
                             return response()->json(['code'=>'200']);
-        }
-         
-        
+        }  
     }
 
 }

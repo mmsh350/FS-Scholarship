@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('service_description')->nullable();
             $table->string('amount');
             $table->string('type')->nullable();
+            $table->string('gateway')->nullable();
             $table->enum('status', ['Approved','Pending'])->default('Pending');
             $table->timestamps();
         });
