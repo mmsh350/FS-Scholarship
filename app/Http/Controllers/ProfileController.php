@@ -79,8 +79,6 @@ class ProfileController extends Controller
 
             DB::table('wallets')->insert(
                 ['userid' => $requestid, 
-                 'balance' => 0,
-                 'deposit' => 0,
                  'created_at'=> Carbon::now(),
                  'updated_at'=> Carbon::now()]
             );

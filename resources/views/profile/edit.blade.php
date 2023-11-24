@@ -363,7 +363,7 @@
                             <textarea class="form-control" rows="3" id="address" name="address" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
                         </div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 mt-3">
                       <label class="form-label" for="formFileMultiple">Profile Photo</label>
                       <input class="form-control" name="image" id="image" type="file" multiple="">
                     </div>

@@ -28,7 +28,7 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
 
 
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet');
-    Route::post('/verifyPayments', [WalletController::class, 'verifyIndividual'])->name('verify');
+    Route::post('/verifyPayments', [WalletController::class, 'verify'])->name('verify');
 });
 
 Route::get('/application', [ProfileController::class, 'edit'])->name('application');

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('userid');
-            $table->string('balance');
-            $table->string('deposit');
+            $table->string('balance')->default(0);
+            $table->string('deposit')->default(0);
             $table->timestamps();
         });
     }

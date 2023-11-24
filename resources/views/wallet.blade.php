@@ -39,7 +39,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/sweetalert.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script src="https://js.paystack.co/v1/inline.js"></script> 
+    <script type="text/javascript" src="https://sdk.monnify.com/plugin/monnify.js"></script>
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -295,8 +295,9 @@
                       </thead>
                       
                         <tbody>
+                        @if($transactions != null)
                         @php $i = 1; @endphp
-                      @foreach($transactions as $data)
+                       @foreach($transactions as $data)
                       <tr class="border-bottom-secondary">
                           <th scope="row">{{ $i }}</th>
                           <td>{{ $data->created_at}}</td>
@@ -316,6 +317,12 @@
                       </tr>
                       @php $i++ @endphp
                       @endforeach
+                      @else
+                      <tr class="border-bottom-secondary">
+
+                  </tr>
+                      No Record Found
+                      @endif
                       </tbody>
                         
                          
@@ -443,10 +450,11 @@
     <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
     <script src="{{ asset('js/logout.js') }}"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
-     <script>
+    <script>
   $(document).ready(function() {
     
     //Default
@@ -456,12 +464,9 @@
     
     $($("input[name=radio1]")).change(function(){
    
-    if($('#ptm11').is(':checked')) {
-          $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Paystack');
-     }else{
-           $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Monnify');
-     }
-    
+    if($('#ptm11').is(':checked'))
+     { $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Paystack'); }else{
+           $('#topup').html('<i class="icofont icofont-pay">&nbsp;</i> Pay With Monnify');}
     });
 
 
@@ -506,14 +511,14 @@
     key: 'pk_test_93b89dcf975d40c3fe1bc2508edb0839b35353d2', // Replace with your public key
     email: document.getElementById("email").value,
     amount: document.getElementById("amount").value * 100,
-	currency: "NGN",
-	metadata: {
-         custom_fields: [
-            {
-                display_name: "Mobile Number",
-                variable_name: "mobile_number",
-                value: document.getElementById("phone_number").value
-            },
+    currency: "NGN",
+    metadata: {
+          custom_fields: [
+              {
+                  display_name: "Mobile Number",
+                  variable_name: "mobile_number",
+                  value: document.getElementById("phone_number").value
+              },
 			{
                 display_name: "First Name",
                 variable_name: "first_name",
@@ -624,7 +629,103 @@
   }); 
  handler.openIframe();
     }
+else{
+        
 
+         let fn = document.getElementById("first-name").value;
+         let ln = document.getElementById("last-name").value;
+         let fullname = fn + ' ' + ln;
+
+         let email = document.getElementById("email").value;
+         let amt = document.getElementById("amount").value;
+
+         let desc = document.getElementById("desc").value;
+         var _token = $('#_token').val();
+
+         MonnifySDK.initialize({
+                amount: amt,
+                currency: "NGN",
+                reference: new String((new Date()).getTime()),
+                customerFullName: fullname,
+                customerEmail: email,
+                apiKey: "MK_TEST_EW6F18MGYA",
+                contractCode: "0931033534",
+                paymentDescription: desc,
+                
+                onLoadStart: () => {
+                    //alert("loading has started");
+                },
+                onLoadComplete: () => {
+                    //console.log("SDK is UP");
+                },
+                onComplete: function(response) {
+                    //Implement what happens when the transaction is completed.
+                if(response.status == 'SUCCESS'){
+                      
+                   
+                    $.ajax({    //create an ajax request to get session data 
+                      type: "POST",
+                      url: "verifyPayments",
+                      data: {ref:response.transactionReference,
+                             pmethod,_token,desc,amt:response.authorizedAmount},
+                      dataType: "json",   //expect json File to be returned                
+                      success: function(dataResult){ 
+                          
+                        if(dataResult.code == 200){
+                                Swal.fire({
+                                title:'Payment Confirmation',
+                                text:'Funds received check your Wallet to confirm the funds ',
+                                icon:'success',
+                                confirmButtonColor: "#2e73b4",
+                                confirmButtonText: "Continue", 
+                                allowOutsideClick: false			  
+                              }
+                              ).then(function() {
+                                    //Redirect the user
+                                    window.location.reload();
+                                  });
+                        }
+                        else if(dataResult.code == 201){
+                          Swal.fire({
+                                title: 'Error',
+                                text:dataResult.err + ', Contact the administrator if you are debitted',
+                                icon:'error',
+                                confirmButtonColor: "#2e73b4",
+                                allowOutsideClick: false		
+                              });
+                              setTimeout(function(){  
+                                window.location.reload();   
+                                }, 10000);
+                          
+                        }
+                            
+                      }, 
+                      error: function(data) {
+                        Swal.fire({
+                                title: 'Something Weird Happened',
+                                text:'Sorry Error Occured while making Transaction.Try again...',
+                                icon:'error',
+                                confirmButtonColor: "#2e73b4",
+                                allowOutsideClick: false		
+                              });
+                              setTimeout(function(){  
+                              // window.location.reload();   
+                                }, 10000);
+
+                      }
+                      });
+
+                    }
+
+
+
+                },
+                onClose: function(data) {
+                    //Implement what should happen when the modal is closed here
+                    console.log(data);
+                }
+            });
+}
 //payment 2
 
  
