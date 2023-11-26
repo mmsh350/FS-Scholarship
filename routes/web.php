@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Action\WalletController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Action\DashboardController;
+use App\Http\Controllers\Action\ApplicationController;
 
  
 
@@ -29,11 +31,13 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
 
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet');
     Route::post('/verifyPayments', [WalletController::class, 'verify'])->name('verify');
+
+    Route::get('/application', [ApplicationController::class, 'show'])->name('application');
 });
 
-Route::get('/application', [ProfileController::class, 'edit'])->name('application');
+
 Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
 
-Route::get('/transaction', [ProfileController::class, 'edit'])->name('transactions');
+Route::get('/transaction', [ApplicationController::class, 'edit'])->name('transactions');
 
 require __DIR__.'/auth.php';

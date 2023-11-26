@@ -16,6 +16,7 @@ class Transaction extends Model
         'service_type',
         'status', 
         'type', 
+        'gateway', 
         'service_description',          
     ];
 

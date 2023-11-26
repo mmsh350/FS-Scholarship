@@ -28,8 +28,6 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request)
     {
-        
-
         $request->validate([
             'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'surname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
@@ -39,12 +37,23 @@ class ProfileController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg|max:500',
         ]);
 
+        $date = Carbon::parse( $request->dob);
+        $now = Carbon::now();
+        $diff = $date->diffInYears($now);
+
+        if(($diff < 10 || $diff > 50)){
+                return response()->json([
+                    "message"=> "Age limit must be between 10 and 50 Years",
+                    "errors"=>array("Date of Birth"=> "Age limit must be between 10 and 50 Years")
+                ], 422);
+        }
+
         $requestid = auth()->user()->id;
 
         $image_path = $request->oldpic;
 
-        if($request->file('image')){
-
+        if($request->file('image'))
+        {
             $path = $request->file('image');
             $data = file_get_contents($path);
             $image_path = base64_encode($data); 
@@ -52,13 +61,13 @@ class ProfileController extends Controller
 
         $affected = User::where('id', $requestid)
         ->update([
-            'first_name' => ucwords($request->firstname),
-            'middle_name' =>  ucwords($request->middlename),
-            'last_name' =>  ucwords($request->surname),
+            'first_name' => ucwords(strtolower($request->firstname)),
+            'middle_name' =>  ucwords(strtolower($request->middlename)),
+            'last_name' =>  ucwords(strtolower($request->surname)),
             'dob' => $request->dob,
             'gender' => $request->gender,
             'phone_number' => $request->phone,
-            'address' => ucwords($request->address),
+            'address' => ucwords(strtolower($request->address)),
             'profile_pic' => $image_path ,
              ]);
 
@@ -72,7 +81,6 @@ class ProfileController extends Controller
         }
         
         //create Wallet
-
         if (DB::table('wallets')->where('userid', '=', $requestid)->exists()) {
             // Wallet Already Exist
          }else{
@@ -83,14 +91,7 @@ class ProfileController extends Controller
                  'updated_at'=> Carbon::now()]
             );
          }
-
-        
-
-       
-
-        // $request->user()->save();
          return response()->json(['code'=>'200']);
-
        
     }
 

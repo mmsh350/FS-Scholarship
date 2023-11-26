@@ -119,14 +119,14 @@
                     <ul class="notification-box">
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>New daily offer added</h6></a>
                           <p>New user-only offer added</p>
                         </div>
                       </li>
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>Product Evaluation</h6></a>
                           <p>Changed to a new workflow</p>
                         </div>
@@ -215,12 +215,12 @@
                                     <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                                 </svg><span>Dashboard</span>
                          </a>
-                    <ul class="sidebar-submenu">
-                      <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
-                      <li><a class="" href="{{ route('application') }}">Application</a></li>
+                    <ul class="sidebar-submenu expand">
+                      <li><a href="{{ route('dashboard') }}">Overview</a></li>
+                      <li><a href="{{ route('wallet') }}"> Wallet</a></li>
+                      <li><a class="" href="{{ route('application') }}">Applications</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li><a href="{{ route('wallet') }}"> Wallets</a></li>
-                      <li><a href="{{ route('transactions') }}">Transaction History</a></li>
+                      <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
                    
@@ -253,23 +253,30 @@
                                   <img class="img-100  " src="{{ asset('images/No-Image.png') }}">
                                @endif </center> 
                             </div><center>
-                            <p><span class="badge badge-danger mt-3">{{ ucwords(Auth::user()->role) }}</span></p>
+                            <p><span class="badge badge-dark mt-3">{{ ucwords(Auth::user()->role) }}</span></p>
                                 <h4 class="mb-1">{{ ucwords(Auth::user()->first_name." ".Auth::user()->last_name) }}</h4>
                                <span class="mb-2"> {{ ucwords(Auth::user()->email) }} </span>
                             </center>
                           </div>
-                          <button class="btn btn-dark" type="button" data-bs-toggle="modal" data-original-title="test" data-bs-target="#passwordModal">Change Password</button>
+                          <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-original-title="test" data-bs-target="#passwordModal">Change Password</button>
                     
                           </div>
 
-                          <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModal" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
+                      <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModal" aria-hidden="true">
+                      <div class="modal-dialog" role="document" 
+                       style="background-color: #fff;
+	                           padding: 16px 24px; border-bottom: 1px dashed rgba(106, 113, 133, 0.3);
+	                           border-top-left-radius: 17px; border-top-right-radius: 17px; position: relative;
+                             text-transform: capitalize;">
                         <div class="modal-content">
                           <div class="modal-body">
                             <div class="modal-toggle-wrapper"> 
-                              <h4> <strong class="txt-danger"></strong>Password Update</h4>
                               <div id="error1" style="display:none" class="alert alert-danger alert-dismissible" role="alert"></div>
                               <div id="success1" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
+                              <h4 class="mb-2"> 
+                              <span class="badge  badge-dark">Password Update</span>
+                             </h4>
+                             
                             <form method="post" action="{{ route('password.update') }}" id="form_pass">
                               @csrf
                               @method('put')
@@ -286,7 +293,7 @@
                           <input class="form-control" name="password_confirmation" id="password_confirmation" type="password" >
                         </div>
                         <div class="form-footer">
-                        <input type="button" id="btnUpdate" class="btn bg-dark d-flex align-items-center gap-2 text-light ms-auto" value="Change Password"> 
+                        <input type="button" id="btnUpdate" class="btn bg-danger d-flex align-items-center gap-2 text-light ms-auto" value="Change Password"> 
                        </div>
                       </form>
                               
@@ -316,27 +323,26 @@
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-6">
-                          <div class="mb-3">
-                            <label class="form-label">Surname <span class="red">(*)</span></label>
+                          <div class="mb-1">
+                            <label class="form-label">Surname <span class="red">*</span></label>
                             <input class="form-control" id="surname" name="surname" type="text" value="{{ Auth::user()->last_name}}" placeholder="">
-                           
                         </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
-                          <div class="mb-3">
-                            <label class="form-label">First Name <span class="red">(*)</span></label>
+                          <div class="mb-1">
+                            <label class="form-label">First Name <span class="red">*</span></label>
                             <input class="form-control" id="firstname" name="firstname" type="text" value="{{ Auth::user()->first_name}}" placeholder="">
                           </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
-                          <div class="mb-3">
+                          <div class="mb-1">
                             <label class="form-label">Middle Name</label>
                             <input class="form-control" id="middlename" name="middlename" type="text" value="{{ Auth::user()->middle_name}}" placeholder="">
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <div class="mb-3">
-                            <label class="form-label">Gender <span class="red">(*)</span></label>
+                          <div class="mb-1">
+                            <label class="form-label">Gender <span class="red">*</span></label>
                             <select name="gender" id="gender" class="form-control btn-square">
                               <option value="">--Select--</option>
                               <option value="Male" @if( Auth::user()->gender == 'Male') selected @endif >Male</option>
@@ -346,14 +352,14 @@
                         </div>
                         
                         <div class="col-sm-6 col-md-6">
-                          <div class="mb-3">
-                            <label class="form-label">Date of Birth <span class="red">(*)</span></label>
+                          <div class="mb-1">
+                            <label class="form-label">Date of Birth <span class="red">*</span></label>
                             <input class="form-control digits" name="dob" id="dob" type="date" value="{{ Auth::user()->dob}}">
                           </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
-                          <div class="mb-3">
-                            <label class="form-label">Phone No.<span class="red">(*)</span></label>
+                          <div class="mb-1">
+                            <label class="form-label">Phone No.<span class="red">*</span></label>
                             <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
                           </div>
                         </div>

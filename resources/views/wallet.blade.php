@@ -64,8 +64,8 @@
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
-              <li class="breadcrumb-item f-w-400">Dashboard</li>
-              <li class="breadcrumb-item f-w-400 active">Wallet</li>
+              <li class="breadcrumb-item f-w-400">Wallet</li>
+              <li class="breadcrumb-item f-w-400 active">Top Up</li>
             </ol>
           </nav>
         </div>
@@ -120,14 +120,14 @@
                     <ul class="notification-box">
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>New daily offer added</h6></a>
                           <p>New user-only offer added</p>
                         </div>
                       </li>
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>Product Evaluation</h6></a>
                           <p>Changed to a new workflow</p>
                         </div>
@@ -208,19 +208,20 @@
                   </li>
                    
                   
-                  <li class="sidebar-list active"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                  <li class="sidebar-list active"><i class="fa fa-thumb-tack"></i>
+                  <a class="sidebar-link sidebar-title active" href="javascript:void(0)">
                       <svg class="stroke-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#stroke-home') }}"></use>
                       </svg>
                       <svg class="fill-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
-                    <ul class="sidebar-submenu">
+                    <ul class="sidebar-submenu expand">
                       <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                      <li><a class="" href="{{ route('application') }}">Application</a></li>
+                      <li><a  class="active" href="{{ route('wallet') }}"> Wallet</a></li>
+                      <li><a  href="{{ route('application') }}">Applications</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li class="active"><a href="{{ route('wallet') }}">Wallet</a></li>
-                      <li><a href="{{ route('transactions') }}">Transaction History</a></li>
+                      <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
                    
@@ -270,7 +271,6 @@
            </div>
 					  
 					 
-					<!-------Might remove----->
                 <div class="row">
               <div class="col-sm-12">
                 <div class="card">
@@ -289,6 +289,7 @@
                           <th scope="col">Id</th>
                           <th scope="col">Transaction Date</th>
                           <th scope="col">Reference Number</th>
+                          <th scope="col">Channel</th>
                           <th scope="col">Service Description</th>
                           <th scope="col"><center>Txn.<br/>Amount (NGN)</center></th>
                         </tr>
@@ -296,12 +297,14 @@
                       
                         <tbody>
                         @if($transactions != null)
+
                         @php $i = 1; @endphp
                        @foreach($transactions as $data)
                       <tr class="border-bottom-secondary">
                           <th scope="row">{{ $i }}</th>
                           <td>{{ $data->created_at}}</td>
                           <td>{{ $data->referenceId}}</td>
+                          <td>{{ $data->gateway}}</td>
                           <td>{{ $data->service_description}}</td>
                         
                           <td> 
@@ -319,9 +322,10 @@
                       @endforeach
                       @else
                       <tr class="border-bottom-secondary">
-
-                  </tr>
-                      No Record Found
+                      <td> No Record Found</td>
+                      </tr>
+                     
+                      
                       @endif
                       </tbody>
                         

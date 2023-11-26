@@ -118,14 +118,14 @@
                     <ul class="notification-box">
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>New daily offer added</h6></a>
                           <p>New user-only offer added</p>
                         </div>
                       </li>
                       <li class="d-flex"> 
                         <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="private-chat.html">
+                        <div class="flex-grow-1"> <a href="#">
                             <h6>Product Evaluation</h6></a>
                           <p>Changed to a new workflow</p>
                         </div>
@@ -153,14 +153,14 @@
                                @else
                                   <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
                                @endif
-                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }}</span>
+                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }} </span>
                       <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>
                   <ul class="profile-dropdown onhover-show-div">
                     <li><a href="{{ route('profile.edit') }}"><i data-feather="user"></i><span>Account</span></a></li>
                     <li>
-                     <a href="#" id="logout" onclick="logout();"> <i data-feather="log-out"> </i><span> Logout</span></a>
+                     <a href="#" id="logout" onclick="logout();"> <i data-feather="log-out"> </i><span> Sign Out</span></a>
                      <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
                   </li>
                   </ul>
@@ -206,19 +206,20 @@
                   </li>
                    
                   
-                  <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title active " href="javascript:void(0)">
+                  <li class="sidebar-list" > 
+                  <a class="sidebar-link sidebar-title active"  href="javascript:void(0)">
                       <svg class="stroke-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#stroke-home') }}"></use>
                       </svg>
                       <svg class="fill-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
-                    <ul class="sidebar-submenu">
+                    <ul class="sidebar-submenu expand">
                       <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
-                      <li><a class="" href="{{ route('application') }}">Application</a></li>
+                      <li><a href="{{ route('wallet') }}"> Wallet</a></li>
+                      <li><a class="" href="{{ route('application') }}">Applications</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li><a href="{{ route('wallet') }}">Wallet</a></li>
-                      <li><a href="{{ route('transactions') }}">Transaction History</a></li>
+                      <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
                    
@@ -241,7 +242,7 @@
 				 <div class="row"> 
                       <div class="col-md-3">
                         <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('wallet') }}"">
+                          <div class="upcoming-box"> <a href="{{ route('wallet') }}">
                             <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
                             <h6 class="p-b-10">Wallet Balance</h6>
 							            <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; {{ number_format($balance, 2); }}</button>
@@ -251,32 +252,31 @@
                       </div>
                       <div class="col-md-3">
                         <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> 
+                          <div class="upcoming-box"> <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
-                          </div>
+                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
+                          </div></a>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box  "> 
+                          <div class="upcoming-box  ">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Approved Application</h6>
-                             
-                           <span class="badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
-                          </div>
+                            <h6 class="p-b-10">Approved Application</h6> 
+                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
+                          </div></a>
                         </div>
                       </div>
 					  
 					  <div class="col-md-3">
                         <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box mb-0"> 
+                          <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
-							<span class="badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
+							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
                           </div>
-                        </div>
+                        </div> </a>
                       </div>                       
                     </div>
 					
@@ -323,7 +323,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script> </p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script></p>
               </div>
             </div>
           </div>

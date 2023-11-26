@@ -337,9 +337,9 @@
 
   // page active
   if ($("#pageWrapper").hasClass("compact-wrapper")) {
-    $(".sidebar-wrapper nav").find("a").removeClass("active");
-    $(".sidebar-wrapper nav").find("li").removeClass("active");
-
+    // $(".sidebar-wrapper nav").find("a").removeClass("active");
+    // $(".sidebar-wrapper nav").find("li").removeClass("active");
+    $('.expand').show();
     var current = window.location.pathname;
     $(".sidebar-wrapper nav ul li a").filter(function () {
       var link = $(this).attr("href");
@@ -442,8 +442,7 @@
     $(".simplebar-wrapper .simplebar-content-wrapper").animate(
       {
         scrollTop:
-          $(".simplebar-wrapper .simplebar-content-wrapper a.active").offset()
-            .top - 400,
+          $(".simplebar-wrapper .simplebar-content-wrapper a.active").top - 400,
       },
       1000
     );

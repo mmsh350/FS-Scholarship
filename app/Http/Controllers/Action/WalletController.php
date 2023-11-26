@@ -35,7 +35,7 @@ class WalletController extends Controller
                         $transactions = Transaction::all()->where('userid', $loginUserId)
                         ->sortByDesc('id')
                         ->take(10);
-
+                        
              
                         if( $wallet != null )
                         {                     
@@ -43,12 +43,10 @@ class WalletController extends Controller
                             $balance = $wallet->balance;
                             $deposit = $wallet->deposit;
                         }
-                        if( $transactions == null )
+                        if( $transactions == null || $transactions->count() == 0)
                         {                     
                             $transactions = null;
                         }
-
-                       
                         
                         return view('wallet') 
                                         ->with(compact('balance'))
@@ -164,7 +162,7 @@ class WalletController extends Controller
                             'service_description' => $request->desc,  
                             'amount' => $request->amt,
                             'type' => 'plus',
-                            'gateway' => 'Monify',
+                            'gateway' => 'Monnify',
                             'status' => 'Approved',
                         ]);
 
