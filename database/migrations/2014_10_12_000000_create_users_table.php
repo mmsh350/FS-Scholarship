@@ -28,6 +28,8 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->boolean('is_active')->default(true);
             $table->enum('role', ['admin','staff','agent','applicant'])->default('applicant');
+            $table->enum('registeredby', ['admin','staff','agent','self'])->default('self');
+            $table->tinyInteger('registrar_id')->nullable();
             $table->longText('address')->nullable();
             $table->longText('profile_pic')->nullable();
             $table->timestamp('current_sign_in_at')->nullable();

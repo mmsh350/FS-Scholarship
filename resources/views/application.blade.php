@@ -38,6 +38,8 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/sweetalert.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
+    <!-- Select 2 CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/select2.css') }}">
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -74,7 +76,7 @@
               <div class="form-group w-100">
                 <div class="Typeahead Typeahead--twitterUsers">
                   <div class="u-posRelative">
-                    <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text" placeholder="Search Mofi .." name="q" title="" autofocus>
+                    <input class="demo-input Typeahead-input form-control-plaintext w-100" type="text" placeholder="Search ..." name="q" title="" autofocus>
                     <div class="spinner-border Typeahead-spinner" role="status"><span class="sr-only">Loading...</span></div><i class="close-search" data-feather="x"></i>
                   </div>
                   <div class="Typeahead-menu"></div>
@@ -222,12 +224,7 @@
                       <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
-                   
-                  
-                 
-               
-               
-                 
+             
                 </ul>
               </div>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
@@ -331,52 +328,87 @@
                     <div class="vertical-main-wizard">
                       <div class="row g-3">    
                         <div class="col-xxl-3 col-xl-4 col-12">
-                          <div class="nav flex-column header-vertical-wizard" id="wizard-tab" role="tablist" aria-orientation="vertical"><a class="nav-link active" id="wizard-contact-tab" data-bs-toggle="pill" href="#wizard-contact" role="tab" aria-controls="wizard-contact" aria-selected="true"> 
+                          <div class="nav flex-column header-vertical-wizard" id="wizard-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="wizard-contact-tab" data-bs-toggle="pill" href="#wizard-contact" role="tab" aria-controls="wizard-contact" aria-selected="true"> 
                               <div class="vertical-wizard">
                                 <div class="stroke-icon-wizard"><i class="fa fa-user"></i></div>
                                 <div class="vertical-wizard-content"> 
-                                  <h6>Personal Information</h6>
-                                  <p>Add your details </p>
+                                  <h6>Personal</h6>
+                                  <p>Add your Personal details </p>
                                 </div>
-                              </div></a><a class="nav-link" id="wizard-cart-tab" data-bs-toggle="pill" href="#wizard-cart" role="tab" aria-controls="wizard-cart" aria-selected="false" tabindex="-1"> 
+                              </div>
+                            </a>
+                              <a class="nav-link" id="next-kin-tab" data-bs-toggle="pill" href="#next-kin" role="tab" aria-controls="next-kin" aria-selected="true" tabindex="-1"> 
                               <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-chain-broken"></i></div>
+                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
                                 <div class="vertical-wizard-content"> 
-                                  <h6>Next Of Kin Information</h6>
-                                  <p>Add Next of kin details</p>
+                                  <h6>Next Of Kin </h6>
+                                  <p>Add Next of Kin details</p>
                                 </div>
-                              </div></a><a class="nav-link" id="wizard-banking-tab" data-bs-toggle="pill" href="#wizard-banking" role="tab" aria-controls="wizard-banking" aria-selected="false" tabindex="-1"> 
+                              </div></a>
+                              
+                              
+                              <a class="nav-link" id="education-tab" data-bs-toggle="pill" href="#education" role="tab" aria-controls="wizard-banking" aria-selected="false" tabindex="-1"> 
                               <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-group"></i></div>
+                                <div class="stroke-icon-wizard"><i class="fa fa-graduation-cap"></i></div>
                                 <div class="vertical-wizard-content"> 
                                   <h6>Education</h6>
-                                  <p>Add Education Details</p>
+                                  <p>Add Study Details</p>
                                 </div>
-                              </div></a></div>
+                              </div></a>
+
+                              <a class="nav-link" id="gurantor-tab" data-bs-toggle="pill" href="#gurantor" role="tab" aria-controls="wizard-banking" aria-selected="false" tabindex="-1"> 
+                              <div class="vertical-wizard">
+                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
+                                <div class="vertical-wizard-content"> 
+                                  <h6>Guarantor</h6>
+                                  <p>Add Guarantor Details</p>
+                                </div>
+                              </div></a>
+
+                              <a class="nav-link" id="school-tab" data-bs-toggle="pill" href="#school" role="tab" aria-controls="school" aria-selected="false" tabindex="-1"> 
+                              <div class="vertical-wizard">
+                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
+                                <div class="vertical-wizard-content"> 
+                                  <h6>Head of School</h6>
+                                  <p>Add Head of School Details</p>
+                                </div>
+                              </div></a>
+
+                              <a class="nav-link" id="media-tab" data-bs-toggle="pill" href="#media" role="tab" aria-controls="media" aria-selected="false" tabindex="-1"> 
+                              <div class="vertical-wizard">
+                                <div class="stroke-icon-wizard"><i class="fa fa-picture-o"></i></div>
+                                <div class="vertical-wizard-content"> 
+                                  <h6>Upload</h6>
+                                  <p> Upload required Documents</p>
+                                </div>
+                              </div></a>
+                            
+                            </div>
                         </div>
                         <div class="col-xxl-9 col-xl-8 col-12">
                           <div class="tab-content" id="wizard-tabContent">
                             <div class="tab-pane fade show active" id="wizard-contact" role="tabpanel" aria-labelledby="wizard-contact-tab">
-                            <form class="row g-3 needs-validation custom-input" novalidate="">
+                            <form class="row g-3  custom-input" enctype="multipart/form-data" autocomplete="off">
 
-                                    <div class="col-xxl-6 col-sm-6">
+                                    <div class="col-xxl-4 col-sm-4">
                                       <label class="form-label" for="validationCustom04">Category</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
+                                      <select class="form-select" name="category" id="category">
+                                        <option value="">Choose...</option>
                                         <option>Student Loan </option>
                                         <option>Scholarship </option>
                                       </select>
                                     </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
+                                    
+                                    <div class="col-xxl-8 col-sm-8">
                                     <label class="form-label" for="validationCustom0-a">Applicant Names<span class="txt-danger">*</span></label>
-                                    <input class="form-control" id="validationCustom0-a"type="text" readonly value="{{ Auth::user()->first_name. ' '. Auth::user()->middle_name.' '. Auth::user()->last_name; }}" required="">
+                                    <input class="form-control" name="applicant_Names" id="applicant_Names"type="text" readonly value="{{ Auth::user()->first_name. ' '. Auth::user()->middle_name.' '. Auth::user()->last_name; }}">
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-6">
                                     <div class="">
                                     <label class="form-label" for="validationCustom-b">Date of Birth<span class="txt-danger">*</span></label>
-                                    <input class="form-control digits" name="dob" id="dob" type="date" value="{{ Auth::user()->dob}}">
+                                    <input class="form-control digits" readonly name="dob" id="dob" type="date" value="{{ Auth::user()->dob}}">
                                     </div>
                                     </div>
 
@@ -384,9 +416,7 @@
                                     <div class="">
                                       <label class="form-label">Gender <span class="txt-danger">*</span></label>
                                       <select name="gender" id="gender" class="form-control btn-square">
-                                        <option value="">--Select--</option>
-                                        <option value="Male" @if( Auth::user()->gender == 'Male') selected @endif >Male</option>
-                                        <option value="Female" @if( Auth::user()->gender == 'Female') selected @endif>Female</option>
+                                        <option>{{ Auth::user()->gender }}</option>
                                       </select>
                                     </div>
                                     </div>
@@ -394,53 +424,49 @@
                                     <div class="col-xxl-4 col-sm-6">
                                     <div class="">
                                       <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                      <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
+                                      <input class="form-control" name="phone_no" id="phone_no" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
                                     </div>
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-6">
                                       <label class="form-label" for="validationemail-b">Email<span class="txt-danger">*</span></label>
-                                      <input class="form-control" id="validationemail-b" type="email" required="" value="{{ Auth::user()->email}}" readonly>
+                                      <input class="form-control" id="email_id" name="email_id" type="email"  value="{{ Auth::user()->email}}" readonly>
                                     </div>
 
-                                    <div class="col-xxl-3 col-sm-3">
+                                    <div class="col-xxl-6 col-sm-6">
                                       <label class="form-label" for="validationCustom04">Country</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                    <option selected="" disabled="" value="">Choose...</option>
-                                    <option>Nigeria </option>
+                                      <select class="form-select" name="country" id="country" >
+                                    <option value="">Choose...</option>
                                       </select>
                                     </div>
 
-                                    <div class="col-xxl-3 col-sm-3">
+                                    <div class="col-xxl-6 col-sm-6">
                                       <label class="form-label" for="validationCustom04">Nationality</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                    <option selected="" disabled="" value="">Choose...</option>
-                                    <option>Nigeria </option>
+                                     <select class="form-select" name="nationality" id="nationality" >
+                                        <option value="">Choose...</option>
                                       </select>
                                     </div>
 
-                                    <div class="col-xxl-3 col-sm-3">
-                                      <label class="form-label" for="validationCustom04">State</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                    <option selected="" disabled="" value="">Choose...</option>
-                                    <option>Kaduna </option>
+                                    <div class="col-xxl-6 col-sm-6">
+                                      <label class="form-label" for="State">State</label>
+                                      <select class="form-select" id="state" name="state" >
+                                        <option value="">Choose...</option>
                                       </select>
-                                    </div>
+                                      </div>
 
-                                    <div class="col-xxl-3 col-sm-3">
+                                    <div class="col-xxl-6 col-sm-6">
                                       <label class="form-label" for="validationCustom04">L.G.A</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" id="lga" name="lga" >
+                                        <option value="">Loading...</option>
                                       </select>
                                     </div>
                                     <div class="col-md-6">
                                     <label class="form-label">Current Home Address</label>
-                                    <textarea class="form-control" rows="3" id="address" name="address" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
+                                    <textarea class="form-control" rows="3" id="caddress" name="caddress" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Nearest Bus Stop</label>
-                                        <textarea class="form-control" rows="3" id="address" name="address" placeholder="Nearedt Bus Station">{{ Auth::user()->address}}</textarea>
+                                        <textarea class="form-control" rows="3" id="nbus_address" name="nbus_address"></textarea>
                                     </div>
 
                                     <div class="mb-3 mt-3">
@@ -448,14 +474,14 @@
                                     <input class="form-control" name="image" id="image" type="file" multiple="">
                                     </div>
 
-                                    <div class="col-md-6"><label class="form-label" style="text-transform:none" for="formFileMultiple">Do you study Abroad ?</label>
+                                    <div class="col-md-12  rounded" style=" border: 1px dashed rgba(106, 113, 133, 0.3);"><label class="form-label" style="text-transform:none" for="formFileMultiple">Do you study Abroad ?</label>
                                       <div class="mb-3 d-flex gap-3 checkbox-checked">
                                           <div class="form-check"> 
-                                            <input class="form-check-input" id="flexRadioDefault1" value="Yes"  type="radio" name="flexRadioDefault">
+                                            <input class="form-check radio radio-primary"  id="flexRadioDefault1" value="Yes"  type="radio" name="flexRadioDefault">
                                             <label class="form-check-label mb-0" for="flexRadioDefault1">Yes </label>
                                           </div>
                                           <div class="form-check">
-                                            <input class="form-check-input" id="flexRadioDefault2" value="No" type="radio" name="flexRadioDefault" checked="">
+                                            <input class="form-check radio radio-primary"  id="flexRadioDefault2" value="No" type="radio" name="flexRadioDefault" checked="">
                                             <label class="form-check-label mb-0" for="flexRadioDefault2">No</label>
                                           </div>
                                       </div>
@@ -464,184 +490,333 @@
                                    
                                     <div class="col-xxl-4 col-sm-6" style="display:none" id="intPhone">
                                       <div class="">
-                                        <label class="form-label">Intl Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
+                                        <label class="form-label">International Phone No.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="intl_phone" id="phone" maxlength="11" type="text">
                                       </div>
                                     </div>
 
                                     <div class="col-md-12" id="intaddr" style="display:none" >
-                                        <label class="form-label">Intl Address </label>
-                                        <textarea class="form-control" rows="3" id="address" name="address" placeholder="International Address">{{ Auth::user()->address}}</textarea>
+                                        <label class="form-label">International Address </label>
+                                        <textarea class="form-control" rows="3" id="intl_address" name="intl_address"></textarea>
                                     </div>
 
                                     <div class="col-12 text-end"> 
-                                      <button class="btn btn-primary">Next</button>
+                                      <a href="#" class="btn btn-dark" id="next1">Next <i class="fa fa-arrow-circle-right"></i></a>
                                     </div>
-                            </form>
-                            </div>
+                                </div>
                             
-                            <div class="tab-pane fade" id="wizard-cart" role="tabpanel" aria-labelledby="wizard-cart-tab">
-                              <form class="row g-3 needs-validation custom-input" novalidate="">
-                                 
+                            <div class="tab-pane fade" id="next-kin" role="tabpanel" aria-labelledby="next-kin-tab">
+                                  <div class="row">
                                   <div class="col-xxl-4 col-sm-4">
                                       <label class="form-label" for="validationCustom04">Title</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" name="title" id="title" >
+                                        <option value="">Choose...</option>
+                                        <option>Mr</option>
+                                        <option>Mrs</option>
+                                        <option>Miss</option>
                                       </select>
                                     </div>
                                     <div class="col-xxl-8 col-sm-8">
                                       <label class="form-label" for="validationCustom04">Relationship</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" name="nrelationship" id="nrelationship" >
+                                        <option value="">Choose...</option>
+                                        <option>Father</option>
+                                        <option>Mother</option>
+                                        <option>Brother</option>
+                                        <option>Sister</option>
+                                        <option>Friend</option>
+                                        <option>Relative</option>
                                       </select>
                                     </div>
-                                  
-                                 
-                                <div class="col-md-4 col-sm-4">
-                                  <label class="form-label" for="validationDates">Next of Kin</label>
-                                  <input class="form-control" id="validationDates" type="number" required="" placeholder="Surname">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                                                
+                                <div class="col-md-4 col-sm-4 mt-3">
+                                  <label class="form-label" for="validationDates">Next of Kin (Full Name)</label>
+                                  <input class="form-control" name="next_of_kin_sname" id="next_of_kin_sname" type="text"  placeholder="Surname">
                                 </div>
 
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-4 col-sm-4  mt-3">
                                   <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="validationDates" type="number" required="" placeholder="First Name">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                  <input class="form-control" id="next_of_kin_fname" name="next_of_kin_fname" type="text"  placeholder="First Name">
                                 </div>
 
-                                <div class="col-md-4 col-sm-4">
+                                <div class="col-md-4 col-sm-4  mt-3">
                                   <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="validationDates" type="number" required="" placeholder="Middle Name">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                  <input class="form-control" id="next_of_kin_mname" name="next_of_kin_mname" type="text"  placeholder="Middle Name">
                                 </div>
-                                <div class="col-xxl-6 col-sm-6">
+                                <div class="col-xxl-6 col-sm-6 mt-3">
                                       <label class="form-label" for="validationCustom04">Gender</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" name="next_of_kin_gender" id="next_of_kin_gender" >
+                                        <option value="">Choose...</option>
+                                        <option value="Male">Male </option>
+                                        <option value="Female">Female </option>
                                       </select>
                                     </div>
-                                <div class="col-md-6 col-sm-6">
-                                  <label class="form-label" for="cvvNumber-b">Date of Birth</label>
-                                  <input class="form-control" id="cvvNumber-b" type="date" required="">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                <div class="col-md-6 col-sm-6  mt-3">
+                                  <label class="form-label" for="dob">Date of Birth</label>
+                                  <input class="form-control" id="next_of_kin_dob" name="next_of_kin_dob" type="date" >
                                 </div>
 
-                                <div class="col-md-6 col-sm-6">
-                                  <label class="form-label" for="cvvNumber-b">Phone Number</label>
-                                  <input class="form-control" id="cvvNumber-b" type="text" required="">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                <div class="col-md-6 col-sm-6  mt-3">
+                                  <label class="form-label" for="">Phone Number</label>
+                                  <input class="form-control" name="next_of_kin_phone" id="next_of_kin_phone" type="text" >
                                 </div>
                                  
-                                <div class="col-md-6 col-sm-6">
-                                  <label class="form-label" for="cvvNumber-b">Email Address</label>
-                                  <input class="form-control" id="cvvNumber-b" type="text" required="">
-                                  <div class="valid-feedback">
-                                     Looks's Good!</div>
+                                <div class="col-md-6 col-sm-6 mt-3">
+                                  <label class="form-label" for="">Email Address</label>
+                                  <input class="form-control" id="nok_email" name="nok_email" type="email" >
                                 </div>
 
-                                <div class="col-xxl-6 col-sm-6">
+                                <div class="col-xxl-6 col-sm-6 mt-3">
                                       <label class="form-label" for="validationCustom04">State</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" id="nok_state" name="nok_state">
+                                        <option value="">Choose...</option>
                                       </select>
                                     </div>
                 
-                                    <div class="col-xxl-6 col-sm-6">
+                                    <div class="col-xxl-6 col-sm-6 mt-3">
                                       <label class="form-label" for="validationCustom04">LGA</label>
-                                      <select class="form-select" id="validationCustom04" required="">
-                                        <option selected="" disabled="" value="">Choose...</option>
-                                        <option>Kuje </option>
+                                      <select class="form-select" id="nok_lga" name="nok_lga" >
+                                        <option value="">Choose...</option>
+                                      </select>
+                                    </div>
+
+                                    <div class="col-md-6 mt-3">
+                                    <label class="form-label">Current Home Address</label>
+                                    <textarea class="form-control" rows="3" id="nok_address" name="nok_address"></textarea>
+                                    </div>
+                                    <div class="col-md-6 mt-3">
+                                        <label class="form-label">Nearest Bus Stop</label>
+                                        <textarea class="form-control" rows="3" id="nok_bus_stop" name="nok_bus_stop"></textarea>
+                                    </div>
+
+                                <div class="col-12 text-end mt-4"> 
+                                  <a href="#" class="btn btn-dark" id="pre1"><i class="fa fa-arrow-circle-left"></i> Previous</a>
+                                  <a href="#" class="btn btn-dark" id="next2">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div> 
+                          </div>
+
+                            <div class="tab-pane fade custom-input" id="education" role="tabpanel" aria-labelledby="wizard-education-tab">
+                              
+                              <div class="row">
+                                   <div class="col-xxl-4 col-sm-4">
+                                      <label class="form-label" for="validationCustom04">Category</label>
+                                      <select class="js-example-basic-single" id="schl_category" name="schl_category" >
+                                        <option value="">Choose...</option>
+                                        <option>University</option>
+                                        <option>Polytechnics/Monotechnics/Colleges</option>
+                                        <option>Secondary Schools</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-xxl-8 col-sm-8"><!--js-searchBox-->
+                                      <label class="form-label" for="validationCustom04">School</label>
+                                      <select class="js-example-basic-single col-sm-6 " id="school_name" name="school_name">
+                                        <option value="">Choose...</option>
+                                      </select>
+                                    </div>
+
+                                    <div class="col-xxl-4 col-sm-4 mt-3 mt-3">
+                                      <label class="form-label" for="validationCustom04">Section</label>
+                                      <select class="form-select" id="section" name="section" >
+                                        <option value="">Choose...</option>
+                                        <option>JSS </option>
+                                        <option>SS </option>
+                                        <option>NCE </option>
+                                        <option>ND/HND </option>
+                                        <option>DEGREE </option>
+                                        <option>NASTERS </option>
+                                      </select>
+                                    </div>
+
+                                    <div class="col-xxl-8 col-sm-8 mt-3"  id="">
+                                      <div class="">
+                                        <label class="form-label">Course of Study<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="course" id="course"  type="text" value="" >
+                                      </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-sm-6 mt-3"  id="">
+                                      <div class="">
+                                        <label class="form-label">No of years<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="no_of_years" minlength="1" maxlength="4" id="no_of_years" type="Number" value="" >
+                                      </div>
+                                    </div>
+                                    <div class="col-xxl-4 col-sm-6 mt-3"  id="">
+                                      <div class="">
+                                        <label class="form-label">Requested Amount.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="ramount" id="ramount" type="text">
+                                      </div>
+                                    </div>
+                              
+                                <div class="col-12 text-end mt-3"> 
+                                  <a href="#" class="btn btn-dark" id="pre2"><i class="fa fa-arrow-circle-left"></i>&nbsp; Previous</a>
+                                  <a href="#" class="btn btn-dark" id="next3">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                               
+                                </div>
+                               </div>
+
+
+                            <div class="tab-pane fade custom-input" id="gurantor" role="tabpanel" aria-labelledby="wizard-banking-tab">
+                               
+                            <div class="row g-3 mb-3 needs-validation">
+
+                            <div class="col-xxl-12 col-sm-12" id="">
+                                      <div class="">
+                                        <label class="form-label"><span class="badge badge-dark">Gurantor 1 </span></label>
+                                       </div>
+                                </div>
+
+                                <div class="col-xxl-6 col-sm-6" id="">
+                                      <div class="">
+                                        <label class="form-label">Names<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gname" id="gname" type="text"  >
+                                      </div>
+                                </div>
+                                    <div class="col-xxl-6 col-sm-6">
+                                      <label class="form-label" for="validationCustom04">Relationship</label>
+                                      <select class="form-select" id="grelationship" >
+                                        <option value="">Choose...</option>
+                                        <option>Father</option>
+                                        <option>Mother</option>
+                                        <option>Brother</option>
+                                        <option>Sister</option>
+                                        <option>Friend</option>
+                                        <option>Relative</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-xxl-4 col-sm-6" >
+                                      <div class="">
+                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gphone" id="gphone" type="text">
+                                      </div>
+                                    </div>
+
+                                    <div class="col-xxl-4 col-sm-6">
+                                      <div class="">
+                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gemail" id="gemail" type="text" >
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Home Address</label>
+                                        <textarea class="form-control" rows="3" id="gaddress" name="gaddress"></textarea>
+                                    </div>
+
+                                    <!-------Gurantor 2---->
+
+                                    <div class="">
+                                        <label class="form-label"><span class="badge badge-dark">Gurantor 2</span></label>
+                                       </div>
+
+                                       <div class="col-xxl-6 col-sm-6" id="">
+                                      <div class="">
+                                        <label class="form-label">Names<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gname2" id="gname2" type="text">
+                                      </div>
+                                </div>
+                                    <div class="col-xxl-6 col-sm-6">
+                                      <label class="form-label" for="validationCustom04">Relationship</label>
+                                      <select class="form-select" id="grelationship2" >
+                                      <option value="">Choose...</option>
+                                        <option>Father</option>
+                                        <option>Mother</option>
+                                        <option>Brother</option>
+                                        <option>Sister</option>
+                                        <option>Friend</option>
+                                        <option>Relative</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-xxl-4 col-sm-6">
+                                      <div class="">
+                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gphone2" id="gphone2" type="text">
+                                      </div>
+                                    </div>
+
+                                    <div class="col-xxl-4 col-sm-6">
+                                      <div class="">
+                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="gemail2" id="gemail2" type="email">
+                                      </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label">Home Address</label>
+                                        <textarea class="form-control" rows="3" id="gaddress2" name="gaddress2"></textarea>
+                                    </div>
+                                
+                                <div class="col-12 text-end mt-3"> 
+                                  <a href="#" class="btn btn-dark" id="pre3"><i class="fa fa-arrow-circle-left"></i> Previous</a>
+                                  <a href="#" class="btn btn-dark" id="next4">Next <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+                              
+                                </div> </div>
+
+
+
+                            <div class="tab-pane fade custom-input" id="school" role="tabpanel" aria-labelledby="wizard-banking-tab">
+                              <div class="row g-3 mb-3">
+                                 
+                                   <div class="col-xxl-6 col-sm-6" id="">
+                                      <div class="">
+                                        <label class="form-label">Head of School<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="hos_name" id="head_of_schl_name" type="text">
+                                      </div>
+                                    </div>
+
+                                    <div class="col-xxl-6 col-sm-6">
+                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="hos_phone" id="hos_phone" maxlength="11" type="text">
+                                      </div>
+                                   
+                                    <div class="col-xxl-6 col-sm-6" id="">
+                                      <div class="">
+                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="hos_email" id="hos_email" type="text">
+                                      </div>
+                                    </div>
+                                    <div class="col-xxl-6 col-sm-6">
+                                      <label class="form-label" for="validationCustom04">State</label>
+                                      <select class="form-select" name="hos_state" id="hos_state" >
+                                        <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-md-6">
-                                    <label class="form-label">Current Home Address</label>
-                                    <textarea class="form-control" rows="3" id="address" name="address" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
+                                        <label class="form-label">City</label>
+                                        <input class="form-control" name="hos_city" id="hos_city" type="text">
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Nearest Bus Stop</label>
-                                        <textarea class="form-control" rows="3" id="address" name="address" placeholder="Nearedt Bus Station">{{ Auth::user()->address}}</textarea>
-                                    </div>
-
-                                 
-                                <div class="col-12 text-end"> 
-                                  <button class="btn btn-primary">Previous</button>
-                                  <button class="btn btn-primary">Next</button>
-                                </div>
-                              </form>
-                            </div>
-
-                            <div class="tab-pane fade custom-input" id="wizard-banking" role="tabpanel" aria-labelledby="wizard-banking-tab">
-                              <form class="row g-3 mb-3 needs-validation" novalidate="">
-                                <div class="col-md-12"> 
-                                  <div class="accordion dark-accordion" id="accordionExample-a">
-                                    <div class="accordion-item">
-                                      <h2 class="accordion-header" id="headingOne-a">
-                                        <button class="accordion-button collapsed accordion-light-primary txt-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne-a" aria-expanded="true" aria-controls="collapseOne-a">NET BANKING<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down svg-color"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-                                      </h2>
-                                      <div class="accordion-collapse collapse" id="collapseOne-a" aria-labelledby="headingOne-a" data-bs-parent="#accordionExample-a">
-                                        <div class="accordion-body weight-title card-wrapper">
-                                          <h6 class="sub-title f-14">SELECT YOUR BANK</h6>
-                                          <div class="row choose-bank">
-                                            <div class="col-sm-6">
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-z" type="radio" name="flexRadioDefault-v">
-                                                <label class="form-check-label" for="flexRadioDefault-z">Industrial &amp; Commercial Bank</label>
-                                              </div>
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-y" type="radio" name="flexRadioDefault-v">
-                                                <label class="form-check-label" for="flexRadioDefault-y">Agricultural Bank</label>
-                                              </div>
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-x" type="radio" name="flexRadioDefault-v" checked="">
-                                                <label class="form-check-label" for="flexRadioDefault-x">JPMorgan Chase &amp; Co.</label>
-                                              </div>
-                                            </div>
-                                            <div class="col-sm-6"> 
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-w" type="radio" name="flexRadioDefault-v">
-                                                <label class="form-check-label" for="flexRadioDefault-w">Construction Bank Corp.</label>
-                                              </div>
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-v" type="radio" name="flexRadioDefault-v">
-                                                <label class="form-check-label" for="flexRadioDefault-v">Bank of America</label>
-                                              </div>
-                                              <div class="form-check radio radio-primary">
-                                                <input class="form-check-input" id="flexRadioDefault-u" type="radio" name="flexRadioDefault-v">
-                                                <label class="form-check-label" for="flexRadioDefault-u">HDFC Bank</label>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
+                                    <div class="col-xxl-12 col-sm-12">
+                                      <div class="">
+                                        <label class="form-label">Home Address<span class="text-danger">*</span></label>
+                                        <textarea class="form-control" rows="3" id="hos_address" name="hos_address"></textarea>
                                       </div>
                                     </div>
-                                  </div>
-                                </div>
-                                <div class="col-12"> 
-                                  <textarea class="form-control" id="validationTextarea24" placeholder="Your Feedback" required="" data-gramm="false" wt-ignore-input="true"></textarea>
-                                  <div class="invalid-feedback">Please enter a message in the textarea.</div>
-                                </div>
-                                <div class="col-12">
-                                  <div class="form-check mb-0">
-                                    <input class="form-check-input" id="invalidCheck67" type="checkbox" value="" required="">
-                                    <label class="form-check-label mb-0" for="invalidCheck67">Agree to terms and conditions</label>
-                                    <div class="invalid-feedback">You must agree before submitting.</div>
-                                  </div>
-                                </div>
+
                                 <div class="col-12 text-end"> 
-                                  <button class="btn btn-success">Finish</button>
+                                  <a href="#" class="btn btn-dark" id="pre4"><i class="fa fa-arrow-circle-left"></i> Previous</a>
+                                  <a href="#" class="btn btn-dark" id="next5">Next <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
-                              </form>
+                                </div>
                             </div>
+
+                            <div class="tab-pane fade custom-input" id="media" role="tabpanel" aria-labelledby="wizard-banking-tab">
+                              <div class="row g-3 mb-3">
+                                 
+                                   <div class="col-xxl-6 col-sm-6" id="">
+                                      <div class="">
+                                        <label class="form-label">Head of School<span class="text-danger">*</span></label>
+                                        <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
+                                      </div>
+                                    </div>
+
+                                <div class="col-12 text-end"> 
+                                  <a href="#" class="btn btn-dark" id="pre5"><i class="fa fa-arrow-circle-left"></i> Previous</a>
+                                  <a href="#" id="submit" class="btn btn-dark">Finish</a>
+                                </div>
+                                </div>
+                            </div>
+
+                            </form>
                           </div>
                         </div>
                       </div>
@@ -707,6 +882,15 @@
     <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
+    <script src="{{ asset('js/loadstates.js') }}"></script>
+    <script src="{{ asset('js/loadlga.js') }}"></script>
+    <script src="{{ asset('js/loadcountries.js') }}"></script>
+    <script src="{{ asset('js/loadschools.js') }}"></script>
+
+    <!-- Touchspin JS -->
+    <script src="{{ asset('js/select2/select2.full.min.js') }}"></script>
+    <script src="{{ asset('js/select2/select2-custom.js') }}"></script>
+     
     <script src="{{ asset('js/logout.js') }}"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
@@ -728,8 +912,115 @@
             }
 
       });
-    </script>
+
+      //Tabs
+      $('#next1').click(function(evt) {
+       
+        $('#next-kin').addClass('show active'); 
+        $('#next-kin-tab').addClass('active'); 
+         
+        $('#wizard-contact').removeClass('show active');
+        $('#wizard-contact-tab').removeClass('active');
+      });
+
+       $('#pre1').click(function(evt) {
+       
+       $('#next-kin').removeClass('show active'); 
+       $('#next-kin-tab').removeClass('active'); 
+        
+       $('#wizard-contact').addClass('show active');
+       $('#wizard-contact-tab').addClass('active');
+     });
+
+       //Tabs
+       $('#next2').click(function(evt) {
+       //Next 
+        $('#education').addClass('show active'); 
+        $('#education-tab').addClass('active'); 
+        
+        $('#next-kin').removeClass('show active'); 
+        $('#next-kin-tab').removeClass('active'); 
+       });
+
+       $('#pre2').click(function(evt) {
+       //Next 
+       $('#education').removeClass('show active'); 
+        $('#education-tab').removeClass('active'); 
+        
+        $('#next-kin').addClass('show active'); 
+        $('#next-kin-tab').addClass('active'); 
+     });
+
+
+     $('#next3').click(function(evt) {
+       //Next 
+       $('#gurantor').addClass('show active'); 
+       $('#gurantor-tab').addClass('active'); 
+        
+       $('#education').removeClass('show active'); 
+        $('#education-tab').removeClass('active'); 
+     });
+
+     $('#pre3').click(function(evt) {
+       
+       $('#gurantor').removeClass('show active'); 
+       $('#gurantor-tab').removeClass('active'); 
+        
+       $('#education').addClass('show active'); 
+        $('#education-tab').addClass('active'); 
+     });
+
+     $('#next4').click(function(evt) {
+       //Next 
+       $('#school').addClass('show active'); 
+       $('#school-tab').addClass('active'); 
+        
+       $('#gurantor').removeClass('show active'); 
+        $('#gurantor-tab').removeClass('active'); 
+     });
+
+     $('#pre4').click(function(evt) {
+       //Next 
+       $('#school').removeClass('show active'); 
+       $('#school-tab').removeClass('active'); 
+        
+       $('#gurantor').addClass('show active'); 
+        $('#gurantor-tab').addClass('active'); 
+     });
+
+
+     $('#next5').click(function(evt) {
+       //Next 
+       $('#school').removeClass('show active'); 
+       $('#school-tab').removeClass('active'); 
+        
+       $('#media').addClass('show active'); 
+        $('#media-tab').addClass('active'); 
+     });
+
+     $('#pre5').click(function(evt) {
+       //Next 
+       $('#school').addClass('show active'); 
+       $('#school-tab').addClass('active'); 
+        
+       $('#media').removeClass('show active'); 
+        $('#media-tab').removeClass('active'); 
+     });
+
+     //Auto Set gender
+
+     $("#title").change(function(){
+         let title_text =  $('#title :selected').val();
+        if(title_text == "Mr")
+               $("select#next_of_kin_gender ").val("Male").change();
+         else if(title_text == "")
+               $("select#next_of_kin_gender").val("").change();
+        else
+              $("select#next_of_kin_gender").val("Female").change();
+      });                  
     
+    </script>
+   
     <!-- Plugin used-->
   </body>
 </html>

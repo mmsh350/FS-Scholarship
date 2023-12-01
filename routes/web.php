@@ -7,8 +7,10 @@ use App\Http\Controllers\Action\WalletController;
 use App\Http\Controllers\Action\DashboardController;
 use App\Http\Controllers\Action\ApplicationController;
 
- 
-
+use App\Http\Controllers\Action\StateController;
+use App\Http\Controllers\Action\LgaController;
+use App\Http\Controllers\Action\CountriesController;
+use App\Http\Controllers\Action\SchoolController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,6 +35,13 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
     Route::post('/verifyPayments', [WalletController::class, 'verify'])->name('verify');
 
     Route::get('/application', [ApplicationController::class, 'show'])->name('application');
+
+
+    Route::post('get-state', [StateController::class, 'fetchState']);
+    Route::post('get-lga', [LgaController::class, 'fetchLgas']);
+    Route::post('get-countries', [CountriesController::class, 'fetchCountry']);
+    Route::post('get-schools', [SchoolController::class, 'fetchSchools']);
+    
 });
 
 
