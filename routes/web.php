@@ -26,17 +26,20 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
 
 
     Route::middleware('auth')->group(function () {
+    //Profile Routes  (General) 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profileUpdate', [ProfileController::class, 'update']);
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
+    //Wallet Routes (Applicant)
     Route::get('/wallet', [WalletController::class, 'show'])->name('wallet');
     Route::post('/verifyPayments', [WalletController::class, 'verify'])->name('verify');
 
+    //Application Routes
     Route::get('/application', [ApplicationController::class, 'show'])->name('application');
+    Route::post('/app-handler', [ApplicationController::class, 'store'])->name('app-handler');
 
-
+    //Utility Routes
     Route::post('get-state', [StateController::class, 'fetchState']);
     Route::post('get-lga', [LgaController::class, 'fetchLgas']);
     Route::post('get-countries', [CountriesController::class, 'fetchCountry']);

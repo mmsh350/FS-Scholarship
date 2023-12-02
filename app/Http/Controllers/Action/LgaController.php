@@ -12,7 +12,7 @@ class LgaController extends Controller
 
             $id = $request->input('getId');
              
-            $lgas = Lga::where('stateId', $id)
+            $lgas = Lga::where('state_id', $id)
                             ->orderby("id","asc")
                             ->select(['id','lgaName'])->get();
                             

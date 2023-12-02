@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Wallet;
-
+use App\Models\Application;
 class DashboardController extends Controller
 {
     public function show(Request $request)
@@ -20,6 +20,23 @@ class DashboardController extends Controller
          else
          {
 
+            //Get Application Count Details
+            $approve_count = 0;
+            $reject_count = 0;
+            $submit_count = 0;
+             
+            $approve_count = Application::all()
+                            ->where('user_id', $loginUserId)
+                            ->where('status', 'Approved')->count();
+
+            $reject_count = Application::all()
+                            ->where('user_id', $loginUserId)
+                            ->where('status', 'Rejected')->count();
+
+            $submit_count = Application::all()
+                            ->where('user_id', $loginUserId)->count();
+
+            //Check if role is applicant
             if(Auth::user()->role == 'applicant')
             {
                  
@@ -38,12 +55,21 @@ class DashboardController extends Controller
                               $balance = $wallet->balance;
                               $deposit = $wallet->deposit;
                           }
-                             return view('dashboard',compact('balance')); 
+                             return view('dashboard')
+                             ->with(compact('balance'))
+                             ->with(compact('approve_count'))
+                             ->with(compact('reject_count'))
+                             ->with(compact('submit_count'));
+          
                             
                       
                     }else{
                          $balance = 0;
-                         return view('dashboard',compact('balance')); 
+                         return view('dashboard')
+                         ->with(compact('balance'))
+                         ->with(compact('approve_count'))
+                         ->with(compact('reject_count'))
+                         ->with(compact('submit_count'));
                      }
             } else if(Auth::user()->role == 'agent') {
 

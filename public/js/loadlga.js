@@ -42,7 +42,7 @@ $(document).ready(function() {
     type: "POST",
     url: "get-lga",
     dataType: "json",   //expect json File to be returned  
-    data: {getId:getId},		
+    data: {getId:getId,_token},			
     success: function(response){                  
          var len = response.length;
 

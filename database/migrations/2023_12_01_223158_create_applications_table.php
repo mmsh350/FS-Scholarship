@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
+
+            $table->bigInteger('user_id');
             $table->string('category');
             $table->string('names');
             $table->date('dob');
@@ -32,6 +34,9 @@ return new class extends Migration
             $table->string('intl_phone')->nullable();
             $table->string('intl_address')->nullable();
             $table->enum('status', ['Pending','Approved','Rejected'])->default('Pending');
+            $table->string('ramount')->nullable();
+            $table->string('approved_amount')->nullable()->default(0);
+            $table->string('initial_fee')->nullable()->default(0);
             $table->timestamps();
         });
     }

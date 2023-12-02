@@ -111,28 +111,18 @@
                   <div class="notification-box">
                     <svg>
                       <use href="{{ asset('svg/icon-sprite.svg#notification') }}"></use>
-                    </svg><span class="badge rounded-pill badge-primary">4 </span>
+                    </svg><span class="badge rounded-pill badge-primary">0</span>
                   </div>
                   <div class="onhover-show-div notification-dropdown">
-                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications                               </h5>
+                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications</h5>
                     <ul class="notification-box">
                       <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
+                        
                         <div class="flex-grow-1"> <a href="#">
-                            <h6>New daily offer added</h6></a>
-                          <p>New user-only offer added</p>
+                            <h6>Approval</h6></a>
+                          <p>No Notification Available</p>
                         </div>
                       </li>
-                      <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="#">
-                            <h6>Product Evaluation</h6></a>
-                          <p>Changed to a new workflow</p>
-                        </div>
-                      </li>
-                      
-                     
-                      <li><a class="f-w-700" href="private-chat.html">Check all     </a></li>
                     </ul>
                   </div>
                 </li>
@@ -255,7 +245,7 @@
                           <div class="upcoming-box"> <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
+                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$submit_count}}</span>
                           </div></a>
                         </div>
                       </div>
@@ -264,7 +254,7 @@
                           <div class="upcoming-box  ">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                             <h6 class="p-b-10">Approved Application</h6> 
-                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
+                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
                           </div></a>
                         </div>
                       </div>
@@ -274,7 +264,7 @@
                           <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
-							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
+							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
                           </div>
                         </div> </a>
                       </div>                       
@@ -301,9 +291,11 @@
                     </div>
                   </div>
                   <div class="card-body">
-                    <p class="mb-1   pb-0 " style="text-align:justify">Welcome to FS-Scholarship – Your Gateway to a Brighter Future! At FS-Scholarship, we believe in nurturing talent, fostering dreams, and empowering the next generation of leaders. Our commitment to excellence and educational advancement is unparalleled. Explore a world of opportunities, unlock your potential, and embark on a journey towards academic success. Join us in shaping a future filled with knowledge, innovation, and endless possibilities. Discover the key to your educational aspirations with FS-Scholarship. Your success story begins here.</p>
-                     <button class="mt-2 example-popover btn btn-dark mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Get started"> Get Started </button>
-                    
+                    <p class="mb-1   pb-0 " style="text-align:justify">Welcome to FS-Scholarship – Your Gateway to a Brighter Future! At FS-Scholarship, we believe in nurturing talent, fostering dreams, and empowering the next generation of leaders. Our commitment to excellence and educational advancement is unparalleled. Explore a world of opportunities, unlock your potential, and embark on a journey towards academic success. Join us in shaping a future filled with knowledge, innovation, and endless possibilities. Discover the key to your educational aspirations with FS-Scholarship. Your success story begins here.<br/> </p>
+                    <p class=" ">To get started, Click on the button below to submit an application</p>
+                    <center>
+                    <a href="{{ route('application') }}"><button class="mt-2 example-popover btn btn-dark mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-original-title="Get started"><i class="fa fa-hand-o-right"> </i> Submit Application </button></a>
+                    </center>
                     
                   </div>
                 </div>

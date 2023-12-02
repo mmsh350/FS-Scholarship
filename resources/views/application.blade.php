@@ -113,28 +113,18 @@
                   <div class="notification-box">
                     <svg>
                       <use href="{{ asset('svg/icon-sprite.svg#notification') }}"></use>
-                    </svg><span class="badge rounded-pill badge-primary">4 </span>
+                    </svg><span class="badge rounded-pill badge-primary">0</span>
                   </div>
                   <div class="onhover-show-div notification-dropdown">
-                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications                               </h5>
+                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications</h5>
                     <ul class="notification-box">
                       <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
+                        
                         <div class="flex-grow-1"> <a href="#">
-                            <h6>New daily offer added</h6></a>
-                          <p>New user-only offer added</p>
+                            <h6>Approval</h6></a>
+                          <p>No Notification Available</p>
                         </div>
                       </li>
-                      <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="#">
-                            <h6>Product Evaluation</h6></a>
-                          <p>Changed to a new workflow</p>
-                        </div>
-                      </li>
-                      
-                     
-                      <li><a class="f-w-700" href="#">Check all     </a></li>
                     </ul>
                   </div>
                 </li>
@@ -243,7 +233,7 @@
                           <div class="upcoming-box"> <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">0</span>
+                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$applications->count()}}</span>
                           </div></a>
                         </div>
                       </div>
@@ -252,7 +242,7 @@
                           <div class="upcoming-box  ">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                             <h6 class="p-b-10">Approved Application</h6> 
-                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">0</span>
+                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
                           </div></a>
                         </div>
                       </div>
@@ -262,7 +252,7 @@
                           <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
-							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">0</span>
+							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
                           </div>
                         </div> </a>
                       </div>                       
@@ -291,24 +281,51 @@
                       <thead>
                         <tr class="border-bottom-primary">
                           <th scope="col">Id</th>
-                          <th scope="col">Requested Date</th>
-                          <th scope="col">Application Code</th>
-                          <th scope="col">Requested Amount</th>
+                          <th scope="col"> Date</th>
+                          <th scope="col"> Requested</th>
+                          <th scope="col"> Approved </th>
+                          <th scope="col">initial Fee </th>
                           <th scope="col">Status</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
                         <tbody>
+                        @if($applications->count() != 0)
+                        
+                        @php $i = 1; @endphp
+                        @foreach($applications as $data)
                         <tr class="border-bottom-secondary">
-                            <th scope="row">1</th>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td> 
-                              <center><span class="badge badge-light-success"></span></center>
-                            </td>
+                          <th scope="row">{{ $i }}</th>
+                          <td>{{ date("d-m-Y", strtotime($data->created_at));}}</td>
+                          <td>{{ number_format($data->ramount, 2)}}</td>
+                          <td>{{ number_format($data->approved_amount, 2)}}</td>
+                          <td>{{ number_format($data->initial_fee, 2)}}</td>
+                          <td>{{ $data->status}}</td>
+                          
+                          <td> 
+                            <center>
+                            @if($data->status == "Pending")
+                            <span class="badge badge-light text-warning">Application Pending Review</span>
+                            @elseif($data->status == "Rejected")
+                            <span class="btn btn-danger">See why?</span>
+                            @elseif($data->status == "Approved")
+                            <span class="btn btn-success">Pay initial fee to proceed</span>
+                            @else
+                            <span class="btn btn-dark">Closed</span>
+                            @endif
+                            </center>
+                          </td>
+                          
                         </tr>
+                        @php $i++ @endphp
+                        @endforeach
+                        @else
+                        <tr class="border-bottom-secondary">
+                        <td colspan="7"> <center>No Record Found</center></td>
+                        </tr>
+
+
+                        @endif
                       </tbody>
                     </table>
                   </div>
@@ -324,6 +341,9 @@
                        <p class="f-m-light mt-1 text-danger" style="text-transform:none"> </p>
                   
                       </div>
+                      <div id="error" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible" role="alert"></div>
+                    <div id="success" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
+                  
                   <div class="card-body">
                     <div class="vertical-main-wizard">
                       <div class="row g-3">    
@@ -390,9 +410,9 @@
                           <div class="tab-content" id="wizard-tabContent">
                             <div class="tab-pane fade show active" id="wizard-contact" role="tabpanel" aria-labelledby="wizard-contact-tab">
                             <form class="row g-3  custom-input" enctype="multipart/form-data" autocomplete="off">
-
+                                @csrf
                                     <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Category</label>
+                                      <label class="form-label" for="validationCustom04">Category<span class="txt-danger">*</span></label>
                                       <select class="form-select" name="category" id="category">
                                         <option value="">Choose...</option>
                                         <option>Student Loan </option>
@@ -402,7 +422,7 @@
                                     
                                     <div class="col-xxl-8 col-sm-8">
                                     <label class="form-label" for="validationCustom0-a">Applicant Names<span class="txt-danger">*</span></label>
-                                    <input class="form-control" name="applicant_Names" id="applicant_Names"type="text" readonly value="{{ Auth::user()->first_name. ' '. Auth::user()->middle_name.' '. Auth::user()->last_name; }}">
+                                    <input class="form-control" name="applicant_Names" id="applicant_Name"type="text" readonly value="{{ Auth::user()->first_name. ' '. Auth::user()->middle_name.' '. Auth::user()->last_name; }}">
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-6">
@@ -434,43 +454,43 @@
                                     </div>
 
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Country</label>
+                                      <label class="form-label" for="validationCustom04">Country<span class="txt-danger">*</span></label>
                                       <select class="form-select" name="country" id="country" >
                                     <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Nationality</label>
+                                      <label class="form-label" for="validationCustom04">Nationality<span class="txt-danger">*</span></label>
                                      <select class="form-select" name="nationality" id="nationality" >
                                         <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="State">State</label>
+                                      <label class="form-label" for="State">State<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="state" name="state" >
                                         <option value="">Choose...</option>
                                       </select>
                                       </div>
 
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">L.G.A</label>
+                                      <label class="form-label" for="validationCustom04">L.G.A<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="lga" name="lga" >
                                         <option value="">Loading...</option>
                                       </select>
                                     </div>
                                     <div class="col-md-6">
-                                    <label class="form-label">Current Home Address</label>
+                                    <label class="form-label">Current Home Address<span class="txt-danger">*</span></label>
                                     <textarea class="form-control" rows="3" id="caddress" name="caddress" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Nearest Bus Stop</label>
+                                        <label class="form-label">Nearest Bus Stop<span class="txt-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="nbus_address" name="nbus_address"></textarea>
                                     </div>
 
                                     <div class="mb-3 mt-3">
-                                    <label class="form-label" for="formFileMultiple">Recent Passport</label>
+                                    <label class="form-label" for="formFileMultiple">Recent Passport<span class="txt-danger">*</span></label>
                                     <input class="form-control" name="image" id="image" type="file" multiple="">
                                     </div>
 
@@ -496,7 +516,7 @@
                                     </div>
 
                                     <div class="col-md-12" id="intaddr" style="display:none" >
-                                        <label class="form-label">International Address </label>
+                                        <label class="form-label">International Address <span class="txt-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="intl_address" name="intl_address"></textarea>
                                     </div>
 
@@ -508,7 +528,7 @@
                             <div class="tab-pane fade" id="next-kin" role="tabpanel" aria-labelledby="next-kin-tab">
                                   <div class="row">
                                   <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Title</label>
+                                      <label class="form-label" for="validationCustom04">Title<span class="txt-danger">*</span></label>
                                       <select class="form-select" name="title" id="title" >
                                         <option value="">Choose...</option>
                                         <option>Mr</option>
@@ -517,8 +537,8 @@
                                       </select>
                                     </div>
                                     <div class="col-xxl-8 col-sm-8">
-                                      <label class="form-label" for="validationCustom04">Relationship</label>
-                                      <select class="form-select" name="nrelationship" id="nrelationship" >
+                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
+                                      <select class="form-select" name="nok_rel" id="nok_rel" >
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
@@ -530,35 +550,35 @@
                                     </div>
                                                                 
                                 <div class="col-md-4 col-sm-4 mt-3">
-                                  <label class="form-label" for="validationDates">Next of Kin (Full Name)</label>
-                                  <input class="form-control" name="next_of_kin_sname" id="next_of_kin_sname" type="text"  placeholder="Surname">
+                                  <label class="form-label" for="validationDates">Next of Kin (Full Name)<span class="txt-danger">*</span></label>
+                                  <input class="form-control" name="nok_sname" id="nok_sname" type="text"  placeholder="Surname">
                                 </div>
 
                                 <div class="col-md-4 col-sm-4  mt-3">
                                   <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="next_of_kin_fname" name="next_of_kin_fname" type="text"  placeholder="First Name">
+                                  <input class="form-control" id="nok_fname" name="nok_fname" type="text"  placeholder="First Name">
                                 </div>
 
                                 <div class="col-md-4 col-sm-4  mt-3">
                                   <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="next_of_kin_mname" name="next_of_kin_mname" type="text"  placeholder="Middle Name">
+                                  <input class="form-control" id="nok_mname" name="nok_mname" type="text"  placeholder="Middle Name">
                                 </div>
                                 <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">Gender</label>
-                                      <select class="form-select" name="next_of_kin_gender" id="next_of_kin_gender" >
+                                      <label class="form-label" for="validationCustom04">Gender<span class="txt-danger">*</span></label>
+                                      <select class="form-select" name="nok_gender" id="nok_gender" >
                                         <option value="">Choose...</option>
                                         <option value="Male">Male </option>
                                         <option value="Female">Female </option>
                                       </select>
                                     </div>
                                 <div class="col-md-6 col-sm-6  mt-3">
-                                  <label class="form-label" for="dob">Date of Birth</label>
-                                  <input class="form-control" id="next_of_kin_dob" name="next_of_kin_dob" type="date" >
+                                  <label class="form-label" for="dob">Date of Birth<span class="txt-danger">*</span></label>
+                                  <input class="form-control" id="nok_dob" name="nok_dob" type="date" >
                                 </div>
 
                                 <div class="col-md-6 col-sm-6  mt-3">
-                                  <label class="form-label" for="">Phone Number</label>
-                                  <input class="form-control" name="next_of_kin_phone" id="next_of_kin_phone" type="text" >
+                                  <label class="form-label" for="">Phone Number<span class="txt-danger">*</span></label>
+                                  <input class="form-control" name="nok_phone" maxlength="11" id="next_of_kin_phone" type="text" >
                                 </div>
                                  
                                 <div class="col-md-6 col-sm-6 mt-3">
@@ -567,25 +587,25 @@
                                 </div>
 
                                 <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">State</label>
+                                      <label class="form-label" for="validationCustom04">State<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="nok_state" name="nok_state">
                                         <option value="">Choose...</option>
                                       </select>
                                     </div>
                 
                                     <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">LGA</label>
+                                      <label class="form-label" for="validationCustom04">LGA<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="nok_lga" name="nok_lga" >
                                         <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-md-6 mt-3">
-                                    <label class="form-label">Current Home Address</label>
+                                    <label class="form-label">Current Home Address<span class="txt-danger">*</span></label>
                                     <textarea class="form-control" rows="3" id="nok_address" name="nok_address"></textarea>
                                     </div>
                                     <div class="col-md-6 mt-3">
-                                        <label class="form-label">Nearest Bus Stop</label>
+                                        <label class="form-label">Nearest Bus Stop<span class="txt-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="nok_bus_stop" name="nok_bus_stop"></textarea>
                                     </div>
 
@@ -600,7 +620,7 @@
                               
                               <div class="row">
                                    <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Category</label>
+                                      <label class="form-label" for="validationCustom04">Category<span class="txt-danger">*</span></label>
                                       <select class="js-example-basic-single" id="schl_category" name="schl_category" >
                                         <option value="">Choose...</option>
                                         <option>University</option>
@@ -609,14 +629,14 @@
                                       </select>
                                     </div>
                                     <div class="col-xxl-8 col-sm-8"><!--js-searchBox-->
-                                      <label class="form-label" for="validationCustom04">School</label>
+                                      <label class="form-label" for="validationCustom04">School<span class="txt-danger">*</span></label>
                                       <select class="js-example-basic-single col-sm-6 " id="school_name" name="school_name">
                                         <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-4 mt-3 mt-3">
-                                      <label class="form-label" for="validationCustom04">Section</label>
+                                      <label class="form-label" for="validationCustom04">Section<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="section" name="section" >
                                         <option value="">Choose...</option>
                                         <option>JSS </option>
@@ -637,7 +657,7 @@
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">
                                       <div class="">
                                         <label class="form-label">No of years<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="no_of_years" minlength="1" maxlength="4" id="no_of_years" type="Number" value="" >
+                                        <input class="form-control" name="no_of_years" minlength="1" maxlength="1" id="no_of_years" type="Number" value="" >
                                       </div>
                                     </div>
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">
@@ -673,8 +693,8 @@
                                       </div>
                                 </div>
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Relationship</label>
-                                      <select class="form-select" id="grelationship" >
+                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
+                                      <select class="form-select" id="grelationship"  name="grelationship">
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
@@ -687,13 +707,13 @@
                                     <div class="col-xxl-4 col-sm-6" >
                                       <div class="">
                                         <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gphone" id="gphone" type="text">
+                                        <input class="form-control" name="gphone" maxlength="11" id="gphone" type="text">
                                       </div>
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-6">
                                       <div class="">
-                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
+                                        <label class="form-label">Email Address.</label>
                                         <input class="form-control" name="gemail" id="gemail" type="text" >
                                       </div>
                                     </div>
@@ -715,8 +735,8 @@
                                       </div>
                                 </div>
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Relationship</label>
-                                      <select class="form-select" id="grelationship2" >
+                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
+                                      <select class="form-select" id="grelationship2" name="grelationship2">
                                       <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
@@ -729,18 +749,18 @@
                                     <div class="col-xxl-4 col-sm-6">
                                       <div class="">
                                         <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gphone2" id="gphone2" type="text">
+                                        <input class="form-control" name="gphone2" maxlength="11" id="gphone2" type="text">
                                       </div>
                                     </div>
 
                                     <div class="col-xxl-4 col-sm-6">
                                       <div class="">
-                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
+                                        <label class="form-label">Email Address.</label>
                                         <input class="form-control" name="gemail2" id="gemail2" type="email">
                                       </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label">Home Address</label>
+                                        <label class="form-label">Home Address<span class="txt-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="gaddress2" name="gaddress2"></textarea>
                                     </div>
                                 
@@ -765,7 +785,7 @@
 
                                     <div class="col-xxl-6 col-sm-6">
                                         <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="hos_phone" id="hos_phone" maxlength="11" type="text">
+                                        <input class="form-control" maxlength="11" name="hos_phone" id="hos_phone" maxlength="11" type="text">
                                       </div>
                                    
                                     <div class="col-xxl-6 col-sm-6" id="">
@@ -775,19 +795,19 @@
                                       </div>
                                     </div>
                                     <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">State</label>
+                                      <label class="form-label" for="validationCustom04">State<span class="text-danger">*</span></label>
                                       <select class="form-select" name="hos_state" id="hos_state" >
                                         <option value="">Choose...</option>
                                       </select>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">City</label>
+                                        <label class="form-label">City<span class="text-danger">*</span></label>
                                         <input class="form-control" name="hos_city" id="hos_city" type="text">
                                     </div>
                                     <div class="col-xxl-12 col-sm-12">
                                       <div class="">
-                                        <label class="form-label">Home Address<span class="text-danger">*</span></label>
+                                        <label class="form-label">School Address<span class="text-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="hos_address" name="hos_address"></textarea>
                                       </div>
                                     </div>
@@ -804,14 +824,21 @@
                                  
                                    <div class="col-xxl-6 col-sm-6" id="">
                                       <div class="">
-                                        <label class="form-label">Head of School<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
-                                      </div>
+                                        <label class="form-label">Documents Upload<span class="text-danger">*</span></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 mt-3">
+                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindy Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, add offline form duly signed and stamp)
+                                    Download the form Here.
+                                    </label>
+                                    <input class="form-control" name="file" id="file" type="file">
                                     </div>
 
                                 <div class="col-12 text-end"> 
                                   <a href="#" class="btn btn-dark" id="pre5"><i class="fa fa-arrow-circle-left"></i> Previous</a>
-                                  <a href="#" id="submit" class="btn btn-dark">Finish</a>
+                                  <button id="submit" type="button" class="btn btn-dark">Finish</button>
+                                  
                                 </div>
                                 </div>
                             </div>
@@ -895,6 +922,7 @@
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
+    <script src="{{ asset('js/app_handler.js') }}"></script>
     <script>
 
     $($("input[name=flexRadioDefault]")).change(function(){
@@ -1012,11 +1040,11 @@
      $("#title").change(function(){
          let title_text =  $('#title :selected').val();
         if(title_text == "Mr")
-               $("select#next_of_kin_gender ").val("Male").change();
+               $("select#nok_gender ").val("Male").change();
          else if(title_text == "")
-               $("select#next_of_kin_gender").val("").change();
+               $("select#nok_gender").val("").change();
         else
-              $("select#next_of_kin_gender").val("Female").change();
+              $("select#nok_gender").val("Female").change();
       });                  
     
     </script>

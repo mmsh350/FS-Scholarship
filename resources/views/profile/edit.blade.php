@@ -112,28 +112,18 @@
                   <div class="notification-box">
                     <svg>
                       <use href="{{ asset('svg/icon-sprite.svg#notification') }}"></use>
-                    </svg><span class="badge rounded-pill badge-primary">4 </span>
+                    </svg><span class="badge rounded-pill badge-primary">0</span>
                   </div>
                   <div class="onhover-show-div notification-dropdown">
-                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications                               </h5>
+                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications</h5>
                     <ul class="notification-box">
                       <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-primary"><img src="{{ asset('images/dashboard/icon/wallet.png') }}" alt="Wallet"></div>
+                        
                         <div class="flex-grow-1"> <a href="#">
-                            <h6>New daily offer added</h6></a>
-                          <p>New user-only offer added</p>
+                            <h6>Approval</h6></a>
+                          <p>No Notification Available</p>
                         </div>
                       </li>
-                      <li class="d-flex"> 
-                        <div class="flex-shrink-0 bg-light-info"><img src="{{ asset('images/dashboard/icon/shield-dne.png') }}" alt="Shield-dne"></div>
-                        <div class="flex-grow-1"> <a href="#">
-                            <h6>Product Evaluation</h6></a>
-                          <p>Changed to a new workflow</p>
-                        </div>
-                      </li>
-                      
-                     
-                      <li><a class="f-w-700" href="private-chat.html">Check all     </a></li>
                     </ul>
                   </div>
                 </li>
