@@ -89,7 +89,7 @@
                   <div class="form-group mb-0">
                     <div class="checkbox p-0">
                       <input id="checkbox1" type="checkbox">
-                      <label class="text-muted" for="checkbox1">Agree with<a class="ms-2" href="#">Privacy Policy</a></label>
+                      <label class="text-muted" for="checkbox1">Agree with<a class="ms-2" href="https://www.fsscholarship.com/privacy.html" target="_blank">Privacy Policy</a></label>
                     </div>
                     <button class="btn btn-primary btn-block w-100" id="register" type="button">Create Account
                     <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
