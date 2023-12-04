@@ -22,10 +22,12 @@ use App\Http\Controllers\Action\SchoolController;
 |
 */
  
-Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','verified'])->name('dashboard');
 
+    Route::middleware(['auth','verified'])->group(function () {
 
-    Route::middleware('auth')->group(function () {
+    //Dashboard
+    Route::get('/',  [DashboardController::class, 'show'])->name('dashboard');
+
     //Profile Routes  (General) 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profileUpdate', [ProfileController::class, 'update']);
@@ -38,6 +40,7 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
     //Application Routes
     Route::get('/application', [ApplicationController::class, 'show'])->name('application');
     Route::post('/app-handler', [ApplicationController::class, 'store'])->name('app-handler');
+    Route::post('/make-payment', [ApplicationController::class, 'initialFee'])->name('make-payment');
 
     //Utility Routes
     Route::post('get-state', [StateController::class, 'fetchState']);
@@ -50,6 +53,6 @@ Route::get('/',  [DashboardController::class, 'show'])->middleware(['auth','veri
 
 Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
 
-Route::get('/transaction', [ApplicationController::class, 'edit'])->name('transactions');
+Route::get('/transaction', [ProfileController::class, 'edit'])->name('transactions');
 
 require __DIR__.'/auth.php';

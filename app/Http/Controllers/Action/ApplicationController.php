@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\Transaction;
+use App\Models\Wallet;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -40,7 +42,7 @@ class ApplicationController extends Controller
                     ->with(compact('reject_count'));
         }
     }
-
+     
     public function store(Request $request)
     {
         $request->validate([
@@ -68,7 +70,7 @@ class ApplicationController extends Controller
              'gname' => ['required','string','max:255'], 
 
             //School                     
-             'ramount' => 'required|numeric|min:500000|max:2000000',
+             'ramount' => 'required|numeric|min:5000|max:1000000',
              'no_of_years' => 'required|numeric|digits:1|min:1|max:1',
              'course' => ['required','string','max:255'],
              'section' => ['required','string','max:255'],
@@ -139,8 +141,8 @@ class ApplicationController extends Controller
 
             //school
             'ramount.required'    => 'Request  amount is Required',
-            'ramount.min'    => 'Request amount cannot be less than 500K',
-            'ramount.max'    => 'Request amount cannot be greater than 2M',
+            'ramount.min'    => 'Request amount cannot be less than 5000 Thousand Naira',
+            'ramount.max'    => 'Request amount cannot be greater than 1 Million Naira',
             'schl_category.required'    => 'School Category is Required',
 
 
@@ -228,6 +230,7 @@ class ApplicationController extends Controller
             $app = Application::create([
                     'user_id' =>  $userid,
                     'category' => $request->category,
+                    'school_id' => $request->school_name,
                     'names' => $applicant_names,
                     'dob' => $dob,
                     'gender' => $gender,
@@ -237,12 +240,12 @@ class ApplicationController extends Controller
                     'nationality' => $request->nationality,
                     'state_id' => $request->state,
                     'lga_id' => $request->lga,
-                    'home_address' => $request->caddress,
-                    'busstop_address' => $request->nbus_address,
+                    'home_address' => ucwords(strtolower($request->caddress)),
+                    'busstop_address' => ucwords(strtolower($request->nbus_address)),
                     'passport' => $image_path,
                     'dysabroad' => $request->flexRadioDefault,
                     'intl_phone' => $request->intl_phone,
-                    'intl_address' => $request->intl_address,
+                    'intl_address' => ucwords(strtolower($request->intl_address)),
                     'ramount' => $request->ramount,
                 ]);
 
@@ -261,8 +264,8 @@ class ApplicationController extends Controller
                     'nok_email' => $request->nok_email,
                     'nok_state' => $request->nok_state,
                     'nok_lga' => $request->nok_lga,
-                    'nok_busstop' => $request->nok_bus_stop,
-                    'nok_address' => $request->nok_address,
+                    'nok_busstop' => ucwords(strtolower($request->nok_bus_stop)),
+                    'nok_address' => ucwords(strtolower($request->nok_address)),
                     'created_at'=>Carbon::now(),
                     'updated_at'=>Carbon::now(),
                     ]);
@@ -273,7 +276,7 @@ class ApplicationController extends Controller
                         'school_category' => $request->schl_category,
                         'school_name' => $request->school_name,
                         'school_section' =>$request->section,
-                        'school_course' => $request->course,
+                        'school_course' => ucwords(strtolower($request->course)),
                         'school_no_of_years' => $request->no_of_years,
                         'school_ramount' => $request->ramount,
                         'created_at'=>Carbon::now(),
@@ -283,16 +286,16 @@ class ApplicationController extends Controller
                         //Guarantor add 
                         $gua = DB::table('guarantors')->insert([
                             'application_id'=>$app->id,
-                            'gf_names' => $request->gname,
+                            'gf_names' => ucwords(strtolower($request->gname)),
                             'gf_relationship' => $request->grelationship,
                             'gf_phone' =>$request->gphone,
                             'gf_email' => $request->gemail,
-                            'gf_address' => $request->gaddress,
-                            'gs_names' => $request->gname2,
+                            'gf_address' => ucwords(strtolower($request->gaddress)),
+                            'gs_names' => ucwords(strtolower($request->gname2)),
                             'gs_relationship' => $request->grelationship2, 
                             'gs_phone' => $request->gphone2, 
                             'gs_email' => $request->gemail2, 
-                            'gs_address' => $request->gaddress2,
+                            'gs_address' => ucwords(strtolower($request->gaddress2)),
                             'created_at'=>Carbon::now(),
                             'updated_at'=>Carbon::now(),
                             ]);       
@@ -300,12 +303,12 @@ class ApplicationController extends Controller
                         //Guarantor add 
                         $hos = DB::table('head_of_schools')->insert([
                             'application_id'=>$app->id,
-                            'name' => $request->hos_name,
+                            'name' => ucwords(strtolower($request->hos_name)),
                             'phone' => $request->hos_phone,
                             'email' =>$request->hos_email,
                             'state' => $request->hos_state,
-                            'city' => $request->hos_city,
-                            'address' => $request->hos_address,
+                            'city' => ucwords(strtolower($request->hos_city)),
+                            'address' => ucwords(strtolower($request->hos_address)),
                             'created_at'=>Carbon::now(),
                             'updated_at'=>Carbon::now(),
                             ]);  
@@ -327,12 +330,69 @@ class ApplicationController extends Controller
                             ]);  
 
 
-        }
-
-      
-      
-     
+        }   
              
            
+    }
+
+   
+    public function  initialFee(Request $request)
+    {
+         $loginUserId = Auth::user()->id;//login user
+
+         //get requested user Wallet Balance information
+         $wallet = Wallet::where('userid', $loginUserId)->first();
+         
+
+         //Application Details
+         $trans_amount = Application::where('id', $request->appid)->first();
+          
+         //check if wallet balance is sufficient
+         if($wallet->balance < $trans_amount->initial_fee){
+
+            return response()->json([
+                "message"=> "Error",
+                "errors"=>array("Wallet Balance"=> "Sorry you do not have enough wallet balance to perform this Transaction")
+            ], 422);
+
+
+         }else
+         {
+               //Generate random reference number 
+               //Convert to function later
+                $referenno = "";
+                srand((double) microtime() * 1000000);
+                $data = "123456123456789071234567890890";
+                $data .= "aBCdefghijklmn123opq45rs67tuv89wxyz"; // if you need alphabatic also
+
+                for ($i = 0; $i < 12; $i++) {
+                        $referenno .= substr($data, (rand() % (strlen($data))), 1);}
+
+                
+                $availbal = $wallet->balance -  $trans_amount->initial_fee;
+               
+                //Update Wallet
+                $affected = Wallet::where('userid', $loginUserId)
+                            ->update(['balance' =>$availbal]);
+
+                //update transaction history
+                $user = Transaction::create([
+                    'userid' => $loginUserId,
+                    'payerid' => '',
+                    'referenceId' => strtoupper($referenno),
+                    'service_type' => '2',
+                    'service_description' => "Payment for Intial 1% fee",  
+                    'amount' => $trans_amount->initial_fee,
+                    'type' => 'minnus',
+                    'gateway' => 'Wallet',
+                    'status' => 'Approved',
+                ]);
+
+               //Mark Application has paid
+               $affected = Application::where('id', $request->appid)
+                            ->update(['pay_status' =>'paid']);
+         }
+
+          
     }
 }

@@ -29,7 +29,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->enum('role', ['admin','staff','agent','applicant'])->default('applicant');
             $table->enum('registeredby', ['admin','staff','agent','self'])->default('self');
-            $table->tinyInteger('registrar_id')->nullable();
+            $table->bigInteger('registrar_id')->nullable();
+            $table->bigInteger('state_id')->nullable();
+            $table->bigInteger('lga_id')->nullable();
             $table->longText('address')->nullable();
             $table->longText('profile_pic')->nullable();
             $table->timestamp('current_sign_in_at')->nullable();

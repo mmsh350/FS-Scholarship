@@ -282,11 +282,11 @@
                         <tr class="border-bottom-primary">
                           <th scope="col">Id</th>
                           <th scope="col"> Date</th>
-                          <th scope="col"> Requested</th>
-                          <th scope="col"> Approved </th>
-                          <th scope="col">initial Fee </th>
+                          <th scope="col"> (&#8358;) Requested </th>
+                          <th scope="col"> (&#8358;) Approved </th>
+                          <th scope="col"> (&#8358;) initial Fee </th>
                           <th scope="col">Status</th>
-                          <th scope="col">Action</th>
+                          <th scope="col" class="text-center">Action</th>
                         </tr>
                       </thead>
                         <tbody>
@@ -300,22 +300,23 @@
                           <td>{{ number_format($data->ramount, 2)}}</td>
                           <td>{{ number_format($data->approved_amount, 2)}}</td>
                           <td>{{ number_format($data->initial_fee, 2)}}</td>
-                          <td>{{ $data->status}}</td>
+                          <td>{{ $data->pay_status}}</td>
                           
                           <td> 
                             <center>
                             @if($data->status == "Pending")
-                            <span class="badge badge-light text-warning">Application Pending Review</span>
+                            <span class="btn btn-warning">Application Pending Review</span>
                             @elseif($data->status == "Rejected")
-                            <span class="btn btn-danger">See why?</span>
-                            @elseif($data->status == "Approved")
-                            <span class="btn btn-success">Pay initial fee to proceed</span>
+                            <button class="btn btn-danger" type="button" data-bs-toggle="modal"  data-comments="{{ $data->comments}}" data-original-title="reject" data-bs-target="#rejectModal">Application Rejected See why?</button>
+                            @elseif($data->status == "Approved" && $data->pay_status == "Pending" )
+                            <button class="btn btn-success" type="button" data-bs-toggle="modal"   data-id="{{$data->id}}" data-amount="{{ number_format($data->initial_fee, 2)}}" data-original-title="test" data-bs-target="#payModal">Pay initial fee to proceed</button>
+                            @elseif($data->status == "Approved" && $data->pay_status == "Paid" )
+                            <button class="btn btn-success" type="button">Approved</button>
                             @else
                             <span class="btn btn-dark">Closed</span>
                             @endif
                             </center>
                           </td>
-                          
                         </tr>
                         @php $i++ @endphp
                         @endforeach
@@ -328,6 +329,45 @@
                         @endif
                       </tbody>
                     </table>
+
+
+                    <!--Modal payment-->
+                    <div class="modal fade" id="payModal" aria-hidden="true" aria-labelledby="exampleModalToggle" tabindex="-1">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div class="modal-toggle-wrapper">
+                              <h2>Confirm Payment </h2>
+                              <input type="hidden" id="app_id">
+                              <h6 class="mb-3" style="text-transform:none">You are about to make (1%) percent payment of the approved loan. </h6>
+                              <h6 style="text-transform:none"> <span class="text-danger" id="amount">&#8358; </span> will be debitted from your wallet Balance</h6>
+                              
+                              <div id="error1" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible mt-4" role="alert"></div>
+                              <div id="success1" style="display:none" class="alert alert-success alert-dismissible mt-4" role="alert"></div>
+                  
+                              <button id="pay" class="btn btn-dark rounded-pill w-100 mt-4"><i class="icofont icofont-pay">&nbsp;</i> Proceed to pay</button>
+                              <button class="btn rounded-pill w-100 pb-0 dark-toggle-btn" type="button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+
+                  <!----Rejection Modal--->
+                  <div class="modal fade" id="rejectModal" aria-hidden="true" aria-labelledby="exampleModalToggle" tabindex="-1">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-body">
+                            <div class="modal-toggle-wrapper">
+                              <h2 class="text-danger">Why Application was rejected </h2>
+                              <h6 class="mt-2 mb-4" id="message" style="text-transform:none"></h6>
+                              <button class="btn btn-dark rounded-pill w-100 pb-0 dark-toggle-btn" type="button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                    
                   </div>
                   </div>
                       <div class="tab-pane fade" id="profile-icon" role="tabpanel" aria-labelledby="profile-icon-tabs">
@@ -397,7 +437,7 @@
 
                               <a class="nav-link" id="media-tab" data-bs-toggle="pill" href="#media" role="tab" aria-controls="media" aria-selected="false" tabindex="-1"> 
                               <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-picture-o"></i></div>
+                                <div class="stroke-icon-wizard"><i class="fa fa-file"></i></div>
                                 <div class="vertical-wizard-content"> 
                                   <h6>Upload</h6>
                                   <p> Upload required Documents</p>
@@ -489,10 +529,15 @@
                                         <textarea class="form-control" rows="3" id="nbus_address" name="nbus_address"></textarea>
                                     </div>
 
-                                    <div class="mb-3 mt-3">
+                                    <div class="mb-3 mt-3 col-md-6">
                                     <label class="form-label" for="formFileMultiple">Recent Passport<span class="txt-danger">*</span></label>
-                                    <input class="form-control" name="image" id="image" type="file" multiple="">
-                                    </div>
+                                    <input class="form-control" name="image" id="image" type="file">
+                                  </div>
+
+                                  <div class="mb-3 mt-3 col-md-6">
+                                  <center><img class="img-100 rounded" id="preview"  src="{{ asset('images/images.png')}}" width="100px" height="100px" /></center>
+                                  </div>
+
 
                                     <div class="col-md-12  rounded" style=" border: 1px dashed rgba(106, 113, 133, 0.3);"><label class="form-label" style="text-transform:none" for="formFileMultiple">Do you study Abroad ?</label>
                                       <div class="mb-3 d-flex gap-3 checkbox-checked">
@@ -651,19 +696,19 @@
                                     <div class="col-xxl-8 col-sm-8 mt-3"  id="">
                                       <div class="">
                                         <label class="form-label">Course of Study<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="course" id="course"  type="text" value="" >
+                                        <input class="form-control" name="course" id="course"  type="text">
                                       </div>
                                     </div>
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">
                                       <div class="">
                                         <label class="form-label">No of years<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="no_of_years" minlength="1" maxlength="1" id="no_of_years" type="Number" value="" >
+                                        <input class="form-control" name="no_of_years" maxlength="1" id="no_of_years" type="text">
                                       </div>
                                     </div>
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">
                                       <div class="">
                                         <label class="form-label">Requested Amount.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="ramount" id="ramount" type="text">
+                                        <input class="form-control" name="ramount" maxlength="8" id="ramount" type="text">
                                       </div>
                                     </div>
                               
@@ -829,12 +874,14 @@
                                     </div>
 
                                     <div class="mb-3 mt-3">
-                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindy Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, add offline form duly signed and stamp)
+                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindly Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, add offline form duly signed and stamped)
                                     Download the form Here.
                                     </label>
-                                    <input class="form-control" name="file" id="file" type="file">
+                                    
                                     </div>
-
+                                    <div class="mb-5 mt-5">
+                                    <input class="form-control" name="file" id="file" type="file">
+                                   </div>
                                 <div class="col-12 text-end"> 
                                   <a href="#" class="btn btn-dark" id="pre5"><i class="fa fa-arrow-circle-left"></i> Previous</a>
                                   <button id="submit" type="button" class="btn btn-dark">Finish</button>
@@ -911,6 +958,7 @@
     <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
     <script src="{{ asset('js/loadstates.js') }}"></script>
     <script src="{{ asset('js/loadlga.js') }}"></script>
+    <script src="{{ asset('js/init_fees.js') }}"></script>
     <script src="{{ asset('js/loadcountries.js') }}"></script>
     <script src="{{ asset('js/loadschools.js') }}"></script>
 
@@ -923,132 +971,10 @@
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/app_handler.js') }}"></script>
+
     <script>
-
-    $($("input[name=flexRadioDefault]")).change(function(){
-
-     
-            var radioValue = $("input[name='flexRadioDefault']:checked").val();
-            if(radioValue == 'Yes'){
-            
-               $('#intPhone').show();
-               $('#intaddr').show();
-            }
-            else{
-              $('#intPhone').hide();
-              $('#intaddr').hide();
-            }
-
-      });
-
-      //Tabs
-      $('#next1').click(function(evt) {
-       
-        $('#next-kin').addClass('show active'); 
-        $('#next-kin-tab').addClass('active'); 
-         
-        $('#wizard-contact').removeClass('show active');
-        $('#wizard-contact-tab').removeClass('active');
-      });
-
-       $('#pre1').click(function(evt) {
-       
-       $('#next-kin').removeClass('show active'); 
-       $('#next-kin-tab').removeClass('active'); 
-        
-       $('#wizard-contact').addClass('show active');
-       $('#wizard-contact-tab').addClass('active');
-     });
-
-       //Tabs
-       $('#next2').click(function(evt) {
-       //Next 
-        $('#education').addClass('show active'); 
-        $('#education-tab').addClass('active'); 
-        
-        $('#next-kin').removeClass('show active'); 
-        $('#next-kin-tab').removeClass('active'); 
-       });
-
-       $('#pre2').click(function(evt) {
-       //Next 
-       $('#education').removeClass('show active'); 
-        $('#education-tab').removeClass('active'); 
-        
-        $('#next-kin').addClass('show active'); 
-        $('#next-kin-tab').addClass('active'); 
-     });
-
-
-     $('#next3').click(function(evt) {
-       //Next 
-       $('#gurantor').addClass('show active'); 
-       $('#gurantor-tab').addClass('active'); 
-        
-       $('#education').removeClass('show active'); 
-        $('#education-tab').removeClass('active'); 
-     });
-
-     $('#pre3').click(function(evt) {
-       
-       $('#gurantor').removeClass('show active'); 
-       $('#gurantor-tab').removeClass('active'); 
-        
-       $('#education').addClass('show active'); 
-        $('#education-tab').addClass('active'); 
-     });
-
-     $('#next4').click(function(evt) {
-       //Next 
-       $('#school').addClass('show active'); 
-       $('#school-tab').addClass('active'); 
-        
-       $('#gurantor').removeClass('show active'); 
-        $('#gurantor-tab').removeClass('active'); 
-     });
-
-     $('#pre4').click(function(evt) {
-       //Next 
-       $('#school').removeClass('show active'); 
-       $('#school-tab').removeClass('active'); 
-        
-       $('#gurantor').addClass('show active'); 
-        $('#gurantor-tab').addClass('active'); 
-     });
-
-
-     $('#next5').click(function(evt) {
-       //Next 
-       $('#school').removeClass('show active'); 
-       $('#school-tab').removeClass('active'); 
-        
-       $('#media').addClass('show active'); 
-        $('#media-tab').addClass('active'); 
-     });
-
-     $('#pre5').click(function(evt) {
-       //Next 
-       $('#school').addClass('show active'); 
-       $('#school-tab').addClass('active'); 
-        
-       $('#media').removeClass('show active'); 
-        $('#media-tab').removeClass('active'); 
-     });
-
-     //Auto Set gender
-
-     $("#title").change(function(){
-         let title_text =  $('#title :selected').val();
-        if(title_text == "Mr")
-               $("select#nok_gender ").val("Male").change();
-         else if(title_text == "")
-               $("select#nok_gender").val("").change();
-        else
-              $("select#nok_gender").val("Female").change();
-      });                  
-    
+      
     </script>
-   
     <!-- Plugin used-->
   </body>
 </html>

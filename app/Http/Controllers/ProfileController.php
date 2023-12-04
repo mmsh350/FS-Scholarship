@@ -48,6 +48,35 @@ class ProfileController extends Controller
                 ], 422);
         }
 
+        //Check if state and lga exist
+           //Assign Values
+            $state =  $request->state;
+            $lga =  $request->lga;
+
+            //Old values
+            $oldstate =  $request->oldstate;
+            $oldlga =  $request->oldlga;
+
+           
+
+            if($state == null)
+            {
+                if($oldstate == null)
+                {
+                    $request->validate([
+                        'lga' => 'required','numeric',
+                        'state' => 'required','numeric',
+                    ]);
+
+                }else
+                {
+                    $state =  $request->oldstate;
+                    $lga =  $request->oldlga;
+                }
+            }
+           
+            
+
         $requestid = auth()->user()->id;
 
         $image_path = $request->oldpic;
@@ -67,6 +96,8 @@ class ProfileController extends Controller
             'dob' => $request->dob,
             'gender' => $request->gender,
             'phone_number' => $request->phone,
+            'state_id' => $state,
+            'lga_id' => $lga,
             'address' => ucwords(strtolower($request->address)),
             'profile_pic' => $image_path ,
              ]);

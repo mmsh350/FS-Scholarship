@@ -13,7 +13,7 @@ class Application extends Model
     protected $fillable = [
         'user_id',
         'category',
-        'names',
+        'school_id',
         'dob',
         'gender',
         'phone',
@@ -31,6 +31,7 @@ class Application extends Model
         'ramount',
         'approved_amount',
         'initial_fee',
+        'verify_id',
     ];
 
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->enum('Schl_category', ['University','Polytechnics/Monotechnics/Colleges','Secondary Schools'])->default('Secondary Schools');
             $table->string("Schl_name");
+            $table->tinyInteger('state_id');
             $table->timestamps();
         });
     }

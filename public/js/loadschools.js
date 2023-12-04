@@ -20,7 +20,8 @@ $(document).ready(function() {
                          var id = response[i]['id'];
                          var name = response[i]['Schl_name'];
                     
-                         $("#school_name").append("<option>"+name+"</option>");                            
+                         $("#school_name").append("<option value='"+id+"'>"+name+"</option>");  
+                                                  
                       }
       },
       error:function(data) 
