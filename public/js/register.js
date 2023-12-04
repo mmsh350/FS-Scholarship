@@ -7,6 +7,8 @@ $(document).ready(function() {
 		 {
 			$('#register').prop("disabled", true);
 			$("#spinner").show();
+			$("#error2").empty();
+			
 			var first_name = $('#firstname').val();
 			var last_name = $('#lastname').val();
 			var email = $('#email').val();

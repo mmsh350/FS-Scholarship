@@ -43,6 +43,7 @@ return new class extends Migration
             $table->enum('pay_status', ['Paid','Pending'])->default('Pending');
             $table->enum('app_verify', [0,1])->default(0);
             $table->tinyInteger('verify_id')->nullable();
+            $table->bigInteger('location_id');
             $table->enum('app_status', ['Open','Close'])->default('Open');
             $table->timestamps();
         });

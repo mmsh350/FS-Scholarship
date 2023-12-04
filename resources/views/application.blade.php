@@ -587,6 +587,7 @@
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
+                                        <option>Wife</option>
                                         <option>Brother</option>
                                         <option>Sister</option>
                                         <option>Friend</option>
@@ -743,6 +744,7 @@
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
+                                        <option>Wife</option>
                                         <option>Brother</option>
                                         <option>Sister</option>
                                         <option>Friend</option>
@@ -785,6 +787,7 @@
                                       <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
+                                        <option>Wife</option>
                                         <option>Brother</option>
                                         <option>Sister</option>
                                         <option>Friend</option>
@@ -874,7 +877,7 @@
                                     </div>
 
                                     <div class="mb-3 mt-3">
-                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindly Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, add offline form duly signed and stamped)
+                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindly Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, and offline form duly signed and stamped)
                                     Download the form Here.
                                     </label>
                                     

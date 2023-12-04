@@ -353,21 +353,7 @@
                             <input class="form-control" name="phone" id="phone" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
                           </div>
                         </div>
-                        <div class="col-xxl-6 col-sm-6">
-                            <label class="form-label" for="State">State<span class="txt-danger">*</span></label>
-                            <select class="form-select" id="state" name="state" >
-                                <option value="">Choose...</option>
-                            </select>
-                        </div>
-
-                        <div class="col-xxl-6 col-sm-6">
-                            <label class="form-label" for="validationCustom04">L.G.A<span class="txt-danger">*</span></label>
-                            <select class="form-select" id="lga" name="lga" >
-                                <option value="">Loading...</option>
-                            </select>
-                            <input name="oldstate" type="hidden" value="{{ Auth::user()->state_id}}">
-                            <input name="oldlga"   type="hidden" value="{{ Auth::user()->lga_id}}">
-                        </div>
+                       
                         <div class="col-md-12">
                           <div>
                             <label class="form-label">Home Address</label>

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Application;
 use App\Models\Transaction;
 use App\Models\Wallet;
+use App\Models\School;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -226,6 +227,10 @@ class ApplicationController extends Controller
 
         }else{
 
+            //get location, state id
+            $school = School::where('id', $request->school_name)->first();
+            $location_id =  $school->state_id;
+
             //Insert intO Application
             $app = Application::create([
                     'user_id' =>  $userid,
@@ -247,6 +252,7 @@ class ApplicationController extends Controller
                     'intl_phone' => $request->intl_phone,
                     'intl_address' => ucwords(strtolower($request->intl_address)),
                     'ramount' => $request->ramount,
+                    'location_id' =>  $location_id,
                 ]);
 
                 //insert into next of kin

@@ -14,6 +14,7 @@ class Application extends Model
         'user_id',
         'category',
         'school_id',
+        'names',
         'dob',
         'gender',
         'phone',
@@ -32,6 +33,7 @@ class Application extends Model
         'approved_amount',
         'initial_fee',
         'verify_id',
+        'location_id',
     ];
 
 }
