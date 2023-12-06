@@ -57,7 +57,8 @@ class ApplicationController extends Controller
             'hos_state' => 'required','numeric',
             'hos_phone' => 'required|numeric|digits:11',
             'hos_name' => ['required','string','max:255'], 
-
+            'hos_email' => ['required','string','email','max:255'], 
+           
             
             //guarantor
              'gaddress2' => ['required','string','max:255'],
@@ -174,6 +175,9 @@ class ApplicationController extends Controller
             'hos_phone.required'    => 'Head of School Phone Number is Required',
             'hos_phone.numeric'    => ' Head of School phone must be a number',
             'hos_phone.digits'    => '  Head of School Phone Number must be 11 digits.',
+
+            'hos_email.required'    => 'Head of School Email Address is Required',
+            'hos_email.email'    => 'Invalid Head of School Email Address',
              
             //Doucmecnt 
  
@@ -306,7 +310,7 @@ class ApplicationController extends Controller
                             'updated_at'=>Carbon::now(),
                             ]);       
                           
-                        //Guarantor add 
+                        //Head of school 
                         $hos = DB::table('head_of_schools')->insert([
                             'application_id'=>$app->id,
                             'name' => ucwords(strtolower($request->hos_name)),
@@ -387,7 +391,7 @@ class ApplicationController extends Controller
                     'payerid' => '',
                     'referenceId' => strtoupper($referenno),
                     'service_type' => '2',
-                    'service_description' => "Payment for Intial 1% fee",  
+                    'service_description' => "Initial 1% Payment Fee",  
                     'amount' => $trans_amount->initial_fee,
                     'type' => 'minnus',
                     'gateway' => 'Wallet',
