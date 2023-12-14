@@ -32,7 +32,7 @@ class ProfileController extends Controller
             'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'surname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'dob' => ['required','date'],
-            'phone' => 'required|numeric|digits:11',
+            'phone_number' => 'required|numeric|digits:11',
             'gender' => ['required', 'string'],
             'image' => 'image|mimes:jpeg,png,jpg|max:500',
         ]);
@@ -47,6 +47,8 @@ class ProfileController extends Controller
                     "errors"=>array("Date of Birth"=> "Age limit must be between 10 and 50 Years")
                 ], 422);
         }
+
+        
 
         //Check if state and lga exist
            //Assign Values
@@ -97,7 +99,7 @@ class ProfileController extends Controller
             'last_name' =>  ucwords(strtolower($request->surname)),
             'dob' => $request->dob,
             'gender' => $request->gender,
-            'phone_number' => $request->phone,
+            'phone_number' => $request->phone_number,
             'address' => ucwords(strtolower($request->address)),
             'profile_pic' => $image_path ,
              ]);

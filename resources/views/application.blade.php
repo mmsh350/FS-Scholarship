@@ -40,6 +40,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
     <!-- Select 2 CSS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/select2.css') }}">
+    <style> .color-a{color:#fff !important}</style>
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -278,15 +279,15 @@
                       <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
                        
                     <table class="table">
-                      <thead>
-                        <tr class="border-bottom-primary">
-                          <th scope="col">Id</th>
-                          <th scope="col"> Date</th>
-                          <th scope="col"> (&#8358;) Requested </th>
-                          <th scope="col"> (&#8358;) Approved </th>
-                          <th scope="col"> (&#8358;) initial Fee </th>
-                          <th scope="col">Status</th>
-                          <th scope="col" class="text-center">Action</th>
+                      <thead style="background-color:#2b3751;">
+                        <tr class="border-bottom-primary text-light">
+                          <th class="color-a">ID</th>
+                          <th class="color-a"> Date</th>
+                          <th class="color-a"> (&#8358;) Requested </th>
+                          <th class="color-a"> (&#8358;) Approved </th>
+                          <th class="color-a"> (&#8358;) initial Fee </th>
+                          <th class="color-a">Status</th>
+                          <th class="color-a"><center>Action</center></th>
                         </tr>
                       </thead>
                         <tbody>
@@ -690,7 +691,7 @@
                                         <option>NCE </option>
                                         <option>ND/HND </option>
                                         <option>DEGREE </option>
-                                        <option>NASTERS </option>
+                                        <option>MASTERS </option>
                                       </select>
                                     </div>
 

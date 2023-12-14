@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('schools', function (Blueprint $table) {
             $table->id();
-            $table->enum('Schl_category', ['University','Polytechnics/Monotechnics/Colleges','Secondary Schools'])->default('Secondary Schools');
-            $table->string("Schl_name");
+            $table->enum('schl_category', ['University','Polytechnics/Monotechnics/Colleges','Secondary Schools'])->default('Secondary Schools');
+            $table->string("schl_name");
             $table->tinyInteger('state_id');
             $table->timestamps();
         });

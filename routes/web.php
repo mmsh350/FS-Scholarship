@@ -6,6 +6,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Action\WalletController;
 use App\Http\Controllers\Action\DashboardController;
 use App\Http\Controllers\Action\ApplicationController;
+use App\Http\Controllers\Action\TransactionController;
+use App\Http\Controllers\Action\AgentController;
 
 use App\Http\Controllers\Action\StateController;
 use App\Http\Controllers\Action\LgaController;
@@ -25,7 +27,7 @@ use App\Http\Controllers\Action\SchoolController;
 
     Route::middleware(['auth','verified'])->group(function () {
 
-    //Dashboard
+    //Applicant Dashboard
     Route::get('/',  [DashboardController::class, 'show'])->name('dashboard');
 
     //Profile Routes  (General) 
@@ -42,6 +44,20 @@ use App\Http\Controllers\Action\SchoolController;
     Route::post('/app-handler', [ApplicationController::class, 'store'])->name('app-handler');
     Route::post('/make-payment', [ApplicationController::class, 'initialFee'])->name('make-payment');
 
+    //Transaction Histories
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
+
+    //Staff Routes
+    Route::get('staff-applications', [ApplicationController::class, 'show'])->name('staff.applications');
+    Route::get('get-application', [ApplicationController::class, 'getApplicationDetails'])->name('get-application');
+    
+    
+    //Staff => Agents
+    Route::get('agents', [AgentController::class, 'index'])->name('staff.agents');
+    Route::post('add-agent', [AgentController::class, 'save'])->name('agent.list');
+
+    Route::get('staff/schools', [ApplicationController::class, 'show'])->name('staff.schools');
+
     //Utility Routes
     Route::post('get-state', [StateController::class, 'fetchState']);
     Route::post('get-lga', [LgaController::class, 'fetchLgas']);
@@ -53,6 +69,10 @@ use App\Http\Controllers\Action\SchoolController;
 
 Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
 
-Route::get('/transaction', [ProfileController::class, 'edit'])->name('transactions');
+Route::get('/emails', function(){
+    return view('emails.newAgent');
+});
+
+
 
 require __DIR__.'/auth.php';
