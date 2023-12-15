@@ -682,7 +682,7 @@
                                       </select>
                                     </div>
 
-                                    <div class="col-xxl-4 col-sm-4 mt-3 mt-3">
+                                    <div class="col-xxl-4 col-sm-4  mt-3">
                                       <label class="form-label" for="validationCustom04">Section<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="section" name="section" >
                                         <option value="">Choose...</option>
@@ -766,7 +766,7 @@
                                       </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label">Home Address</label>
+                                        <label class="form-label">Home Address<span class="text-danger">*</span></label>
                                         <textarea class="form-control" rows="3" id="gaddress" name="gaddress"></textarea>
                                     </div>
 

@@ -89,7 +89,7 @@ class AgentController extends Controller
                 $btn = "
                     <a 
                     class='btn btn-pill btn-dark btn-air-primary btn-xs'
-                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                     data-bs-toggle='modal' data-bs-target='..bd-example-modal-xl' data-id=$row->id>
                     Look up<i class='icofont icofont-look'> </i> </a>";
                 return $btn;
             }) ->rawColumns(['action']) ->make(true);

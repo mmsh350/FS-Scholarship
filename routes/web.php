@@ -49,8 +49,10 @@ use App\Http\Controllers\Action\SchoolController;
 
     //Staff Routes
     Route::get('staff-applications', [ApplicationController::class, 'show'])->name('staff.applications');
+    Route::get('staff-applications-verify', [ApplicationController::class, 'verifiedlist'])->name('staff.applications-verify');
     Route::get('get-application', [ApplicationController::class, 'getApplicationDetails'])->name('get-application');
     
+    Route::post('verify', [ApplicationController::class, 'verifyApp'])->name('verify-app');
     
     //Staff => Agents
     Route::get('agents', [AgentController::class, 'index'])->name('staff.agents');
@@ -63,15 +65,19 @@ use App\Http\Controllers\Action\SchoolController;
     Route::post('get-lga', [LgaController::class, 'fetchLgas']);
     Route::post('get-countries', [CountriesController::class, 'fetchCountry']);
     Route::post('get-schools', [SchoolController::class, 'fetchSchools']);
+
+
+    Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
+
     
 });
 
 
-Route::get('/loan', [ProfileController::class, 'edit'])->name('loan');
 
-Route::get('/emails', function(){
-    return view('emails.newAgent');
-});
+
+// Route::get('/emails', function(){
+//     return view('emails.newAgent');
+// });
 
 
 
