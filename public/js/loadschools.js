@@ -18,7 +18,7 @@ $(document).ready(function() {
                       {
                            
                          var id = response[i]['id'];
-                         var name = response[i]['Schl_name'];
+                         var name = response[i]['schl_name'];
                     
                          $("#school_name").append("<option value='"+id+"'>"+name+"</option>");  
                                                   

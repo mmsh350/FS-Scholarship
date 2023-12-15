@@ -41,6 +41,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="https://sdk.monnify.com/plugin/monnify.js"></script>
   </head>
+  <style> .light-a { color:white !important}</style>
   <body> 
     <div class="loader-wrapper"> 
       <div class="loader loader-1">
@@ -274,14 +275,14 @@
                       <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">
                       <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
                     <table class="table">
-                      <thead>
+                      <thead style="background-color:#2b3751;">
                         <tr class="border-bottom-primary">
-                          <th scope="col">Id</th>
-                          <th scope="col">Transaction Date</th>
-                          <th scope="col">Reference Number</th>
-                          <th scope="col">Channel</th>
-                          <th scope="col">Service Description</th>
-                          <th scope="col"><center>Txn.<br/>Amount (NGN)</center></th>
+                          <th class="light-a">ID</th>
+                          <th class="light-a">Transaction Date</th>
+                          <th class="light-a">Reference Number</th>
+                          <th class="light-a">Channel</th>
+                          <th class="light-a">Service Description</th>
+                          <th class="light-a"><center>Amount (NGN)</center></th>
                         </tr>
                       </thead>
                       

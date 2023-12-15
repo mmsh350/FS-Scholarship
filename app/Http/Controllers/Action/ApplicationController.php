@@ -5,9 +5,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\Countries;
+use App\Models\Lga;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Models\School;
+use App\Models\State;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +19,7 @@ class ApplicationController extends Controller
     public function show(Request $request)
     {
         $loginUserId = Auth::user()->id;
+        $stateId =  Auth::user()->state_id;
 
         if(Auth::user()->gender == '' || Auth::user()->dob == '')
         {
@@ -23,24 +27,80 @@ class ApplicationController extends Controller
         }
         else
         { 
-            $approve_count = 0;
-            $reject_count = 0;
-             
-            $applications = Application::all()->where('user_id', $loginUserId)
-            ->sortByDesc('id')
-            ->take(10);
 
-            $approve_count = Application::all() 
-                            ->where('user_id', $loginUserId)
-                            ->where('status', 'Approved')->count();
-            $reject_count = Application::all()
-                          ->where('user_id', $loginUserId)
-                          ->where('status', 'Rejected')->count();
+            //Check if role is applicant
+            if(Auth::user()->role == 'applicant')
+            {
+                    $approve_count = 0;
+                    $reject_count = 0;
+                    
+                    $applications = Application::all()->where('user_id', $loginUserId)
+                    ->sortByDesc('id')
+                    ->take(5);
+
+                    $approve_count = Application::all() 
+                                    ->where('user_id', $loginUserId)
+                                    ->where('status', 'Approved')->count();
+                    $reject_count = Application::all()
+                                ->where('user_id', $loginUserId)
+                                ->where('status', 'Rejected')->count();
+                    
+                    return view('application')
+                            ->with(compact('applications'))
+                            ->with(compact('approve_count'))
+                            ->with(compact('reject_count'));
             
-            return view('application')
-                    ->with(compact('applications'))
-                    ->with(compact('approve_count'))
-                    ->with(compact('reject_count'));
+            }else if(Auth::user()->role == 'staff') 
+            {
+                if ($request->ajax()) {
+                    
+                    $data = Application::select(
+                             'id',
+                             'created_at',
+                             'names',
+                             'phone',
+                             'ramount', 
+                             'app_status',
+                            )
+                  
+                     ->where('location_id',$stateId )
+                     ->where('app_verify','0' )
+                     ->where('app_status','Open' );
+                    return Datatables($data)
+
+                    ->editColumn('ramount', function ($row) {
+                        return  "&#8358;".number_format($row->ramount ,2);
+                       
+                          })->escapeColumns('ramount')
+
+                    ->editColumn('created_at', function ($row) {
+                        
+                        return  date("d-m-Y H:i:s", strtotime($row->created_at) );
+                          })
+
+                          ->editColumn('app_status', function ($row) {
+                        
+                            return  "<span class='badge badge-success'>".$row->app_status."</span>";
+                              })
+                     
+                           
+                      ->addIndexColumn()
+                      ->addColumn('action', function($row){
+                            
+                        // Button Customizations
+                        $btn = "
+                            <a 
+                            class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                             data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                            Look up<i class='icofont icofont-look'> </i> </a>";
+                        return $btn;
+                    }) ->rawColumns(['action']) 
+                    ->make(true);
+        
+                    }
+                  return view('staff.application');
+            }
+            
         }
     }
      
@@ -358,7 +418,7 @@ class ApplicationController extends Controller
          $trans_amount = Application::where('id', $request->appid)->first();
           
          //check if wallet balance is sufficient
-         if($wallet->balance < $trans_amount->initial_fee){
+         if($wallet->balance < $trans_amount->initial_fee ){
 
             return response()->json([
                 "message"=> "Error",
@@ -404,5 +464,82 @@ class ApplicationController extends Controller
          }
 
           
+    }
+
+    public function getApplicationDetails(Request $request)
+    {
+        $id = $request->input('id');
+
+        //Get application details
+        $appDetails = Application::all()->where('id',$id)->first();
+        
+        //Request amount
+         $amt = number_format($appDetails->ramount ,2);
+        //Get state and lga
+        $state = State::select('stateName')->where('id',$appDetails->state_id)
+            ->first();
+        $lga = Lga::select('lgaName')->where('id',$appDetails->lga_id)
+            ->first();
+        //Get country & Nationality
+        $country = Countries::select('CountryName')->where('id',$appDetails->country)->first();
+
+        $nationality = Countries::select('CountryName')->where('id',$appDetails->nationality)->first();
+        //Update dob 
+        $dob = date("d-m-Y", strtotime($appDetails->dob) );
+
+        //get next ok kin information
+         $kinDetails = DB::table('next_kins')->where('application_id',$id)->first();
+
+          //Get state and lga
+        $kin_state = State::select('stateName')->where('id',$kinDetails->nok_state)
+        ->first();
+        $kin_lga = Lga::select('lgaName')->where('id',$kinDetails->nok_lga)
+        ->first();
+
+         //Update kin dob 
+         $nokdob = date("d-m-Y", strtotime($kinDetails->nok_dob) );
+
+
+         //get next ok Education information
+         $eduDetails = DB::table('educations')->where('application_id',$id)->first();
+         //get school name
+         $schlname = School::select('schl_name')->where('id',$eduDetails->school_name)
+         ->first();
+
+          //get Education information
+          $GuaDetails = DB::table('guarantors')->where('application_id',$id)->first();
+
+           //get Head of School information
+           $HosDetails = DB::table('head_of_schools')->where('application_id',$id)->first();
+
+            //get Head of school state
+            $hos_state = State::select('stateName')->where('id',$HosDetails->state)
+            ->first();
+            //get Head of School information
+            $UploadsDetails = DB::table('uploads')->where('application_id',$id)->first();
+        
+        $data2 = array(  "dateofBirth" => $dob ,
+                         "state" => $state,
+                         "lga" => $lga ,
+                         "country_name" => $country,
+                         "nationality_name"=>$nationality,
+                         "amount"=>$amt,
+                         "kin_state"=>$kin_state,
+                         "kin_lga"=>$kin_lga,
+                         "nok_dob"=>$nokdob,
+                         "school"=>$schlname,
+                         "hoss" => $hos_state);
+
+
+       $data3 = array("kin"=>$kinDetails);
+       $data4 = array("edu" =>$eduDetails);
+       $data5 = array("gua" =>$GuaDetails);
+       $data6 = array("hos" =>$HosDetails);
+       $data7 = array("upload" =>$UploadsDetails);
+       
+
+        $array = array_merge($appDetails->toArray(), $data2);
+        $array = array_merge($array,$data3,$data4,$data5, $data6,$data7);
+        return response()->json($array);
     }
 }

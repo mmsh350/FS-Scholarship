@@ -13,9 +13,9 @@ class SchoolController extends Controller
 
             $id = $request->input('getId');
              
-            $results = School::where('Schl_category', $id)
-                            ->orderby("id","asc")
-                            ->select(['id','Schl_name'])->get();
+            $results = School::where('schl_category', $id)
+                            ->orderby("schl_name","asc")
+                            ->select(['id','schl_name'])->get();
                             
             return response()->json($results);
     }
