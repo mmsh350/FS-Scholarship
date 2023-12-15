@@ -28,7 +28,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/slick-theme.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/scrollbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/animate.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/datatables.css') }}">
     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/bootstrap.css') }}">
@@ -38,6 +37,7 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/sweetalert.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>.red{ color:red;}</style>
   </head>
   <body> 
@@ -218,8 +218,8 @@
                           <ul class="sidebar-submenu expand">
                             <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
                             <li><a href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
-                            <li><a class="" href="{{ route('staff.applications') }}">Applications</a></li>
-                            <li><a href="{{ route('staff.schools') }}">Schools</a></li>
+                            <li><a href="{{ route('staff.applications') }}">Applications</a></li>
+                            <li><a href="#">Schools</a></li>
                           </ul>
                         @elseif(Auth::user()->role == 'agents')
                         @endif
@@ -355,7 +355,7 @@
                         <div class="col-sm-6 col-md-6">
                           <div class="mb-1">
                             <label class="form-label">Date of Birth <span class="red">*</span></label>
-                            <input class="form-control digits" name="dob" id="dob" type="date" value="{{ Auth::user()->dob}}">
+                            <input class="form-control digits dob" placeholder="DD/MM/YYYY" name="dob" id="dob" type="text" value="{{  date('d-m-Y', strtotime(Auth::user()->dob)) }}">
                           </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
@@ -424,9 +424,7 @@
 	<script src="{{ asset('js/prism/prism.min.js') }}"></script>
        <script src="{{ asset('js/custom-card/custom-card.js') }}"></script>
     <!-- calendar js-->
-    <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
+     
     <script src="{{ asset('js/logout.js') }}"></script>
     <script src="{{ asset('js/updateProfile.js') }}"></script>
     <script src="{{ asset('js/loadstates.js') }}"></script>
@@ -434,7 +432,23 @@
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
-    
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      $( document ).ready(function() {
+        $("#dob").datepicker({
+          dateFormat: 'dd/mm/yy',//check change
+          yearRange: "1973:2013",
+          changeMonth: true,
+          changeYear: true
+      });
+      var getDate = $("#dob").val();
+        
+      if(getDate == '01-01-1970'){
+       $( ".dob" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
+      }
+       
+      });
+    </script>
     <!-- Plugin used-->
   </body>
 </html>

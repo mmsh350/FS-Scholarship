@@ -31,13 +31,19 @@ class ProfileController extends Controller
         $request->validate([
             'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'surname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
-            'dob' => ['required','date'],
+            'dob' => ['required'],
             'phone_number' => 'required|numeric|digits:11',
             'gender' => ['required', 'string'],
             'image' => 'image|mimes:jpeg,png,jpg|max:500',
         ]);
 
-        $date = Carbon::parse( $request->dob);
+       
+
+      
+        $checkdate = str_replace('/', '-', $request->dob);
+        $entered_date = date('Y-m-d', strtotime($checkdate));
+       
+        $date = Carbon::parse($entered_date);
         $now = Carbon::now();
         $diff = $date->diffInYears($now);
 
@@ -48,38 +54,11 @@ class ProfileController extends Controller
                 ], 422);
         }
 
-        
+        //Reset Date 
+        $checkdate = str_replace('/', '-', $request->dob);
+        $correct_dob = date('Y-m-d', strtotime($checkdate));
+         
 
-        //Check if state and lga exist
-           //Assign Values
-            // $state =  $request->state;
-            // $lga =  $request->lga;
-
-            // //Old values
-            // $oldstate =  $request->oldstate;
-            // $oldlga =  $request->oldlga;
-
-           
-
-            // if($state == null)
-            // {
-            //     if($oldstate == null)
-            //     {
-            //         $request->validate([
-            //             'lga' => 'required','numeric',
-            //             'state' => 'required','numeric',
-            //         ]);
-
-            //     }else
-            //     {
-            //         $state =  $request->oldstate;
-            //         $lga =  $request->oldlga;
-            //     }
-            // }
-            // 'state_id' => $state,
-            // 'lga_id' => $lga,
-           
-            
 
         $requestid = auth()->user()->id;
 
@@ -97,7 +76,7 @@ class ProfileController extends Controller
             'first_name' => ucwords(strtolower($request->firstname)),
             'middle_name' =>  ucwords(strtolower($request->middlename)),
             'last_name' =>  ucwords(strtolower($request->surname)),
-            'dob' => $request->dob,
+            'dob' => $correct_dob,
             'gender' => $request->gender,
             'phone_number' => $request->phone_number,
             'address' => ucwords(strtolower($request->address)),

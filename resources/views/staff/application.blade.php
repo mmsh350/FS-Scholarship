@@ -44,6 +44,12 @@
     <style>
       .paginate_button.current  {background-color: #2b3751 !important; }
       .dataTables_filter input { border: 1px dashed #2b3751 !important; }
+      .close {
+   color: #fff !important; // red
+   opacity: 1;
+   // orther style
+}
+ 
       </style>
   </head>
   <body> 
@@ -214,8 +220,8 @@
                         <ul class="sidebar-submenu expand">
                           <li><a href="{{ route('dashboard') }}">Overview</a></li>
                           <li><a class="active" class="" href="{{ route('staff.applications') }}">Applications</a></li>
-                          <li><a  href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
-                          <li><a href="{{ route('staff.schools') }}">Schools</a></li>
+                          <li><a  href="{{ route('staff.agents') }}">Agents</a></li>
+                          <li><a href="#">Schools</a></li>
                         </ul>
                     </li>
                   </ul>
@@ -239,39 +245,11 @@
                     <p class="mt-1 f-m-light" style="text-transform:none;">Staff manage submitted applications from this module </p>
                   </div>
                   <div class="card-body">
-                   
-                    <ul class="simple-wrapper nav nav-tabs" id="myTab" role="tablist">
-                      <li class="nav-item" role="presentation"><a class="nav-link active txt-primary" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" tabindex="-1" aria-selected="false"><i class="fa fa-clock-o" aria-hidden="true"></i>Pending</a></li>
-                      <li class="nav-item" role="presentation"><a class="nav-link txt-primary" id="verified-tab" data-bs-toggle="tab" href="#verified" role="tab" aria-controls="verified" aria-selected="true" ><i class="fa fa-check" aria-hidden="true"></i>
-                        Verified</a></li>
-                     
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                      <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
-                         
-                        
-                      </div>
 
-                      <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tabs">
-                        <div class="table-responsive theme-scrollbar mt-5">
-                          <table class="display" style="overflow:auto" id="pendinglist" style="width:130%">
-                            <thead style="background-color:#2b3751;" class="text-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Submitted On.</th>
-                                    <th style="width: 25%;">Applicant Names</th>
-                                    <th style="width: 10%;">Request Amount</th>
-                                    <th>Phone Number</th>
-                                    <th>Status</th>
-                                   <th>Action</th>
-                                </tr>
-                            </thead>
-                          </table>
-                        </div>
-                	<!--Open Modal --->
+                    <!--Open Modal --->
                     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
+                        <div class="modal-content" id="modal-content">
                           <div class="modal-header" style="background:#2b3751;   border-bottom: 1px dashed white; ">
                             <h4 class="modal-title text-light" id="myLargeModalLabel">Application Lookup</h4>
                             <button class="btn-close py-0 text-danger" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -289,33 +267,81 @@
                             <!-------Next of kin------>
                             <table border="1" class="table mt-4">
                               <thead style="background-color:#2b3751;">
-                                
+                                <th class="text-light"> Application Details </th> 
                               </thead>
                               <tbody>
                                
-
                                 <tr>
-                                  <th class="border-end" width="50%"><span>Application Type</span>
+                                  <th class="border-end" width="50%"><span>Type</span>
                                   <br> <span id="cat" class="f-w-300"></span>
                                   </th>
                                 </tr>
                                 <tr>
-                                  <th class="border-end" width="50%"><span>Request Amount</span>
-                                  <br> <span id="amount" class="f-w-300"></span>
+                                  <th class="border-end" width="50%"><span>Status</span>
+                                  <br> <span id="appstatus" class="f-w-300"></span>
                                   </th>
                                 </tr>
                                 <tr>
-                                  <th class="border-end" width="50%"><span>Initiated By</span>
-                                  <br> <span id="amount" class="f-w-300"></span>
+                                  <th class="border-end" width="50%"><span>Request Amount</span>
+                                  <br> <span id="amount" class="f-w-300 text-dark"></span>
+                                  </th>
+                                </tr>
+                                <tr id="dis1"  style="display:none">
+                                  <th class="border-end" width="50%"><span>Approved Amount</span>
+                                  <br> <span id="appamount" class="f-w-300 text-suceess"></span>
+                                  </th>
+                                </tr>
+                                <tr id="dis4"  style="display:none">
+                                  <th class="border-end" width="50%"><span>Offer Acceptance</span>
+                                  <br> <span id="app_accept" class="f-w-300 text-suceess"></span>
                                   </th>
                                 </tr>
 
-                              
+                                <tr id="dis3" style="display:none">
+                                  <th class="border-end" width="50%"><span>Initial Fees</span>
+                                    <br/><span id="paystatus">Loading status...</span>
+                                  <br> <span id="initamount" class="f-w-300 text-suceess"></span>
+                                  
+                                  </th>
+                                </tr>
+
+                                <tr id="dis2"  style="display:none">
+                                  <th class="border-end" width="50%"><span>Disbursement</span>
+                                       <span id="disbursed"></span>
+                                  </th>
+                                </tr>
+                               
+                                <tr>
+                                  <th class="border-end" width="50%"><span>Initiated By</span>
+                                  <br> <span id="initiator" class="f-w-400"></span>
+                                  </th>
+                                </tr>
                               </tbody>
                             </table>
-                             
-                             
 
+                            <table id="action" style="display:none" border="1" class="table mt-4">
+                              <thead style="background-color:#2b3751;">
+                                <th class="text-light"> Action </th>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td class="border-end">
+                                    <textarea class="form-control btn-square" placeholder="Verification Reason" id="comments" title="Coments"></textarea>
+                                  </td>
+                                </tr>
+                            <tr>
+                              <td class="border-end" width="50%">
+                                <button class="btn btn-success-gradien btn-sm" id="approve" type="button" title="Approve">&nbsp; Approve &nbsp;<i class="fa fa-check"></i></button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="border-end" width="50%">
+                                <button class="btn btn-danger-gradien btn-sm" id="reject" type="button" title="Reject">&nbsp; Reject &nbsp;&nbsp; &nbsp; <i class="fa fa-times"></i> &nbsp;</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                           </table>
+                             
                               </div>
                               <div class="col-sm-10 ">
                                 <div class="col-sm-12">
@@ -325,6 +351,10 @@
                                     </div> --}}
                                     <div class="card-block row">
                                       <div class="col-sm-12 col-lg-12 col-xl-12">
+                                        
+                                        <div id="err" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible mt-4" role="alert"></div>
+                                        <div id="done" style="display:none" class="alert alert-success alert-dismissible mt-4" role="alert"></div>
+                            
                                         <div class="table-responsive theme-scrollbar">
                                           <table border="1" class="table">
                                             <thead style="background-color:#2b3751;">
@@ -337,6 +367,7 @@
                                                 <th class="border-end" width="50%">
                                                   <span>Applicant Name</span>
                                                 <br> <span id="app_name" class="f-w-300"></span>
+                                                <input type="hidden" id="appid" value="" name="appid" class="f-w-300"/>
                                                 </th>
                                                 <th><span>Gender</span>
                                                   <br><span id="gender" class="f-w-300">
@@ -622,7 +653,34 @@
                                                   
                                               </tbody>
                                             </table>
-
+        <!-------Head of school info ------>
+                                             
+                                                      <!-------Head of school info ------>
+                                             <table border="1" id="acct_info" style="display:none;" class="table mt-3">
+                                              <thead style="background-color:#2b3751;">
+                                                <tr>
+                                                  <th colspan="2" class="text-light">Account Information</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody>
+                                                 
+                                                <tr>
+                                                  <th class="border-end" width="50%">
+                                                    <span>Account Number</span>
+                                                  <br> <span id="acct_number" class="f-w-300"></span>
+                                                  </th>
+                                                  <th class="border-end" width="50%">
+                                                    <span>Account Name</span>
+                                                  <br> <span id="acct_name" class="f-w-300"></span>
+                                                  </th>
+                                                </tr>
+                                                <tr>
+                                                  <th><span>Bank Name <Address></Address></span>
+                                                    <br><span id="acct_bankname" class="f-w-300">
+                                                    </span>
+                                                  </th>
+                                              </tbody>
+                                            </table>
                                               <!-------Documents info ------>
                                               <table border="1" class="table mt-3">
                                                 <thead style="background-color:#2b3751;">
@@ -634,14 +692,11 @@
                                                    
                                                   <tr>
                                                     <td>
-                                                    <object id="upload" data="{{ asset('storage/uploads/6615743909.pdf');}}" type="application/pdf" width="100%" height="500px">
-                                                      <p>Unable to display PDF file. <a href="/uploads/media/default/0001/01/540cb75550adf33f281f29132dddd14fded85bfc.pdf">Download</a> instead.</p>
+                                                    <object id="upload" data="" type="application/pdf" width="100%" height="500px">
+                                                      <p>Unable to display PDF file. <a id="downloadpdf" href="">Download</a> instead.</p>
                                                     </object>
                                                   </td>
                                                   </tr>
-                                                                     
-    
-                                                    
                                                 </tbody>
                                               </table>
                                         </div>
@@ -657,12 +712,55 @@
                       </div>
                     </div>
                      <!--Close Modal ---> 
+                   
+                    <ul class="simple-wrapper nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation"><a class="nav-link active txt-warning" id="pending-tabs" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" tabindex="-1" aria-selected="false"><i class="fa fa-clock-o" aria-hidden="true"></i>Pending</a></li>
+                      <li class="nav-item" role="presentation"><a class="nav-link txt-success" id="verified-tab" data-bs-toggle="tab" href="#verified" role="tab" aria-controls="verified" aria-selected="true" ><i class="fa fa-check-circle" aria-hidden="true"></i>
+                        Verified</a></li>
+                     
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
+                       
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="verifiedlist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Submitted On.</th>
+                                    <th style="width: 25%;">Applicant Names</th>
+                                    <th style="width: 10%;">Request Amount</th>
+                                    <th>Phone Number</th>
+                                    <th>Status</th>
+                                   <th>Action</th>
+                                </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+                        
+                      </div>
+
+                      <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="pending-tabs">
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="pendinglist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Submitted On.</th>
+                                    <th style="width: 25%;">Applicant Names</th>
+                                    <th style="width: 10%;">Request Amount</th>
+                                    <th>Phone Number</th>
+                                    <th>Status</th>
+                                   <th>Action</th>
+                                </tr>
+                            </thead>
+                          </table>
+                        </div>
+                	
                       </div>
 
                     </div>
-
-
-                    
                   </div> 
                 
                 </div>

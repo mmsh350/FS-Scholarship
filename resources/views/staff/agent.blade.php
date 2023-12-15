@@ -215,7 +215,8 @@
                           <li><a href="{{ route('dashboard') }}">Overview</a></li>
                           <li><a class="" href="{{ route('staff.applications') }}">Applications</a></li>
                           <li><a class="active" href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
-                          <li><a href="{{ route('staff.schools') }}">Schools</a></li>
+                          <li><a href="#">Schools</a></li>
+                       {{-- {{ route('staff.schools') }  --}}
                         </ul>
                     </li>
                   </ul>

@@ -11,9 +11,13 @@ use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Models\School;
 use App\Models\State;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+
+use function PHPSTORM_META\map;
+
 class ApplicationController extends Controller
 {
     public function show(Request $request)
@@ -98,12 +102,69 @@ class ApplicationController extends Controller
                     ->make(true);
         
                     }
+
+
                   return view('staff.application');
             }
             
         }
     }
      
+
+  public function verifiedlist(Request $request){
+    $loginUserId = Auth::user()->id;
+    $stateId =  Auth::user()->state_id;
+    if ($request->ajax()) {
+                    
+        $data = Application::select(
+                 'id',
+                 'created_at',
+                 'names',
+                 'phone',
+                 'ramount', 
+                 'app_status',
+                )
+      
+         ->where('location_id',$stateId )
+         ->where('verify_id', $loginUserId);
+        return Datatables($data)
+
+        ->editColumn('ramount', function ($row) {
+            return  "&#8358;".number_format($row->ramount ,2);
+           
+              })->escapeColumns('ramount')
+
+        ->editColumn('created_at', function ($row) {
+            
+            return  date("d-m-Y H:i:s", strtotime($row->created_at) );
+              })
+
+              ->editColumn('app_status', function ($row) {
+                 if($row->app_status == 'Close')
+                     return  "<span class='badge badge-danger'>".$row->app_status."</span>";
+                    else
+                    return  "<span class='badge badge-success'>".$row->app_status."</span>";
+                  })->escapeColumns('app_status')
+         
+               
+          ->addIndexColumn()
+          ->addColumn('action', function($row){
+                
+            // Button Customizations
+            $btn = "
+                <a 
+                class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                 data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                Look up<i class='icofont icofont-look'> </i> </a>";
+            return $btn;
+        }) ->rawColumns(['action']) 
+        ->make(true);
+
+        }
+
+        
+      return view('staff.application');
+  }
     public function store(Request $request)
     {
         $request->validate([
@@ -473,8 +534,11 @@ class ApplicationController extends Controller
         //Get application details
         $appDetails = Application::all()->where('id',$id)->first();
         
+        $userid = $appDetails->id;
+        $usersData = User::select('role','phone_number','first_name')->where('id',$userid)->first();
+
         //Request amount
-         $amt = number_format($appDetails->ramount ,2);
+        $amt = number_format($appDetails->ramount ,2);
         //Get state and lga
         $state = State::select('stateName')->where('id',$appDetails->state_id)
             ->first();
@@ -486,6 +550,10 @@ class ApplicationController extends Controller
         $nationality = Countries::select('CountryName')->where('id',$appDetails->nationality)->first();
         //Update dob 
         $dob = date("d-m-Y", strtotime($appDetails->dob) );
+
+          //Update requeste amount 
+          $appamount = number_format($appDetails->approved_amount ,2);
+          $initamount = number_format($appDetails->initial_fee ,2);
 
         //get next ok kin information
          $kinDetails = DB::table('next_kins')->where('application_id',$id)->first();
@@ -518,7 +586,7 @@ class ApplicationController extends Controller
             //get Head of School information
             $UploadsDetails = DB::table('uploads')->where('application_id',$id)->first();
         
-        $data2 = array(  "dateofBirth" => $dob ,
+         $data2 = array(  "dateofBirth" => $dob ,
                          "state" => $state,
                          "lga" => $lga ,
                          "country_name" => $country,
@@ -528,7 +596,10 @@ class ApplicationController extends Controller
                          "kin_lga"=>$kin_lga,
                          "nok_dob"=>$nokdob,
                          "school"=>$schlname,
-                         "hoss" => $hos_state);
+                         "hoss" => $hos_state,
+                        "appamount"=>$appamount,
+                        "initamount"=>$initamount
+                         );
 
 
        $data3 = array("kin"=>$kinDetails);
@@ -536,10 +607,41 @@ class ApplicationController extends Controller
        $data5 = array("gua" =>$GuaDetails);
        $data6 = array("hos" =>$HosDetails);
        $data7 = array("upload" =>$UploadsDetails);
+       $data8 = array("initiator" =>$usersData);
        
 
         $array = array_merge($appDetails->toArray(), $data2);
-        $array = array_merge($array,$data3,$data4,$data5, $data6,$data7);
+        $array = array_merge($array,$data3,$data4,$data5, $data6,$data7, $data8);
         return response()->json($array);
+    }
+
+    public function  verifyApp(Request $request)
+    {
+            $appid = $request->appid;
+            $status = $request->status;
+            $loginUserId = Auth::user()->id;//login staff
+
+            if(empty($request->reason) || $request->reason == null )
+            {
+                    return response()->json([
+                        "message"=> "Error",
+                        "errors"=>array("Error"=> "Please Enter verification Reason")
+                    ], 422);
+
+             }
+
+            if($status == 'approved'){
+                Application::where('id', $appid)->update(['app_verify' => '1', 
+                                                         'verify_id' => $loginUserId,
+                                                         'comments'=>$request->reason]);
+            }
+            else{
+                Application::where('id', $appid)->update(['app_verify' => '0', 
+                                                          'verify_id' => $loginUserId,
+                                                          'status' => 'Rejected',
+                                                          'app_status' => 'Close',
+                                                          'comments'=>$request->reason
+                                                        ]);
+            }
     }
 }
