@@ -534,7 +534,7 @@ class ApplicationController extends Controller
         //Get application details
         $appDetails = Application::all()->where('id',$id)->first();
         
-        $userid = $appDetails->id;
+        $userid = $appDetails->user_id;
         $usersData = User::select('role','phone_number','first_name')->where('id',$userid)->first();
 
         //Request amount

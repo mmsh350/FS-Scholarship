@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	//Create New Account Information
 	$('#btnSave').click(function(evt) {
+		$("#spinner").show();
 		$('#btnSave').prop("disabled", true);
 		var first_name = $('#firstname').val();
 		var last_name = $('#surname').val();
@@ -24,12 +25,13 @@ $(document).ready(function() {
 				success: function(dataResult) {
 							window.scrollTo(0, 0);
 							$("#success").show();
-							$('#success').append('<strong>Update Succesfully!</strong>');
+							$('#success').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+'<strong>Profile Update Successful !</strong>');
 							$('#btnSave').html("Redirecting ...");
 							setTimeout(function(){  
 								$("#error3").hide();
 								$('form').trigger("reset");
 								window.location.reload(); 
+								$("#spinner").hide();
 							}, 2000);
 				},
 				error: function(data) {
@@ -37,7 +39,7 @@ $(document).ready(function() {
 					$("#error3").show();
 					$.each(data.responseJSON.errors, function (key, value) {
 						$("#error3").empty();
-						$('#error3').append('<strong>'+value+'</strong>');
+						$('#error3').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+'<strong>'+value+'</strong>');
 					});
 					
 						setTimeout(function(){ 
@@ -45,6 +47,7 @@ $(document).ready(function() {
 							$('#btnSave').prop("disabled", false);
 							$("#error3").empty();
 							$("#error3").hide();
+							$("#spinner").hide();
 						}, 5000);
 				}
 			});
@@ -52,11 +55,12 @@ $(document).ready(function() {
 
 						window.scrollTo(0, 0);
 						$("#error3").empty();
-						$('#error3').append('<strong>Please fill in the required fields (*)</strong>');
+						$('#error3').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+'<strong>Please fill in the required fields (*)</strong>');
 						$("#error3").show();
 						setTimeout(function(){  	
 							$('#btnSave').prop("disabled", false);
 							$("#error3").hide();
+							$("#spinner").hide();
 						}, 2000); 
 
 			}
@@ -66,7 +70,6 @@ $(document).ready(function() {
 
 	$('#btnUpdate').click(function(evt) {
 		$('#btnUpdate').prop("disabled", true);
-		$("#spinner").show();
 		var pass = $('#password').val();
 		var cpass = $('#current_password').val();
 		var passconfirm = $('#password_confirmation').val();
@@ -88,7 +91,8 @@ $(document).ready(function() {
 				success: function(dataResult) {
 							window.scrollTo(0, 0);
 							$("#success1").show();
-							$('#success1').append('<strong>Update Succesfully! </strong>');
+							$('#success1').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+
+												  '<strong>Password Update Successful ! </strong>');
 							setTimeout(function(){  
 								$('form').trigger("reset");
 								window.location.reload(); 
@@ -99,7 +103,8 @@ $(document).ready(function() {
 					$("#error1").show();
 					$.each(data.responseJSON.errors, function (key, value) {
 						$("#error1").empty();
-						$('#error1').append('<strong>'+value+'</strong>');
+						$('#error1').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+
+											'<strong>'+value+'</strong>');
 					});
 					
 						setTimeout(function(){ 
@@ -114,7 +119,8 @@ $(document).ready(function() {
 
 						window.scrollTo(0, 0);
 						$("#error1").empty();
-						$('#error1').append('<strong>All Fields are required! </strong>');
+						$('#error1').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+
+											'<strong>All fields are required ! </strong>');
 						$("#error1").show();
 						setTimeout(function(){  	
 							$('#btnUpdate').prop("disabled", false);

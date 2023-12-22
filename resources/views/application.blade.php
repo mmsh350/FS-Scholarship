@@ -231,7 +231,7 @@
                      
                       <div class="col-md-4">
                         <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('application') }}">
+                          <div class="upcoming-box"> <a href="#">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
                              <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$applications->count()}}</span>
@@ -240,7 +240,7 @@
                       </div>
                       <div class="col-md-4">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('application') }}">
+                          <div class="upcoming-box  ">  <a href="#">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                             <h6 class="p-b-10">Approved Application</h6> 
                            <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
@@ -250,7 +250,7 @@
 					  
 					  <div class="col-md-4">
                         <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
+                          <div class="upcoming-box mb-0">  <a href="#">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
 							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
@@ -879,7 +879,7 @@
 
                                     <div class="mb-3 mt-3">
                                     <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindly Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, and offline form duly signed and stamped)
-                                    Download the form Here.
+                                     Click here to <a href="https://fsscholarship.com/Offline-Form.pdf" target="_blank"><i class="fa fa-download"></i>&nbsp;Download form</a> .
                                     </label>
                                     
                                     </div>
@@ -926,7 +926,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script></p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant LTD <script>document.write(new Date().getFullYear())</script></p>
               </div>
             </div>
           </div>

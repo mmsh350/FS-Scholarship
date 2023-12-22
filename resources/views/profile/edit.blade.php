@@ -240,8 +240,9 @@
               <div class="row">
                 <div class="col-xl-4">
                   <div class="card">
-                    <div class="card-header">
-                      <h4 class="card-title mb-0">My Profile</h4>
+                    <div class="card-header" style="background-color:#2b3751;">
+                      <h4 class="card-title mb-0 text-light"><i class="fa fa-user" aria-hidden="true"></i>
+                        My Profile</h4>
                       <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
                     </div>
                     <div class="card-body">
@@ -259,57 +260,61 @@
                                <span class="mb-2"> {{ ucwords(Auth::user()->email) }} </span>
                             </center>
                           </div>
-                          <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-original-title="test" data-bs-target="#passwordModal">Change Password</button>
-                    
+                          <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-original-title="test" data-bs-target="#passwordModal">
+                            <i class="fa fa-expand" aria-hidden="true">&nbsp; </i>&nbsp; Update Password
+                          </button>
                           </div>
 
                       <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModal" aria-hidden="true">
-                      <div class="modal-dialog" role="document" 
-                       style="background-color: #fff;
-	                           padding: 16px 24px; border-bottom: 1px dashed rgba(106, 113, 133, 0.3);
-	                           border-top-left-radius: 17px; border-top-right-radius: 17px; position: relative;
-                             text-transform: capitalize;">
+                      <div class="modal-dialog" role="document">
+                        <div class="card-header text-light" style="background-color:#2b3751;">
+                          <h4 class="card-title mb-0"><i class="fa fa-user" aria-hidden="true"></i> Password Update</h4>
+                          <div class="card-options">
+                            <a class="card-options-collapse" href="#" data-bs-toggle="card-collapse">
+                            <i class="fe fe-chevron-up"></i></a>
+                              <a class="card-options-remove" href="#" data-bs-toggle="card-remove">
+                              <i class="fe fe-x"></i></a>
+                          </div>
+                        </div>
                         <div class="modal-content">
                           <div class="modal-body">
                             <div class="modal-toggle-wrapper"> 
                               <div id="error1" style="display:none" class="alert alert-danger alert-dismissible" role="alert"></div>
-                              <div id="success1" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
-                              <h4 class="mb-2"> 
-                              <span class="badge  badge-dark">Password Update</span>
-                             </h4>
-                             
+                              <div id="success1" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>                     
                             <form method="post" action="{{ route('password.update') }}" id="form_pass">
                               @csrf
                               @method('put')
-                          <div class="mb-3">
-                          <label class="form-label">Current Password</label>
-                          <input class="form-control" name="current_password" id="current_password" type="password">
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label">New Password</label>
-                          <input class="form-control" name="password" id="password" type="password">
-                        </div>
-                        <div class="mb-3">
-                          <label class="form-label">Confirm Password</label>
-                          <input class="form-control" name="password_confirmation" id="password_confirmation" type="password" >
-                        </div>
-                        <div class="form-footer">
-                        <input type="button" id="btnUpdate" class="btn bg-danger d-flex align-items-center gap-2 text-light ms-auto" value="Change Password"> 
-                       </div>
-                      </form>
+                              <div class="mb-3">
+                                <label class="form-label">Current Password</label>
+                                <input class="form-control" name="current_password" id="current_password" type="password">
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label">New Password</label>
+                                <input class="form-control" name="password" id="password" type="password">
+                              </div>
+                              <div class="mb-3">
+                                <label class="form-label">Confirm Password</label>
+                                <input class="form-control" name="password_confirmation" id="password_confirmation" type="password" >
+                              </div>
+                              <div class="form-footer">
+                              <button type="button" id="btnUpdate" class="btn bg-danger d-flex align-items-center gap-2 text-light ms-auto"/> <i class="fa fa-key" aria-hidden="true"></i>
+                              Change</button>
+                            </div>
+                          </form>
                               
                             </div>
                           </div>
                         </div>
                       </div>
+
                     </div>
                     </div>
                   </div>
                 </div>
                 <div class="col-xl-8">
                   <form class="card" id="profile" enctype="multipart/form-data" autocomplete="off">
-                    <div class="card-header">
-                      <h4 class="card-title mb-0">Edit Profile</h4>
+                    <div class="card-header" style="background-color:#2b3751;">
+                      <h4 class="card-title mb-0 text-light"><i class="fa fa-edit"></i> Edit Profile</h4>
                       <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
                     </div>
                     <div id="error3" style="display:none" class="alert alert-danger alert-dismissible" role="alert"></div>
@@ -351,11 +356,14 @@
                             </select>
                           </div>
                         </div>
-                        
+                        @php 
+                            $edate = Auth::user()->dob;
+                            $dob = str_replace('-', '/', $edate);
+                        @endphp
                         <div class="col-sm-6 col-md-6">
                           <div class="mb-1">
                             <label class="form-label">Date of Birth <span class="red">*</span></label>
-                            <input class="form-control digits dob" placeholder="DD/MM/YYYY" name="dob" id="dob" type="text" value="{{  date('d-m-Y', strtotime(Auth::user()->dob)) }}">
+                            <input class="form-control digits" placeholder="DD/MM/YYYY" name="dob" id="dob" type="text" value="{{date('d/m/Y', strtotime($dob));}}">
                           </div>
                         </div>
                         <div class="col-sm-6 col-md-6">
@@ -378,7 +386,9 @@
                       </div>
                     </div>
                     <div class="card-footer text-end">
-                      <button class="btn btn-dark" id="btnSave" name="btnSave" type="button">Update Profile</button>
+                      <button class="btn btn-dark" id="btnSave" name="btnSave" type="button">
+                        <i class="fa fa-save"></i> &nbsp; Update  <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
+                       </button>
                     </div>
                   </form>
                 </div>
@@ -393,7 +403,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script> </p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant LTD <script>document.write(new Date().getFullYear())</script> </p>
               </div>
             </div>
           </div>
@@ -435,18 +445,18 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
       $( document ).ready(function() {
-        $("#dob").datepicker({
-          dateFormat: 'dd/mm/yy',//check change
-          yearRange: "1973:2013",
-          changeMonth: true,
-          changeYear: true
-      });
-      var getDate = $("#dob").val();
-        
-      if(getDate == '01-01-1970'){
-       $( ".dob" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
-      }
-       
+        var dateFormat = $( "#dob" ).datepicker( "option", "dateFormat" );
+        let dayTo = "2013"; let dayFrom = "1973";
+        // //set range
+        $( "#dob" ).datepicker({
+            yearRange: dayFrom + ":"+dayTo,
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd/mm/yy'
+        });
+        let getDate =   $("#dob").val();
+         if(getDate == '01/01/1970')
+         { let fullDate = "01/01/"+dayTo; $("#dob").datepicker( "setDate", fullDate ); $("#dob").val(null); }
       });
     </script>
     <!-- Plugin used-->

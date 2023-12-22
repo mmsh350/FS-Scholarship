@@ -283,11 +283,9 @@
                     <div class="card-header-right">
                       <ul class="list-unstyled card-option">
                         <li><i class="icon-more-alt"></i></li>
-                        <li><i class="view-html fa fa-code"></i></li>
                         <li><i class="icofont icofont-maximize full-card"></i></li>
-                        <li><i class="icofont icofont-minus minimize-card"></i></li>
                         <li><i class="icofont icofont-refresh reload-card"></i></li>
-                        <li><i class="icofont icofont-error close-card"> </i></li>
+                        <li><i class="icofont icofont-error"> </i></li>
                       </ul>
                     </div>
                   </div>
@@ -316,7 +314,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright©fee24 Consultant Ltd <script>document.write(new Date().getFullYear())</script></p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant LTD <script>document.write(new Date().getFullYear())</script></p>
               </div>
             </div>
           </div>

@@ -31,6 +31,7 @@ class ProfileController extends Controller
         $request->validate([
             'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'surname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
+            'middlename' => ['nullable','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'dob' => ['required'],
             'phone_number' => 'required|numeric|digits:11',
             'gender' => ['required', 'string'],
@@ -38,7 +39,7 @@ class ProfileController extends Controller
         ]);
 
        
-
+        
       
         $checkdate = str_replace('/', '-', $request->dob);
         $entered_date = date('Y-m-d', strtotime($checkdate));

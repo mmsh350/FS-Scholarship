@@ -19,10 +19,14 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
             'first_name' => 'IT',
             'last_name' => 'Support',
-            'email' => 'support@oisservices.com',
-            'password' => Hash::make('passwd'),
+            'email' => 'support@fsscholarship.com',
+            'email_verified_at' =>  Carbon::now(),
+            'password' => Hash::make('password'),
+            'dob' => '1990/03/27',
+            'gender' =>'Male',
             'phone_number'=>'08103440497',
-            'role'=>'applicant',
+            'role'=>'admin',
+            'registeredby' => 'self',
             'is_active' =>true,
             'created_at' => Carbon::now(),
         ]);
