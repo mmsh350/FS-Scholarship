@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\App_Notification;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
@@ -42,6 +43,16 @@ class RegisteredUserController extends Controller
             'last_name' => ucwords($request->lastname),
             'email' => strtolower($request->email),
             'password' => Hash::make($request->password),
+        ]);
+         
+        
+        $lastInsertedId = $user->id;
+
+         //update notification history
+         App_Notification::create([
+            'user_id' =>  $lastInsertedId,
+            'message_title' => 'Welcome Message',
+            'messages' => "Welcome to FS-Scholarship Student Loan/Scholarship Application Portal",
         ]);
 
         event(new Registered($user));

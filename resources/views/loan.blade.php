@@ -65,7 +65,7 @@
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
-              <li class="breadcrumb-item f-w-400">Applications</li>
+              <li class="breadcrumb-item f-w-400">Loan</li>
               <li class="breadcrumb-item f-w-400 active">Manage</li>
             </ol>
           </nav>
@@ -231,8 +231,8 @@
                       </svg><span>Dashboard</span></a>
                     <ul class="sidebar-submenu expand">
                       <li><a href="{{ route('dashboard') }}">Overview</a></li>
-                      <li><a href="{{ route('loan') }}">Loans</a></li>
-                      <li><a class="active" href="{{ route('application') }}">Applications</a></li>
+                      <li><a  class="active" href="{{ route('loan') }}">Loans</a></li>
+                      <li><a href="{{ route('application') }}">Applications</a></li>
                       <li><a href="{{ route('wallet') }}"> Fund Wallet</a></li>
                       <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>

@@ -8,7 +8,7 @@ var table3 = $('#transactions').DataTable({
         [5,10, 25, 50, -1],
         [5,10, 25, 50, 'All'],
     ],
-
+    order: [[0, 'desc']],
     columns: [
         {data: 'id', name: 'id'},
         {data: 'created_at', name: 'created_at'},

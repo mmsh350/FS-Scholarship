@@ -107,27 +107,7 @@
                       </div>
                     </div>
                   </div>
-                </li>
-                <li class="onhover-dropdown">
-                  <div class="notification-box">
-                    <svg>
-                      <use href="{{ asset('svg/icon-sprite.svg#notification') }}"></use>
-                    </svg><span class="badge rounded-pill badge-primary">0</span>
-                  </div>
-                  <div class="onhover-show-div notification-dropdown">
-                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications</h5>
-                    <ul class="notification-box">
-                      <li class="d-flex"> 
-                        
-                        <div class="flex-grow-1"> <a href="#">
-                            <h6>Approval</h6></a>
-                          <p>No Notification Available</p>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                
+                </li>                
                 <li>
                   <div class="mode">
                     <svg>
@@ -208,9 +188,9 @@
                          @if(Auth::user()->role == 'applicant')
                           <ul class="sidebar-submenu expand">
                             <li><a href="{{ route('dashboard') }}">Overview</a></li>
-                            <li><a href="{{ route('wallet') }}"> Wallet</a></li>
+                            <li><a href="{{ route('loan') }}">Loans</a></li>
                             <li><a class="" href="{{ route('application') }}">Applications</a></li>
-                            <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
+                            <li><a href="{{ route('wallet') }}"> Fund Wallet</a></li>
                             <li><a href="{{ route('transactions') }}">Transactions</a></li>
                           </ul>
                        
@@ -219,9 +199,17 @@
                             <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
                             <li><a href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
                             <li><a href="{{ route('staff.applications') }}">Applications</a></li>
-                            <li><a href="#">Schools</a></li>
+                            <li><a href="{{ route('staff.schools') }}">Schools</a></li>
                           </ul>
-                        @elseif(Auth::user()->role == 'agents')
+                        @elseif(Auth::user()->role == 'admin')
+                        <ul class="sidebar-submenu expand">
+                          <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a  href="{{ route('admin.users') }}">Users</a></li>
+                          <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
+                          <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
+                          <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
+                        </ul>
+                        @elseif(Auth::user()->role == 'agent')
                         @endif
                   </li>
                    
@@ -241,7 +229,8 @@
                 <div class="col-xl-4">
                   <div class="card">
                     <div class="card-header" style="background-color:#2b3751;">
-                      <h4 class="card-title mb-0 text-light"><i class="fa fa-user" aria-hidden="true"></i>
+                      <h4 class="card-title mb-0 text-light">
+                        <i class="icofont icofont-users-alt-4"></i>
                         My Profile</h4>
                       <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
                     </div>
@@ -446,7 +435,7 @@
     <script>
       $( document ).ready(function() {
         var dateFormat = $( "#dob" ).datepicker( "option", "dateFormat" );
-        let dayTo = "2013"; let dayFrom = "1973";
+        let dayTo = "2014"; let dayFrom = "1973";
         // //set range
         $( "#dob" ).datepicker({
             yearRange: dayFrom + ":"+dayTo,

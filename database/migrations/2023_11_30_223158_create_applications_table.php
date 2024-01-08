@@ -39,11 +39,12 @@ return new class extends Migration
             $table->string('comments')->nullable();
             $table->string('approved_amount')->nullable()->default(0);
             $table->string('initial_fee')->nullable()->default(0);
-            $table->string('total_to_pay')->nullable()->default(0);
+            $table->string('total_paid')->nullable()->default(0);
+            $table->string('monthly_repayment')->nullable()->default(0);
             $table->enum('pay_status', ['Paid','Pending'])->default('Pending');
             $table->enum('app_verify', [0,1])->default(0);
             $table->tinyInteger('verify_id')->nullable();
-            $table->enum('app_accept', [0,1])->default(0);
+            $table->enum('app_accept', [0,1,2])->default(0);
             $table->string('acct_name')->nullable();
             $table->string('acct_number')->nullable();
             $table->string('acct_bankname')->nullable();

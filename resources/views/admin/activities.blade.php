@@ -236,7 +236,7 @@
                           <li><a href="{{ route('dashboard') }}">Overview</a></li>
                           <li><a class="active" class="" href="{{ route('staff.applications') }}">Applications</a></li>
                           <li><a  href="{{ route('staff.agents') }}">Agents</a></li>
-                          <li><a href="{{ route('staff.schools') }}">Schools</a></li>
+                          <li><a href="#">Schools</a></li>
                         </ul>
                     </li>
                   </ul>
@@ -265,17 +265,6 @@
                     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                       <div class="modal-dialog modal-xl">
                         <div class="modal-content" id="modal-content">
-                          <div id="modal-preloader">
-                            <div class="modal-preloader_status">
-                            <div class="modal-preloader_spinner">
-                                <div class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status"></div>
-                                   Fetching  Record..
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-
                           <div class="modal-header" style="background:#2b3751;   border-bottom: 1px dashed white; ">
                             <h4 class="modal-title text-light" id="myLargeModalLabel"><i class="icofont icofont-telescope"></i> Application (LookUp) </h4>
                                 <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
@@ -292,12 +281,17 @@
                                 <center><img class="img-responsive rounded border border-dark " width="80%" id="passport" src="" alt="Profile Photo" />
                                 </center>
                                 <!---------Repayment Modal
+                                  
+                                  
+                                  <a href="#" data-dismiss="modal" class="btn btn-warning" id="repay" data-bs-toggle="modal" data-bs-target=".repayModal" data-id="" style="display:none; margin-top:15px;">
+                                    <i class="fa fa-bar-chart-o "></i> Repayment 
+                                </a>
                                   ----------->
                                 <a href="#" class="btn btn-warning" id="repay"  style="display:none; margin-top:15px;">
                                     <i class="fa fa-bar-chart-o "></i> Repayment 
                                 </a>
                                 
-                            <!-------Application Details------>
+                            <!-------Next of kin------>
                             <table border="1" class="table mt-4">
                               <thead style="background-color:#2b3751;">
                                 <th class="text-light"> Application Details </th> 

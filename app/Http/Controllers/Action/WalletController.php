@@ -4,6 +4,7 @@ namespace App\Http\Controllers\action;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\App_Notification;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Wallet;
@@ -15,14 +16,34 @@ class WalletController extends Controller
     public function show(Request $request)
     {
         $loginUserId = Auth::user()->id;
+        $active =Auth::user()->is_active;
+        
+        //Check if user has been disabled
+        if($active !="1")
+        {
+           Auth::logout();
+               return view('error') ;
+        }
 
         if(Auth::user()->gender == '' || Auth::user()->dob == '')
         {
                return view('profile.edit');
         }
-        else
+        else if(Auth::user()->role == 'applicant')
         {  
                 if (Wallet::where('userid', $loginUserId)->exists()) {
+
+                    $notifycount =0;
+                    $notifications = 0;
+
+                    $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                    ->sortByDesc('id')
+                    ->take(3);
+
+                    $notifycount = App_Notification::all()
+                                                ->where('user_id', $loginUserId)
+                                                ->where('status', 'unread')
+                                                ->count();
                     
                         //get requested user Wallet Balance information
                         $wallet = Wallet::where('userid', $loginUserId)->first();                   
@@ -33,6 +54,7 @@ class WalletController extends Controller
 
                         //Fetch Transactions
                         $transactions = Transaction::all()->where('userid', $loginUserId)
+                        ->where('service_type','!=', '3')
                         ->sortByDesc('id')
                         ->take(10);
                         
@@ -51,6 +73,8 @@ class WalletController extends Controller
                         return view('wallet') 
                                         ->with(compact('balance'))
                                         ->with(compact('deposit'))
+                                        ->with(compact('notifications'))
+                                        ->with(compact('notifycount'))
                                         ->with(compact('transactions'));
                                     
                 }else
@@ -62,8 +86,20 @@ class WalletController extends Controller
                     return view('wallet',compact('balance'))
                     ->with(compact('balance'))
                     ->with(compact('deposit'))
+                    ->with(compact('notifications'))
+                    ->with(compact('notifycount'))
                     ->with(compact('transactions'));
                 }
+        }
+        else if(Auth::user()->role == 'agent') {
+
+        }
+        else if(Auth::user()->role == 'admin') {
+            
+        }
+        else{
+            Auth::logout();
+            return view('error') ;
         }
     }
 
@@ -123,7 +159,7 @@ class WalletController extends Controller
 
                         $user = Transaction::create([
                             'userid' => $userid,
-                            'payerid' => '',
+                            //'payerid' => '',
                             'referenceId' => $reference,
                             'service_type' => '1',
                             'service_description' => $request->desc,  
@@ -141,6 +177,13 @@ class WalletController extends Controller
                           $affected = DB::table('wallets')->where('userid', $userid)
                             ->update(['balance' =>$balance,
                                       'deposit' => $deposit]);
+                        //notification
+                        //update notification history
+                            App_Notification::create([
+                                'user_id' =>  $userid,
+                                'message_title' => 'Top Up',
+                                'messages' => 'Wallet TopUp of ₦'.$amount." Was Successful",
+                            ]);
 
                             return response()->json(['code'=>'200']);
 
@@ -156,7 +199,7 @@ class WalletController extends Controller
 
                         $user = Transaction::create([
                             'userid' => $userid,
-                            'payerid' => '',
+                            //'payerid' => '',
                             'referenceId' => $request->ref,
                             'service_type' => '1',
                             'service_description' => $request->desc,  
@@ -174,6 +217,14 @@ class WalletController extends Controller
                           $affected = DB::table('wallets')->where('userid', $userid)
                             ->update(['balance' =>$balance,
                                       'deposit' => $deposit]);
+
+                         //notification
+                        //update notification history
+                        App_Notification::create([
+                            'user_id' =>  $userid,
+                            'message_title' => 'Top Up',
+                            'messages' => 'Wallet TopUp of ₦'.$request->amt." Was Successful",
+                        ]);
 
                             return response()->json(['code'=>'200']);
         }  

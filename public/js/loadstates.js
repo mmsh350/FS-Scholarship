@@ -16,11 +16,14 @@ $(document).ready(function() {
                     $("#hos_state").empty();
                     $("#hos_state").append("<option value=''>"+"Choose..."+"</option>");
 
+                    $("#state2").empty();
+                    $("#state2").append("<option value=''>"+"Choose..."+"</option>");
                     for( var i = 0; i<len; i++)
                     {
                          var id = response[i]['id'];
                          var dname = response[i]['stateName'];
 
+                         $("#state2").append("<option value='"+id+"'>"+dname+"</option>"); 
                          $("#state").append("<option value='"+id+"'>"+dname+"</option>"); 
                          $("#nok_state").append("<option value='"+id+"'>"+dname+"</option>"); 
                          $("#hos_state").append("<option value='"+id+"'>"+dname+"</option>"); 

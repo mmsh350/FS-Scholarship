@@ -84,14 +84,14 @@ class ProfileController extends Controller
             'profile_pic' => $image_path ,
              ]);
 
-        $image_path = $request->oldpic;
+        // $image_path = $request->oldpic;
 
-        if($request->file('image')){
+        // if($request->file('image')){
 
-            $path = $request->file('image');
-            $data = file_get_contents($path);
-            $image_path = base64_encode($data); 
-        }
+        //     $path = $request->file('image');
+        //     $data = file_get_contents($path);
+        //     $image_path = base64_encode($data); 
+        // }
         
         //create Wallet
         if (DB::table('wallets')->where('userid', '=', $requestid)->exists()) {

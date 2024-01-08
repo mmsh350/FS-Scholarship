@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
+use App\Models\App_Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DataTables;
@@ -13,13 +14,32 @@ class TransactionController extends Controller
     //Return view
     public function index(Request $request)
     {
-          $login_id =  Auth::user()->id;
+         $login_id =  Auth::user()->id;
+         $active =Auth::user()->is_active;
+         //Check if user has been disabled
+         if($active !="1")
+         {
+            Auth::logout();
+                return view('error') ;
+         }
+
         if(Auth::user()->gender == '' || Auth::user()->dob == '')
         {
                return view('profile.edit');
         }
         else
         {  
+
+              $notifycount =0;
+              $notifications =0;
+              $notifications = App_Notification::all()->where('user_id', $login_id)
+              ->sortByDesc('id')
+              ->take(3);
+
+              $notifycount = App_Notification::all()
+                                          ->where('user_id', $login_id)
+                                          ->where('status', 'unread')
+                                          ->count();
                  
         if ($request->ajax()) {
             
@@ -51,7 +71,9 @@ class TransactionController extends Controller
                })->escapeColumns('amount')->make(true);
 
             }
-            return view('transactions');
+            return view('transactions')
+            ->with(compact('notifications'))
+            ->with(compact('notifycount'));
      }   
     
 }

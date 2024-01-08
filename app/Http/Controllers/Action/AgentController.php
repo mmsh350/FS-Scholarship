@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Action;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NewAgentNotify;
+use App\Models\App_Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Application;
+use App\Models\State;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -29,9 +31,30 @@ class AgentController extends Controller
         }
         else
         {  
-                 // 
+             
+          $notifycount =0;
+          $notifications =0;
+
+            //Fetch State Name
+            $getName = State::select('stateName')
+                           ->where('id', $stateId)->first();
+             $stateName =  $getName->stateName;
+
+          $notifications = App_Notification::all()->where('user_id', $loginUserId)
+          ->sortByDesc('id')
+          ->take(3);
+
+          $notifycount = App_Notification::all()
+                                      ->where('user_id', $loginUserId)
+                                      ->where('status', 'unread')
+                                      ->count();
+        // 
         if ($request->ajax()) {
-            
+
+             $app_count = 0;
+             $app_approve = 0;
+             $app_reject = 0;
+
             $data = DB::table('users')->select(
             DB::raw('CONCAT(first_name, " ", middle_name, " ", last_name ) AS full_name'),
                      'users.id',
@@ -84,24 +107,40 @@ class AgentController extends Controller
                    
               ->addIndexColumn()
               ->addColumn('action', function($row){
-                    
+                $app_count=0;
+                $app_count = Application::all()->where('user_id',$row->id)->count();
+
+                $app_reject = Application::all()->where('user_id',$row->id)
+                ->where('status','Rejected')
+                ->count();
+
+                $app_approve = Application::all()->where('user_id',$row->id)
+                ->where('status','Approved')
+                ->count();
+                
                 // Button Customizations
                 $btn = "
                     <a 
                     class='btn btn-pill btn-dark btn-air-primary btn-xs'
-                     data-bs-toggle='modal' data-bs-target='..bd-example-modal-xl' data-id=$row->id>
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id 
+                     data-approve=$app_approve data-reject=$app_reject data-app_count= $app_count>
                     Look up<i class='icofont icofont-look'> </i> </a>";
                 return $btn;
             }) ->rawColumns(['action']) ->make(true);
 
             }
-          return view('staff.agent');
+          return view('staff.agent')  
+                  ->with(compact('notifications'))
+                  ->with(compact('stateName'))
+                  ->with(compact('notifycount'));
 
      }   
     
   }
+
+  
   public function save(Request $request)
-    {
+  {
           $loginUserId =  Auth::user()->id;
           $stateId =  Auth::user()->state_id;
          
@@ -147,9 +186,34 @@ class AgentController extends Controller
           'state_id'=>$stateId,
           'role'=>'agent',
         ]);
-      
 
-        
+        $lastInsertedId = $user->id;
+
+        //update notification history
+        App_Notification::create([
+           'user_id' =>  $lastInsertedId,
+           'message_title' => 'Welcome Message',
+           'messages' => "Welcome to FS-Scholarship Student Loan/Scholarship Application Portal",
+       ]);
+      
+    }
+
+    public function getAgentDetails(Request $request)
+    {
+           $id = $request->input('id');
+           $agentDetails = User::all()->where('id',$id)->first();
+  
+           $dob = date("d-m-Y", strtotime($agentDetails->dob) );
+           $reg_on = date("F j, Y", strtotime($agentDetails->created_at) );
+           $regid = User::select(['first_name', 'last_name'])
+                      ->where('id',$agentDetails->registrar_id)->first();
+
+           $data = array( "dateofBirth" => $dob ,
+                           "reg_on" => $reg_on,
+                           "registrar" => $regid->first_name.' '.$regid->last_name );
+           $array = array_merge($agentDetails->toArray(), $data);
+         
+           return response()->json($array);
     }
 
 

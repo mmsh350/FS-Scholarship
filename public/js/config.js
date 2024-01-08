@@ -12,7 +12,18 @@
   $(window).on('load', function(){
     $('body').addClass('loaded');
     $("#spinner").hide();
+    $("#spinner2").hide();
     
  });
 
 })();
+
+$('#read').click(function(evt) {
+  $.ajax({    //create an ajax request to get session data 
+     type: "POST",
+     url: "read",   //expect json File to be returned  
+     success: function(response){ 
+      $('#done').show();
+     }
+    });
+});

@@ -58,7 +58,7 @@
           <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
         </div>
         <div class="col-4 col-xl-4 page-title">
-          <h4 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h4>
+          <h4 class="f-w-700"> Admin Dashboard </h4>
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -228,12 +228,13 @@
                       </svg><span>Dashboard</span></a>
                       <ul class="sidebar-submenu expand">
                         <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
-                        <li><a class="" href="{{ route('staff.applications') }}">Applications</a></li>
-                        <li><a href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
-                        <li><a href="{{ route('staff.schools') }}">Schools</a></li>
+                        <li><a  href="{{ route('admin.users') }}">Users</a></li>
+                        <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
+                        <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
+                        <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
                       </ul>
-                  </li>
-                   
+                  </li>             
+               
                  
                 </ul>
               </div>

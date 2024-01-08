@@ -7,7 +7,7 @@ function logout(){
       closeOnConfirm: false,
       confirmButtonClass: "btn-danger",
       confirmButtonText: "Yes",
-      cancelButtonClass: "btn-info",
+      cancelButtonClass: "btn-secondary",
       cancelButtonText: "No",
       showLoaderOnConfirm: true
     }, function () {

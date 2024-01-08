@@ -17,7 +17,8 @@ class Transaction extends Model
         'status', 
         'type', 
         'gateway', 
-        'service_description',          
+        'service_description', 
+        'payerid'         
     ];
 
 }

@@ -114,18 +114,42 @@
                   <div class="notification-box">
                     <svg>
                       <use href="{{ asset('svg/icon-sprite.svg#notification') }}"></use>
-                    </svg><span class="badge rounded-pill badge-primary">0</span>
+                    </svg><span class="badge rounded-pill badge-danger">{{$notifycount}}</span>
                   </div>
                   <div class="onhover-show-div notification-dropdown">
-                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notitications</h5>
-                    <ul class="notification-box">
+                    <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notifications</h5>
+                    <ul>
+                     
+                      @if($notifications->count() != 0)                      
+                      @foreach($notifications as $data)
+
                       <li class="d-flex"> 
-                        
-                        <div class="flex-grow-1"> <a href="#">
-                            <h6>Approval</h6></a>
-                          <p>No Notification Available</p>
+                        <div class="">
+                            <h6></h6>
+                            <p>{{$data->messages}}</p>
+                            <p class="txt-primary mb-0 pull-right"> ~ {{date("F j, Y", strtotime($data->created_at) );}} ~ </p>
                         </div>
                       </li>
+
+                      @endforeach
+                      @else
+                      <li class="d-flex"> 
+                        <div class="">
+                             <h6>No Notification yet!</h6>
+                        </div>
+                      </li>
+
+                      @endif
+
+                      <li class="d-flex"> 
+                        <div class="">
+                            <p><a id="read" href="#">Mark Read</a></p>
+                            <p style="display:none" id="done" class="text-danger">Done</p>
+                        </div>
+                      </li>
+
+
+
                     </ul>
                   </div>
                 </li>
@@ -209,9 +233,9 @@
                       </svg><span>Dashboard</span></a>
                     <ul class="sidebar-submenu expand">
                       <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                      <li><a  class="active" href="{{ route('wallet') }}"> Wallet</a></li>
+                      <li><a href="{{ route('loan') }}">Loans</a></li>
                       <li><a  href="{{ route('application') }}">Applications</a></li>
-                      <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
+                      <li><a  class="active" href="{{ route('wallet') }}"> Fund Wallet</a></li>
                       <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>

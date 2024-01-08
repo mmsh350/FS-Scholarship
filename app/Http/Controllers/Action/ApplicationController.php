@@ -3,10 +3,18 @@
 namespace App\Http\Controllers\Action;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Mail\ApprovalMail;
+use App\Mail\disburseMail;
+use App\Mail\DueMail;
+use App\Mail\RejectMail;
+use App\Mail\UpcommingMail;
+use App\Models\App_Notification;
 use Illuminate\Http\Request;
 use App\Models\Application;
+use App\Models\Approval;
 use App\Models\Countries;
 use App\Models\Lga;
+use App\Models\Repayment;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Models\School;
@@ -14,9 +22,9 @@ use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPSTORM_META\map;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class ApplicationController extends Controller
 {
@@ -25,6 +33,14 @@ class ApplicationController extends Controller
         $loginUserId = Auth::user()->id;
         $stateId =  Auth::user()->state_id;
 
+        $active =Auth::user()->is_active;
+        //Check if user has been disabled
+        if($active !="1")
+        {
+           Auth::logout();
+               return view('error') ;
+        }
+        
         if(Auth::user()->gender == '' || Auth::user()->dob == '')
         {
                return view('profile.edit');
@@ -37,10 +53,20 @@ class ApplicationController extends Controller
             {
                     $approve_count = 0;
                     $reject_count = 0;
+                    $notifycount =0;
                     
                     $applications = Application::all()->where('user_id', $loginUserId)
                     ->sortByDesc('id')
                     ->take(5);
+
+                    $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                    ->sortByDesc('id')
+                    ->take(3);
+
+                    $notifycount = App_Notification::all()
+                                                ->where('user_id', $loginUserId)
+                                                ->where('status', 'unread')
+                                                ->count();
 
                     $approve_count = Application::all() 
                                     ->where('user_id', $loginUserId)
@@ -51,11 +77,30 @@ class ApplicationController extends Controller
                     
                     return view('application')
                             ->with(compact('applications'))
+                            ->with(compact('notifications'))
+                            ->with(compact('notifycount'))
                             ->with(compact('approve_count'))
                             ->with(compact('reject_count'));
             
             }else if(Auth::user()->role == 'staff') 
             {
+                $notifycount =0;
+                $notifications =0;
+
+                   //Fetch State Name
+                   $getName = State::select('stateName')
+                   ->where('id', $stateId)->first();
+                    $stateName =  $getName->stateName;
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+
                 if ($request->ajax()) {
                     
                     $data = Application::select(
@@ -79,7 +124,7 @@ class ApplicationController extends Controller
 
                     ->editColumn('created_at', function ($row) {
                         
-                        return  date("d-m-Y H:i:s", strtotime($row->created_at) );
+                        return  date("M j, Y", strtotime($row->created_at) );
                           })
 
                           ->editColumn('app_status', function ($row) {
@@ -104,12 +149,148 @@ class ApplicationController extends Controller
                     }
 
 
-                  return view('staff.application');
+                  return view('staff.application') 
+                  ->with(compact('notifications'))
+                  ->with(compact('notifycount'))
+                  ->with(compact('stateName'));
+            }
+            else if(Auth::user()->role == 'agent') {
+
+            }
+            else if(Auth::user()->role == 'admin') {
+                $notifycount =0;
+                $notifications =0;
+
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+
+                if ($request->ajax()) {
+                    
+                    $data = Application::select(
+                             'id',
+                             'created_at',
+                             'names',
+                             'phone',
+                             'ramount', 
+                             'app_verify',
+                            )
+                  
+                     ->where('status','Pending' )
+                     ->where('app_verify','1' )
+                     ->where('app_status','Open' );
+
+                    return Datatables($data)
+
+                    ->editColumn('ramount', function ($row) {
+                        return  "&#8358;".number_format($row->ramount ,2);
+                       
+                          })->escapeColumns('ramount')
+
+                    ->editColumn('created_at', function ($row) {
+                        
+                        return  date("M j, Y", strtotime($row->created_at) );
+                          })
+
+                          ->editColumn('app_verify', function ($row) {
+                              if($row->app_verify == 1)
+                                  return  "<span class='badge badge-success'> Pass </span>";
+                             else if($row->app_verify == 0)
+                             return  "<span class='badge badge-success'>Failed</span>";
+                             else
+                                return  "<span class='badge badge-success'>Pending</span>";
+                            })
+                     
+                           
+                      ->addIndexColumn()
+                      ->addColumn('action', function($row){
+                            
+                        // Button Customizations
+                        $btn = "
+                            <a 
+                            class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                             data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                            Look up<i class='icofont icofont-look'> </i> </a>";
+                        return $btn;
+                    }) ->rawColumns(['action']) 
+                    ->make(true);
+        
+                    }
+
+
+                  return view('admin.applications') 
+                  ->with(compact('notifications'))
+                  ->with(compact('notifycount'));
+            }
+            else{
+                Auth::logout();
+                return view('error') ;
             }
             
         }
     }
-     
+    
+    public function approvedlist(Request $request){
+        $loginUserId = Auth::user()->id;
+        
+        if ($request->ajax()) {
+                        
+            $data = Application::select(
+                     'id',
+                     'created_at',
+                     'names',
+                     'phone',
+                     'ramount', 
+                     'status', 
+                     'app_status',
+                    )
+          
+             
+             ->where('status', 'Approved');
+            return Datatables($data)
+    
+            ->editColumn('ramount', function ($row) {
+                return  "&#8358;".number_format($row->ramount ,2);
+               
+                  })->escapeColumns('ramount')
+    
+            ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })
+    
+                  ->editColumn('app_status', function ($row) {
+                     if($row->app_status == 'Close')
+                         return  "<span class='badge badge-danger'>".$row->app_status."</span>";
+                        else
+                        return  "<span class='badge badge-success'>".$row->app_status."</span>";
+                      })->escapeColumns('app_status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                    <a 
+                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                    Look up<i class='icofont icofont-look'> </i> </a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            }
+    
+            
+          return view('staff.application');
+      }
 
   public function verifiedlist(Request $request){
     $loginUserId = Auth::user()->id;
@@ -122,6 +303,7 @@ class ApplicationController extends Controller
                  'names',
                  'phone',
                  'ramount', 
+                 'status', 
                  'app_status',
                 )
       
@@ -136,7 +318,7 @@ class ApplicationController extends Controller
 
         ->editColumn('created_at', function ($row) {
             
-            return  date("d-m-Y H:i:s", strtotime($row->created_at) );
+            return  date("M j, Y", strtotime($row->created_at) );
               })
 
               ->editColumn('app_status', function ($row) {
@@ -171,7 +353,7 @@ class ApplicationController extends Controller
 
 
             //Document Upload
-            'file' => 'required|mimes:pdf|max:2048',
+            'file' => 'required|mimes:pdf|max:5048',
             //Head Of School
             'hos_address' => ['required','string','max:255'],
             'hos_city' => ['required','string','max:255'],
@@ -466,9 +648,26 @@ class ApplicationController extends Controller
            
     }
 
-   
+    
+    public function  rejectOffer(Request $request)
+    {
+        //Mark Application has paid
+        $affected = Application::where('id', $request->appid)
+        ->update([
+                'app_status' =>'close',
+                'app_accept' =>'2'
+                ]);
+
+    }
+    
     public function  initialFee(Request $request)
     {
+        $request->validate([
+            'account_name' => ['required','string','max:255'],
+            'account_number' => 'required|numeric|digits:10',
+            'bank_name' => ['required','string','max:255'],
+        ]);
+
          $loginUserId = Auth::user()->id;//login user
 
          //get requested user Wallet Balance information
@@ -509,7 +708,7 @@ class ApplicationController extends Controller
                 //update transaction history
                 $user = Transaction::create([
                     'userid' => $loginUserId,
-                    'payerid' => '',
+                    //'payerid' => '',
                     'referenceId' => strtoupper($referenno),
                     'service_type' => '2',
                     'service_description' => "Initial 1% Payment Fee",  
@@ -521,10 +720,15 @@ class ApplicationController extends Controller
 
                //Mark Application has paid
                $affected = Application::where('id', $request->appid)
-                            ->update(['pay_status' =>'paid']);
+                            ->update([
+                                    'pay_status' =>'paid',
+                                    'acct_name' =>ucwords(strtolower($request->account_name)),
+                                    'acct_number' =>$request->account_number,
+                                    'acct_bankname' =>$request->bank_name,
+                                    'app_accept' =>'1'
+                                    ]);
          }
-
-          
+                  
     }
 
     public function getApplicationDetails(Request $request)
@@ -615,11 +819,210 @@ class ApplicationController extends Controller
         return response()->json($array);
     }
 
+
+    public function getApplicationData(Request $request)
+    {
+        $id = $request->input('id');
+
+        //Get application details
+        $appDetails = Application::all()->where('id',$id)->first();
+        
+        $userid = $appDetails->user_id;
+        $usersData = User::select('role','phone_number','first_name')->where('id',$userid)->first();
+
+        //Request amount
+        $amt = number_format($appDetails->ramount ,2);
+        //Get state and lga
+        $state = State::select('stateName')->where('id',$appDetails->state_id)
+            ->first();
+        $lga = Lga::select('lgaName')->where('id',$appDetails->lga_id)
+            ->first();
+        //Get country & Nationality
+        $country = Countries::select('CountryName')->where('id',$appDetails->country)->first();
+
+        $nationality = Countries::select('CountryName')->where('id',$appDetails->nationality)->first();
+        //Update dob 
+        $dob = date("d-m-Y", strtotime($appDetails->dob) );
+
+          //Update requeste amount 
+          $appamount = number_format($appDetails->approved_amount ,2);
+          $initamount = number_format($appDetails->initial_fee ,2);
+
+        //get next ok kin information
+         $kinDetails = DB::table('next_kins')->where('application_id',$id)->first();
+
+          //Get state and lga
+        $kin_state = State::select('stateName')->where('id',$kinDetails->nok_state)
+        ->first();
+        $kin_lga = Lga::select('lgaName')->where('id',$kinDetails->nok_lga)
+        ->first();
+
+         //Update kin dob 
+         $nokdob = date("d-m-Y", strtotime($kinDetails->nok_dob) );
+
+
+         //get next ok Education information
+         $eduDetails = DB::table('educations')->where('application_id',$id)->first();
+         //get school name
+         $schlname = School::select('schl_name')->where('id',$eduDetails->school_name)
+         ->first();
+
+          //get Education information
+          $GuaDetails = DB::table('guarantors')->where('application_id',$id)->first();
+
+           //get Head of School information
+           $HosDetails = DB::table('head_of_schools')->where('application_id',$id)->first();
+
+            //get Head of school state
+            $hos_state = State::select('stateName')->where('id',$HosDetails->state)
+            ->first();
+            //get Head of School information
+            $UploadsDetails = DB::table('uploads')->where('application_id',$id)->first();
+        
+         $data2 = array(  "dateofBirth" => $dob ,
+                         "state" => $state,
+                         "lga" => $lga ,
+                         "country_name" => $country,
+                         "nationality_name"=>$nationality,
+                         "amount"=>$amt,
+                         "kin_state"=>$kin_state,
+                         "kin_lga"=>$kin_lga,
+                         "nok_dob"=>$nokdob,
+                         "school"=>$schlname,
+                         "hoss" => $hos_state,
+                        "appamount"=>$appamount,
+                        "initamount"=>$initamount
+                         );
+
+
+       $data3 = array("kin"=>$kinDetails);
+       $data4 = array("edu" =>$eduDetails);
+       $data5 = array("gua" =>$GuaDetails);
+       $data6 = array("hos" =>$HosDetails);
+       $data7 = array("upload" =>$UploadsDetails);
+       $data8 = array("initiator" =>$usersData);
+       
+
+        $array = array_merge($appDetails->toArray(), $data2);
+        $array = array_merge($array,$data3,$data4,$data5, $data6,$data7, $data8);
+        return response()->json($array);
+    }
+
+
     public function  verifyApp(Request $request)
     {
             $appid = $request->appid;
             $status = $request->status;
-            $loginUserId = Auth::user()->id;//login staff
+            $loginUserId = Auth::user()->id;//login staff or admin
+
+           if(Auth::user()->role == 'admin'){
+             
+            //Get userid from application
+             //Get application details
+             $appUserId = Application::all()->where('id',$appid)->first();
+
+             $appName =  $appUserId->names;
+             $email = $appUserId->email;
+             $apptype =  $appUserId->category;
+              
+             if($status == 'approved'){
+                  //Check if Scholarship
+                if($apptype == 'Scholarship'){
+                        $request->validate([
+                            'Approve_Amount' =>  'required|numeric|min:5000|max:1000000',
+                            'Initial_Fee' =>     'required|numeric|min:0|max:0',
+                            'Monthly_Repayment'=>'required|numeric|min:0|max:0',
+                        ]);
+                 }else{
+                    $request->validate([
+                        'Approve_Amount' =>  'required|numeric|min:5000|max:1000000',
+                        'Initial_Fee' =>     'required|numeric|min:1000|max:1000000',
+                        'Monthly_Repayment'=>  'required|numeric|min:500|max:1000000',
+                    ]);
+                 }
+                 Application::where('id', $appid)->update(['status' => 'Approved',
+                                                           'approved_amount'=>$request->Approve_Amount,
+                                                         'initial_fee'=>$request->Initial_Fee,
+                                                         'monthly_repayment'=>$request->Monthly_Repayment]);
+ 
+                    //Approval Record
+                    Approval::create([
+                        'app_id' =>  $request->appid,
+                        'approved_amount' => $request->Approve_Amount,
+                        'initial_fee' => $request->Initial_Fee,
+                        'monthly_repayment' => $request->Monthly_Repayment,
+                    ]);
+                     //update notification history
+                     App_Notification::create([
+                         'user_id' =>  $appUserId->user_id,
+                         'message_title' => 'Approval',
+                         'messages' => 'Congratulations! Your application has been approved, Proceed to accept your offer',
+                     ]);
+
+                     //Send Mail
+                     $appdata=[
+                        'Name' => ucwords(strtolower($appName)),
+                        'approved' => $request->Approve_Amount,
+                        'initial_fee' => $request->Initial_Fee,
+                        'monthly_repayment' => $request->Monthly_Repayment,
+                     ];
+            
+                     try {
+                             //Send mail to User
+                             $send = Mail::to($email)->send(new ApprovalMail($appdata));
+                          } catch (TransportExceptionInterface $e) {
+                            return response()->json([
+                              "message"=> "Email Failed",
+                              "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                          ], 422);
+                       }
+               
+             }
+             else{
+
+                if(empty($request->reason) || $request->reason == null )
+                {
+                        return response()->json([
+                            "message"=> "Error",
+                            "errors"=>array("Error"=> "Please Enter Approval Reason")
+                        ], 422);
+    
+                 }
+                 Application::where('id', $appid)->update(['status' => 'Rejected',
+                                                           'app_status' => 'Close',
+                                                           'comments'=>$request->reason ]);
+ 
+                      //update notification history
+                      App_Notification::create([
+                         'user_id' =>  $appUserId->user_id,
+                         'message_title' => 'Approval',
+                         'messages' => 'Sorry, Your Application has been rejected, see reason why rejected on the application page.',
+                     ]);
+
+                 //Send Mail
+                 $appdata=[
+                    'Name' => ucwords(strtolower($appName)),
+                    'reason' => $request->reason,
+                 ];
+        
+                 try {
+                         //Send mail to User
+                         $send = Mail::to($email)->send(new RejectMail($appdata));
+                      } catch (TransportExceptionInterface $e) {
+                        return response()->json([
+                          "message"=> "Email Failed",
+                          "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                      ], 422);
+                   }
+             }
+
+          }
+          else if(Auth::user()->role == 'staff'){
+                //Get userid from application
+             //Get application details
+            $appUserId = Application::select('user_id')->where('id',$appid)->first();
+          
+           
 
             if(empty($request->reason) || $request->reason == null )
             {
@@ -634,6 +1037,14 @@ class ApplicationController extends Controller
                 Application::where('id', $appid)->update(['app_verify' => '1', 
                                                          'verify_id' => $loginUserId,
                                                          'comments'=>$request->reason]);
+
+                    //update notification history
+                    App_Notification::create([
+                        'user_id' =>  $appUserId->user_id,
+                        'message_title' => 'Verification',
+                        'messages' => 'Congratulations! Your application has passed the verification stage.',
+                    ]);
+              
             }
             else{
                 Application::where('id', $appid)->update(['app_verify' => '0', 
@@ -642,6 +1053,423 @@ class ApplicationController extends Controller
                                                           'app_status' => 'Close',
                                                           'comments'=>$request->reason
                                                         ]);
+
+                     //update notification history
+                     App_Notification::create([
+                        'user_id' =>  $appUserId->user_id,
+                        'message_title' => 'Verification',
+                        'messages' => 'Sorry, Your Application did not passed the verification stage.',
+                    ]);
             }
+
+          }
+           else{
+                Auth::logout();
+                return view('error') ;
+            }            
     }
+
+    public function  approvalData(Request $request)
+    {
+        $id = $request->input('appid');
+
+        //Get application details
+        $ApprovalDetails = Approval::all()->where('app_id',$id)->first(); 
+
+         $approved_amount = number_format($ApprovalDetails->approved_amount,2);
+         $initial_fee = number_format($ApprovalDetails->initial_fee,2);
+         $monthly_repayment = number_format($ApprovalDetails->monthly_repayment,2);
+         $created_at = date("M j, Y", strtotime($ApprovalDetails->created_at) );
+         $interest =  number_format( $ApprovalDetails->approved_amount * 0.1,2);
+
+         //$checkdate = str_replace('/', '-', );
+         $d1 = date("Y-m-d",strtotime('+30 days')); 
+         $d2 = date('Y-m-d',strtotime('+30 days',strtotime($d1)));
+         $d3 = date('Y-m-d',strtotime('+30 days',strtotime($d2)));
+         $d4 = date('Y-m-d',strtotime('+30 days',strtotime($d3)));
+         $d5 = date('Y-m-d',strtotime('+30 days',strtotime($d4)));
+         $d6 = date('Y-m-d',strtotime('+30 days',strtotime($d5)));
+         $d7 = date('Y-m-d',strtotime('+30 days',strtotime($d6)));
+         $d8 = date('Y-m-d',strtotime('+30 days',strtotime($d7)));
+         $d9 = date('Y-m-d',strtotime('+30 days',strtotime($d8)));
+         $d10 = date('Y-m-d',strtotime('+30 days',strtotime($d9)));
+         $d11 = date('Y-m-d',strtotime('+30 days',strtotime($d10)));
+         $d12 = date('Y-m-d',strtotime('+30 days',strtotime($d11)));
+       
+        $data = array( "approved_amount"=> $approved_amount, 
+                       "initial_fee"=> $initial_fee, 
+                       "monthly_repayment"=>  $monthly_repayment,
+                       "created_at"=>  $created_at,
+                       "d1"=>$d1,"d2"=>$d2,"d3"=>$d3,
+                       "d4"=>$d4,"d5"=>$d5,"d6"=>$d6,
+                       "d7"=>$d7,"d8"=>$d8,"d9"=>$d9,
+                       "d10"=>$d10,"d11"=>$d11,"d12"=>$d12,
+                       "interest"=>$interest
+                    );
+         $array = array_merge($ApprovalDetails->toArray(), $data);
+         
+           return response()->json($array);
+
+    }
+
+    public function  disburse(Request $request)
+    {
+        $appid = $request->input('app_id');
+         
+
+        //Validation
+         
+         //get approval details
+         $appDetails = Application::all()->where('id',$appid)->first(); 
+
+        //update disbursed status
+        Application::where('id', $appid)->update(['disbursed' => '1']);
+        
+        //get approval details
+        $ApprovalDetails = Approval::all()->where('app_id',$appid)->first(); 
+
+       
+       // $initial_fee = number_format($ApprovalDetails->initial_fee,2);
+        $monthly_repayment = $ApprovalDetails->monthly_repayment;    
+
+        //applicant details
+        $user_id = $appDetails->user_id;
+        $appname =   $appDetails->names;
+        $email =   $appDetails->email;
+        $apptype = $appDetails->category;
+
+        if($apptype == 'Scholarship'){
+
+            $interest =   $ApprovalDetails->approved_amount * 0.1;
+            $disbursed_amount =  $ApprovalDetails->approved_amount -  $interest;
+    
+            //update approval
+            Approval::where('app_id', $appid)->update(['status' => 'Completed',
+                                                       'disbursed_date' => Carbon::now(),
+                                                       'disbursed_amount' =>  $disbursed_amount,
+                                                       'disbursed_interest'=>  '0',
+                                                      ]);
+             
+    
+             //Generate random reference number 
+                   //Convert to function later
+                   $referenno = "";
+                   $data = "123456123456789071234567890890";
+                   $data .= "aBCdefghijklmn123opq45rs67tuv89wxyz"; // if you need alphabatic also
+    
+                   for ($i = 0; $i < 12; $i++) {
+                           $referenno .= substr($data, (rand() % (strlen($data))), 1);}
+    
+                   $loginUserId = Auth::user()->id;//login staff or admin
+    
+                   //update transaction history
+                    Transaction::create([
+                       'userid' => $user_id,
+                       'payerid' =>   $loginUserId,
+                       'referenceId' => strtoupper($referenno),
+                       'service_type' => '3',
+                       'service_description' => "Loan Disbursement-FS",  
+                       'amount' =>  $disbursed_amount,
+                       'type' => 'plus',
+                       'gateway' => 'FS-TRANSACT',
+                       'status' => 'Approved',
+                   ]);
+    
+                    //update notification history
+                    App_Notification::create([
+                        'user_id' =>  $user_id,
+                        'message_title' => 'Loan Disbursement',
+                        'messages' => "We're pleased to inform you that your approved loan amount has been successfully disbursed to your designated account.",
+                    ]);
+    
+                    //Send Mail
+                    $appdata=[
+                       'Name' => ucwords(strtolower($appname)),
+                    ];
+           
+                    try {
+                            //Send mail to User
+                            $send = Mail::to($email)->send(new disburseMail($appdata));
+                         } catch (TransportExceptionInterface $e) {
+                           return response()->json([
+                             "message"=> "Email Failed",
+                             "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                         ], 422);
+                      }
+        }
+        else{
+            $interest =   $ApprovalDetails->approved_amount * 0.1;
+            $disbursed_amount =  $ApprovalDetails->approved_amount -  $interest;
+    
+            //update approval
+            Approval::where('app_id', $appid)->update(['status' => 'ongoing',
+                                                       'disbursed_date' => Carbon::now(),
+                                                       'disbursed_amount' =>  $disbursed_amount,
+                                                       'disbursed_interest'=>  $interest,
+                                                      ]);
+            //repayment details
+            
+            Repayment::insert([
+                [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt1
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt2
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt3
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt4
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt5
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt6
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt7
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt8
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt9
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt10
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt11
+               ],
+               [
+                'app_id' =>  $appid,
+                'repayment_amount' =>  $monthly_repayment,
+                'status' =>'Pending',
+                'repayment_date' =>$request->mt12
+               ],
+    
+    
+             ]);
+    
+             //Generate random reference number 
+                   //Convert to function later
+                   $referenno = "";
+                   $data = "123456123456789071234567890890";
+                   $data .= "aBCdefghijklmn123opq45rs67tuv89wxyz"; // if you need alphabatic also
+    
+                   for ($i = 0; $i < 12; $i++) {
+                           $referenno .= substr($data, (rand() % (strlen($data))), 1);}
+    
+                   $loginUserId = Auth::user()->id;//login staff or admin
+    
+                   //update transaction history
+                    Transaction::create([
+                       'userid' => $user_id,
+                       'payerid' =>   $loginUserId,
+                       'referenceId' => strtoupper($referenno),
+                       'service_type' => '3',
+                       'service_description' => "Loan Disbursement-FS",  
+                       'amount' =>  $disbursed_amount,
+                       'type' => 'plus',
+                       'gateway' => 'FS-TRANSACT',
+                       'status' => 'Approved',
+                   ]);
+    
+                    //update notification history
+                    App_Notification::create([
+                        'user_id' =>  $user_id,
+                        'message_title' => 'Loan Disbursement',
+                        'messages' => "We're pleased to inform you that your approved loan amount has been successfully disbursed to your designated account.",
+                    ]);
+    
+                    //Send Mail
+                    $appdata=[
+                       'Name' => ucwords(strtolower($appname)),
+                    ];
+           
+                    try {
+                            //Send mail to User
+                            $send = Mail::to($email)->send(new disburseMail($appdata));
+                         } catch (TransportExceptionInterface $e) {
+                           return response()->json([
+                             "message"=> "Email Failed",
+                             "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                         ], 422);
+                      }
+        }          
+
+    }
+ 
+    public function repaylist(Request $request){
+        
+        $appid = $request->input('appid');
+       
+        if ($request->ajax()) {
+                        
+            $data = Repayment::select(
+                     'id',
+                     'repayment_amount',
+                     'repayment_date',
+                     'status', 
+            )->where('app_id', $appid);
+            return Datatables($data)
+    
+            ->editColumn('repayment_amount', function ($row) {
+                return  "&#8358;".number_format($row->repayment_amount ,2);
+               
+                  })->escapeColumns('repayment_amount')
+    
+            ->editColumn('repayment_date', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->repayment_date) );
+                  })
+    
+                  ->editColumn('status', function ($row) {
+                    if($row->status == 'Paid')
+                         return  "<span class='badge badge-success'>".$row->status."</span>";
+                    else
+                         return  "<span class='badge badge-warning'>".$row->status."</span>";
+                    })->escapeColumns('status')
+
+                 ->editColumn('metadata', function ($row) {
+                    
+                        $date = Carbon::parse($row->repayment_date);
+                        $now = Carbon::now();
+                        $diff = $date->diffInDays($now->toDateString());
+    
+                       if( $date->isPast()){
+                            //Check if its due date
+                            if($date->eq($now->toDateString()))
+                                return  "<span class='badge badge-warning'> Due Today</span>";
+                             else
+                                return  "<span class='badge badge-danger'>".'Overdue for ('.$diff." days) </span>";
+                       }else
+                        return  "<span class='badge badge-success'>".'Due in ('.$diff." days) </span>";
+    
+    
+                          })->escapeColumns('status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                  <a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            } 
+          return view('admin.applications');
+        }
+       public function reminder(Request $request)
+         {
+             $id = $request->input('id');
+
+            //Get Repayment details
+            $planDetails = Repayment::all()->where('id',$id)->first(); 
+
+            //Get application details
+            $appDetails = Application::select('user_id','email','names')->where('id',$planDetails->app_id)->first(); 
+            $date = Carbon::parse($planDetails->repayment_date);
+
+            if( $date->isPast()){
+              
+                       //update notification history
+              App_Notification::create([
+                  'user_id' =>  $appDetails->user_id,
+                  'message_title' => 'Missed Payment Alert',
+                  'messages' => "We hope you're well. We noticed that your recent loan payment of ₦ ".
+                  number_format( $planDetails->repayment_amount,2)." due on ". 
+                  date("M j, Y", strtotime($planDetails->repayment_date))." has not been received.",
+               ]);
+
+            //Send Mail
+            $appdata=[
+               'Name' => ucwords(strtolower($appDetails->names)),
+               'Due_date' => date("M j, Y", strtotime($planDetails->repayment_date)),
+               'Amount' => "₦". number_format( $planDetails->repayment_amount,2),
+            ];
+
+            
+            try {
+                    //Send mail to User
+                    $send = Mail::to($appDetails->email)->send(new DueMail($appdata));
+                 } catch (TransportExceptionInterface $e) {
+                   return response()->json([
+                     "message"=> "Email Failed",
+                     "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                 ], 422);
+              }
+               
+
+            }else{
+                    //update notification history
+              App_Notification::create([
+                'user_id' =>  $appDetails->user_id,
+                'message_title' => 'Upcoming Payment Reminders',
+                'messages' => "A friendly reminder that your next loan payment of ₦ ".
+                    number_format( $planDetails->repayment_amount,2)." is due on ".
+                    date("M j, Y", strtotime($planDetails->repayment_date)),
+               ]);
+
+            //Send Mail
+            $appdata=[
+               'Name' => ucwords(strtolower($appDetails->names)),
+               'Due_date' => date("M j, Y", strtotime($planDetails->repayment_date)),
+               'Amount' => "₦". number_format( $planDetails->repayment_amount,2),
+            ];
+
+            
+            try {
+                    //Send mail to User
+                    $send = Mail::to($appDetails->email)->send(new UpcommingMail($appdata));
+                 } catch (TransportExceptionInterface $e) {
+                   return response()->json([
+                     "message"=> "Email Failed",
+                     "errors"=>array("Email Not Sent"=> "Sorry Error sending Mail, check your Mail Settings")
+                 ], 422);
+              }
+               
+                
+            }         
+    }
+
+
 }

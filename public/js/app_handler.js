@@ -18,7 +18,7 @@ $(document).ready(function() {
 				success: function(dataResult) {
 							window.scrollTo(0, 0);
 							$("#success").show();
-							$('#success').append('<strong>Application Submitted Succesfully!</strong>');
+							$('#success').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+'<strong>Application Submitted successfully!</strong>');
 							$('#submit').html("Redirecting ...");
 							setTimeout(function(){  
 								$("#error").hide();
@@ -31,7 +31,7 @@ $(document).ready(function() {
 					$("#error").show();
 					$.each(data.responseJSON.errors, function (key, value) {
 						$("#error").empty();
-						$('#error').append('<strong>'+value+'</strong>');
+						$('#error').append('<i class="fa fa-info-circle" aria-hidden="true"></i>'+'<strong>'+value+'</strong>');
 					});
 					
 						setTimeout(function(){ 
