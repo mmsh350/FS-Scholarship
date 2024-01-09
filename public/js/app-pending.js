@@ -107,13 +107,104 @@ $("#repay").on( "click", function() {
     $('.repayModal').modal('show');  
 });
 
+$('.repayModal').on('hidden.bs.modal', function () {
+    $('.bd-example-modal-xl').css('z-index', '');
+});
+//Plan Modal
+var table3="";
 //Plan Modal
 $('.repayModal').on('shown.bs.modal', function(event) {
-
-    alert('hi');
-   
+    $('.bd-example-modal-xl').css('z-index', 1039);
     let appid = $('#appid').val() ;
-    $('#txt1').val(appid) ;
+    var _token = $('#_token').val();
+   //Ftech repay list    
+            var table3 = $('#repaylist').on( 'error.dt', function ( e, settings, techNote, message ) {
+                // console.log( 'An error has been reported by DataTables: ', message );
+            }).DataTable({
+                ajax: {
+                    url: 'repay-data',
+                    type: 'POST',
+                    data:{appid,_token},
+                },
+            processing: true,
+            serverSide: true,
+            pagingType: "full_numbers",
+            language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
+            lengthMenu: [
+            [5,10, 25, 50, -1],
+            [5,10, 25, 50, 'All'],
+            ],
+
+            columns: [
+            {data: 'id', name: 'id'},            
+            {data: 'repayment_amount', name: 'repayment_amount'},
+            {data: 'repayment_date', name: 'repayment_date'},
+            {data: 'status', name: 'status'},
+            {data: 'metadata', name: 'metadata'},
+            {data: 'action', name: 'action'},       
+            ],
+
+            dom: 'Blfrtip',
+            buttons: [
+            {
+            extend: 'print',
+            exportOptions: {
+            columns: [ 1, 2, 3,4 ]
+            },
+            title: 'Applicant Repayment List'
+            },
+            {
+            extend: 'pdfHtml5',
+            exportOptions: {
+            columns: [ 1, 2, 3,4,]
+            },
+            title: 'Applicant Repayment List'
+            },
+
+            ],
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+            $("td:first", nRow).html(iDisplayIndex +1);
+            return nRow;
+            },
+            
+            });
+
+            $('.repayModal tbody').on('click', '.remind', function () {
+                var row = $(this).closest('tr');
+                var id = table3.row( row ).data().id;
+                var _token = $('#_token').val();   
+                $("#modal-preloader2").show();
+                $.ajax({    //create an ajax request to get session data 
+                    type: "POST",
+                    url: "send-reminder",   //expect json File to be returned  
+                    data: {id:id,_token},		
+                    success: function(response){  
+                        $("#modal-preloader2").hide();
+                                    $(".disburseModal").scrollTop(0);
+                                    $("#done_3").show();
+                                    $('#done_3').append('<strong>Reminder Sent.</strong>');
+                                    setTimeout(function(){ 
+                                        $("#done_3").empty();
+                                        $("#done_3").hide();
+                                    }, 3000);
+                        },
+                        error: function(data) {
+                            $(".disburseModal").scrollTop(0);
+                            $("#err3").show();
+                            $.each(data.responseJSON.errors, function (key, value) {
+                                $("#err3").empty();
+                                $('#err3').append('<strong>'+value+'</strong>');
+                            });
+                                setTimeout(function(){ 
+                                    $("#err3").empty();
+                                    $("#err3").hide();
+                                }, 3000);
+                        }
+                    });
+    
+
+              });
+            
 
 });
  //show Modal
@@ -177,9 +268,12 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                 $("#acct_number").html(data.acct_number);
                 $("#acct_name").html(data.acct_name);
                 $("#acct_bankname").html(data.acct_bankname);
+                $("#repayrow").show();
+                $("#repaystatus").html('<span class="badge badge-primary">'+data.approvalDataStatus+'</span>');
             }
             else{
                 $("#acct_info").hide();
+                $("#repayrow").hide();
             }
            
             if(data.disbursed == '1'){

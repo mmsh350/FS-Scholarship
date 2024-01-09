@@ -252,33 +252,34 @@
 				 <div class="row"> 
                      
                       <div class="col-md-4">
-                        <div class="btn-light1-primary b-r-10"> 
+                        <div class="btn-light1-warning b-r-10"> 
                           <div class="upcoming-box"> <a href="#">
-                            <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$applications->count()}}</span>
+                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/loan.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Approved Loan</h6>  
+                                <span class="f-14 txt-dark"> &#8358; {{number_format($approve_amount,2)}}</span>
                           </div></a>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="btn-light1-success b-r-10"> 
                           <div class="upcoming-box  ">  <a href="#">
-                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Approved Application</h6> 
-                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/repay.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Re-Paid Loan</h6> 
+                          <span class="f-14 txt-dark"> &#8358; {{number_format($paid_amount,2)}} </span>
                           </div></a>
                         </div>
                       </div>
 					  
-					  <div class="col-md-4">
+					           <div class="col-md-4">
                         <div class="btn-light1-danger b-r-10"> 
                           <div class="upcoming-box mb-0">  <a href="#">
-                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Rejected Application</h6>
-							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
-                          </div>
+                            <div class="upcoming-icon bg-danger"> 
+                              <img src="{{ asset('images/dashboard-2/svg-icon/naira.png') }}" alt=""></div>
+                              <h6 class="p-b-10">Loan Balance</h6> 
+                              <span class="f-14 txt-dark"> &#8358; {{ number_format($approve_amount - $paid_amount, 2); }}</span>
+							               </div>
                         </div> </a>
-                      </div>                       
+                      </div> 
                     </div>
 					
 					<!------- Application ------>
@@ -288,14 +289,13 @@
                   <div class="card-header">
                     <div class="card-body">
                     <ul class="nav nav-tabs" id="icon-tab" role="tablist">
-                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark active" id="icon-home-tab" data-bs-toggle="tab" href="#icon-home" role="tab" aria-controls="icon-home" aria-selected="true"><i class="icofont icofont-newspaper"></i>My Applications</a></li>
-                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark" id="profile-icon-tabs" data-bs-toggle="tab" href="#profile-icon" role="tab" aria-controls="profile-icon" aria-selected="false" tabindex="-1"><i class="fa fa-plus text-primary"></i>New Application</a></li>
+                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark active" id="icon-home-tab" data-bs-toggle="tab" href="#icon-home" role="tab" aria-controls="icon-home" aria-selected="true"><i class="icofont icofont-newspaper"></i>Loan Repayments</a></li>
                      </ul>
-                    <div class="tab-content" id="icon-tabContent">
+                  <div class="tab-content" id="icon-tabContent">
                       <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">
                      
                       <div class="alert alert-light-dark mt-3" role="alert">
-                          <p style="text-transform:none" class="txt-dark ">Each application can be tracked using its status, application status are indicated using <span class="bagde badge-light text-warning">Pending</span>,  <span class="bagde badge-light text-success">Approved</span> and  <span class="bagde badge-light text-danger">Rejected</span>. 
+                          <p style="text-transform:none" class="txt-dark ">Below is your loan repayment detais, Timely payments are crucial to maintaining a strong financial record. </span>. 
 
                         </div>
                       <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
@@ -304,93 +304,49 @@
                       <thead style="background-color:#2b3751;">
                         <tr class="border-bottom-primary text-light">
                           <th class="color-a">ID</th>
-                          <th class="color-a"> Date</th>
-                          <th class="color-a"> (&#8358;) Requested </th>
-                          <th class="color-a"> (&#8358;) Approved </th>
-                          <th class="color-a"> (&#8358;) initial Fee </th>
-                          <th class="color-a" width="15%"><center>Status</center></th>
-                          <th class="color-a" width="15%"><center>Action</center></th>
+                          <th class="color-a">Repayment Amount</th>
+                          <th class="color-a">Due dates</th>
+                          <th class="color-a">Status</th>
+                          <th class="color-a" width="15%">Action</th>
                         </tr>
                       </thead>
                         <tbody>
-                        @if($applications->count() != 0)
-                        
+                        @if($repayments != null)
+                    
                         @php $i = 1; @endphp
-                        @foreach($applications as $data)
+                        @foreach($repayments as $data)
                         <tr class="border-bottom-secondary">
                           <th scope="row">{{ $i }}</th>
-                          <td>{{ date("M j, Y", strtotime($data->created_at));}}</td>
-                          <td>{{ number_format($data->ramount, 2)}}</td>
-                          <td>{{ number_format($data->approved_amount, 2)}}</td>
+                          <td>&#8358; {{ number_format($data->repayment_amount, 2)}}</td>
+                          <td>{{ date("M j, Y", strtotime($data->repayment_date));}}</td>
                           <td>
-                            {{ number_format($data->initial_fee, 2)}}
-                            
-                            @if($data->pay_status == "Pending")
-                            <i class="icofont icofont-question-circle" title="Pending initial fee payment"></i>
-                            @elseif($data->pay_status == "Paid")
-                            <i class="fa fa-check-circle" title="Initial fee payment Approved"></i>
+                            @if($data->status == "Pending")
+                            <span class="badge badge-warning">
+                              <i class="icofont icofont-question-circle" title="Pending repayment"></i> Pending</span>
+                            @elseif($data->status == "Paid")
+                            <span class="badge badge-success"> <i class="icofont icofont-check" title="Paid"></i>Paid</span>
                             @endif
                           </td>
-
-                          <td>
-                            <center>
-                            @if($data->status == "Pending" && $data->app_verify == "0")
-                                 <span class="badge badge-warning" title="Application is pending review by the staff in charge !" style="text-transform:none">
-                                  <i class="icofont icofont-info-circle"></i>&nbsp;Application pending review !</span>
-
-                            @elseif($data->status == "Pending" && $data->app_verify == "1")
-                                 <span class="badge rounded-pill badge-success" title="Application has passed the verification stage" style="text-transform:none"> 
-                                  <i class="icofont icofont-info-circle"></i>&nbsp; Your application has passed the <br/>verification stage</span>
+                           <td>
+                            @if($data->status == "Pending")
+                            <button class="btn btn-pill btn-dark btn-air-primary btn-xs"
+                             data-bs-toggle="modal" 
+                             id="topup" type="button" 
+                              data-id="{{$data->id}}" 
+                              data-amt="{{$data->repayment_amount}}" 
+                              data-amttext="{{ number_format($data->repayment_amount,2)}}" 
+                              data-date="{{ date("M j, Y", strtotime($data->repayment_date));}}" 
+                              data-original-title="" data-bs-target="#payModal">
+                              <i class="icofont icofont-pay">&nbsp;</i>Pay Now</button>
                             
-                            @elseif($data->status == "Approved")
-                                
-                                @if($data->status == "Approved" && $data->app_accept == "0")
-                                  <span class="badge rounded-pill badge-success" title="Kindly accept the offer by click on the button Accept Offer !" style="text-transform:none"> 
-                                    <i class="icofont icofont-info-circle"></i>&nbsp; Approved, Click on the action button <br/>to accept your Offer!</span>
-                                
-                                @elseif($data->status == "Approved" && $data->app_accept == "2")
-                                    <span class="badge rounded-pill badge-warning" title="You have rejected the offer !" style="text-transform:none"> 
-                                      <i class="icofont icofont-info-circle"></i>&nbsp; Offer rejected <br/> kindly submit a new application <br/> with neccessay document to get a new offer</span>
-                                
-                                @elseif($data->app_accept == "1"  && $data->disbursed == "0")
-                                <span class="badge rounded-pill badge-warning" title="Awaiting disbursement !" style="text-transform:none"> 
-                                 <i class="icofont icofont-info-circle"></i>&nbsp; Your application is now <br>Pending disbursement !</span>
-                             
-                                 @elseif($data->app_accept == "1" && $data->disbursed == "1")
-                                  <span class="badge rounded-pill badge-success" title="Your Application is now disbursed !" style="text-transform:none"> 
-                                    <i class="icofont icofont-info-circle"></i>&nbsp; Your application is now <br> disbursed !</span>
-                                  
-                               @endif
-                           
-                            @elseif($data->status == "Rejected")
-                              <span class="badge rounded-pill badge-danger" style="text-transform:none" title="Your Application is rejected !"> 
-                                <i class="icofont icofont-info-circle"></i>&nbsp; Your application is rejected <br> click on the action button to see why !</span>
-                               
                             @endif
-                            </center>
-                          </td>
-                          
-                          <td> 
-                           
-                            @if($data->status == "Approved" && $data->app_accept == "2")
-                                                          
-                            @elseif($data->status == "Rejected")
-                              <button class="btn btn-dark btn-sm " type="button" data-bs-toggle="modal"  data-comments="{{ $data->comments}}" data-original-title="reject" data-bs-target="#rejectModal">Reason</button>
-                           
-                            @elseif($data->status == "Approved" && $data->app_accept == "0" )
-                              <button class="btn btn-dark" type="button" data-bs-toggle="modal"   data-id="{{$data->id}}"  data-approve="{{ number_format($data->approved_amount,2)}}" data-cat="{{$data->category}}" data-amount="{{ number_format($data->initial_fee, 2)}}" data-original-title="test" data-bs-target="#payModal">Proceed</button>
-                           
-                            @else
-                              
-                            @endif
-                           
                           </td>
                         </tr>
                         @php $i++ @endphp
                         @endforeach
                         @else
                         <tr class="border-bottom-secondary">
-                        <td colspan="7"> <center>No Record Found</center></td>
+                        <td colspan="7"> <center>No oustanding Loan Records! </center></td>
                         </tr>
                         @endif
                       </tbody>
@@ -403,71 +359,19 @@
                         <div class="modal-content">
                           <div class="modal-body">
                             <div class="modal-toggle-wrapper">
-                              <h2 class="text-center" style=" text-decoration: underline;"><span id="cat" style=" text-decoration: underline;"></span> Offer Acceptance </h2>
+                              <h2 class="text-center" style=" text-decoration: underline;"><span id="cat" style=" text-decoration: underline;"></span> Loan Repayment </h2>
                               <input type="hidden" id="app_id">
 
-                              <h6 class="mb-3 mt-3" style="text-transform:none; color:green">Read the offer details carefully before proceeding</h6>
-                             
-                              <h6 class="mb-3 mt-3"> Approved Amount :  <b> &#8358;<span id="appv"></span></b></h6>
-                              <h6 class="mb-3 mt-3"> Initial upfront fee: <b> &#8358;<span id="onep"></span></b></h6>
-                             
-                              <h6 class="mb-3 mt-3" style="text-decoration:underline;text-weight:bold">Provide Account Details below</h6>
-
-                             <div class="row">
-                              <div class="col-xxl-6 col-sm-6">
-                                <label class="form-label" for="validationCustom04">Bank Name<span class="txt-danger">*</span></label>
-                                <select class="form-select" name="bank_name" id="bankname">
-                                  <option value="">Choose...</option>
-                                  <option id='Access Bank Plc'>Access Bank Plc</option>
-                                  <option id='Citibank Nigeria Limited'>Citibank Nigeria Limited</option>
-                                  <option id='Ecobank Nigeria Plc'>Ecobank Nigeria Plc</option>
-                                  <option id='Fidelity Bank Plc'>Fidelity Bank Plc</option>
-                                  <option id='First Bank Nigeria Limited'>First Bank Nigeria Limited</option>
-                                  <option id='First City Monument Bank Plc'>First City Monument Bank Plc</option>
-                                  <option id='Globus Bank Limited'>Globus Bank Limited</option>
-                                  <option id='Guaranty Trust Bank Plc'>Guaranty Trust Bank Plc</option>
-                                  <option id='Heritage Banking Company Ltd.'>Heritage Banking Company Ltd.</option>
-                                  <option id='Keystone Bank Limited'>Keystone Bank Limited</option>
-                                  <option id='Parallex Bank Ltd'>Parallex Bank Ltd</option>
-                                  <option id='Polaris Bank Plc'>Polaris Bank Plc</option>
-                                  <option id='Premium Trust Bank'>Premium Trust Bank</option>
-                                  <option id='Providus Bank'>Providus Bank</option>
-                                  <option id='Stanbic IBTC Bank Plc'>Stanbic IBTC Bank Plc</option>
-                                  <option id='Standard Chartered Bank Nigeria Ltd.'>Standard Chartered Bank Nigeria Ltd.</option>
-                                  <option id='Sterling Bank Plc'>Sterling Bank Plc</option>
-                                  <option id='SunTrust Bank Nigeria Limited'>SunTrust Bank Nigeria Limited</option>
-                                  <option id='Titan Trust Bank Ltd'>Titan Trust Bank Ltd</option>
-                                  <option id='Union Bank of Nigeria Plc'>Union Bank of Nigeria Plc</option>
-                                  <option id='United Bank For Africa Plc'>United Bank For Africa Plc</option>
-                                  <option id='Unity  Bank Plc'>Unity  Bank Plc</option>
-                                  <option id='Wema Bank Plc'>Wema Bank Plc</option>
-                                  <option id='Zenith Bank Plc'>Zenith Bank Plc</option>
-                                </select>
-                              </div>
-                              <div class="col-xxl-4 col-sm-6">
-                                <div class="">
-                                  <label class="form-label">Account No.<span class="text-danger">*</span></label>
-                                  <input class="form-control" name="account_number" id="acctno" maxlength="10" type="text" value="" >
-                                </div>
-                                </div>
-
-                                <div class="col-xxl-12 col-sm-12">
-                                  <div class="">
-                                    <label class="form-label">Account Name.<span class="text-danger">*</span></label>
-                                    <input class="form-control" name="account_name" id="acctname"  type="text" value="" >
-                                  </div>
-                                  </div>
-                            </div>
-                            
-                              <h6 class="mt-4" style="text-transform:none; text-align:justify">By accepting the offer means you have agreed to the <a target="_blank" href="https://fsscholarship.com/Loan-Terms-and-Condition.pdf">terms & Conditions </a>, this also include the initial upfront fee payment of &#8358;<span class="text-danger" id="amount"> </span>
-                              which will be debitted from your wallet upon the acceptance of the <span id="cat2"> </span>.
-                              </h6>
-                            
+                                <p class="mt-4" style="text-transform:none; text-align:justify">You are about to make a repayment of <b>&#8358;<span id="amttext">loading...</span></b> due on <b><span id="date">loading...</span></b>, to proceed click on the make payment button below. Otherwsie use the cancel button to exit.</p>
+                                 <input type="hidden" id="loanid"/>
                               <div id="error1" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible mt-4" role="alert"></div>
                               <div id="success1" style="display:none" class="alert alert-success alert-dismissible mt-4" role="alert"></div>
                   
-                              <button id="pay" class="btn btn-dark rounded-pill w-100 mt-4"><i class="icofont icofont-pay">&nbsp;</i> Accept</button>
-                              <button id="reject_offer"class="btn btn-danger mt-4 rounded-pill w-100 pb-0 d" type="button" >Reject</button>
+                              <button id="pay" class="btn btn-dark rounded-pill w-100 mt-4"><i class="icofont icofont-pay">&nbsp;</i> 
+                                Make Payment
+                                <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
+                              </button>
+                              <button data-bs-dismiss="modal" class="btn btn-danger mt-4 rounded-pill w-100 pb-0 d" type="button" >Cancel</button>
                             </div>
                           </div>
                         </div>
@@ -491,540 +395,7 @@
                     
                   </div>
                   </div>
-                      <div class="tab-pane fade" id="profile-icon" role="tabpanel" aria-labelledby="profile-icon-tabs">
-                       
-                      <div class="col-md-12">
-                <div class="card">
-                  <div class="card-header">
-                    <h4>Online Application Form </h4>
-                    <p class="f-m-light mt-1" style="text-transform:none">
-                       Kindly complete this form to enable us serve you better, Please Read the <a target="_blank" href="https://fsscholarship.com/Loan-Terms-and-Condition.pdf">terms & Conditions </a>before you fill this form. </p>
-                       <p class="f-m-light mt-1 text-danger" style="text-transform:none"> </p>
-                  
-                      </div>
-                      <div id="error" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible" role="alert"></div>
-                    <div id="success" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
-                  
-                  <div class="card-body">
-                    <div class="vertical-main-wizard">
-                      <div class="row g-3">    
-                        <div class="col-xxl-3 col-xl-4 col-12">
-                          <div class="nav flex-column header-vertical-wizard" id="wizard-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link active" id="wizard-contact-tab" data-bs-toggle="pill" href="#wizard-contact" role="tab" aria-controls="wizard-contact" aria-selected="true"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-user"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Personal</h6>
-                                  <p>Add your Personal details </p>
-                                </div>
-                              </div>
-                            </a>
-                              <a class="nav-link" id="next-kin-tab" data-bs-toggle="pill" href="#next-kin" role="tab" aria-controls="next-kin" aria-selected="true" tabindex="-1"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Next Of Kin </h6>
-                                  <p>Add Next of Kin details</p>
-                                </div>
-                              </div></a>
-                              
-                              
-                              <a class="nav-link" id="education-tab" data-bs-toggle="pill" href="#education" role="tab" aria-controls="wizard-banking" aria-selected="false" tabindex="-1"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-graduation-cap"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Education</h6>
-                                  <p>Add Study Details</p>
-                                </div>
-                              </div></a>
-
-                              <a class="nav-link" id="gurantor-tab" data-bs-toggle="pill" href="#gurantor" role="tab" aria-controls="wizard-banking" aria-selected="false" tabindex="-1"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Guarantor</h6>
-                                  <p>Add Guarantor Details</p>
-                                </div>
-                              </div></a>
-
-                              <a class="nav-link" id="school-tab" data-bs-toggle="pill" href="#school" role="tab" aria-controls="school" aria-selected="false" tabindex="-1"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-info-circle"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Head of School</h6>
-                                  <p>Add Head of School Details</p>
-                                </div>
-                              </div></a>
-
-                              <a class="nav-link" id="media-tab" data-bs-toggle="pill" href="#media" role="tab" aria-controls="media" aria-selected="false" tabindex="-1"> 
-                              <div class="vertical-wizard">
-                                <div class="stroke-icon-wizard"><i class="fa fa-file"></i></div>
-                                <div class="vertical-wizard-content"> 
-                                  <h6>Upload</h6>
-                                  <p> Upload required Documents</p>
-                                </div>
-                              </div></a>
-                            
-                            </div>
-                        </div>
-                        <div class="col-xxl-9 col-xl-8 col-12">
-                          <div class="tab-content" id="wizard-tabContent">
-                            <div class="tab-pane fade show active" id="wizard-contact" role="tabpanel" aria-labelledby="wizard-contact-tab">
-                            <form class="row g-3  custom-input" enctype="multipart/form-data" autocomplete="off">
-                                @csrf
-                                    <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Category<span class="txt-danger">*</span></label>
-                                      <select class="form-select" name="category" id="category">
-                                        <option value="">Choose...</option>
-                                        <option>Student Loan </option>
-                                        <option>Scholarship </option>
-                                      </select>
-                                    </div>
-                                    
-                                    <div class="col-xxl-8 col-sm-8">
-                                    <label class="form-label" for="validationCustom0-a">Applicant Names<span class="txt-danger">*</span></label>
-                                    <input class="form-control" name="applicant_Names" id="applicant_Name"type="text" readonly value="{{ Auth::user()->first_name. ' '. Auth::user()->middle_name.' '. Auth::user()->last_name; }}">
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-6">
-                                    <div class="">
-                                    <label class="form-label" for="validationCustom-b">Date of Birth<span class="txt-danger">*</span></label>
-                                    <input class="form-control digits" readonly name="dob" id="dob" type="date" value="{{ Auth::user()->dob}}">
-                                    </div>
-                                    </div>
-
-                                    <div class="col-xxl-5 col-sm-6">
-                                    <div class="">
-                                      <label class="form-label">Gender <span class="txt-danger">*</span></label>
-                                      <select name="gender" id="gender" class="form-control btn-square">
-                                        <option>{{ Auth::user()->gender }}</option>
-                                      </select>
-                                    </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-6">
-                                    <div class="">
-                                      <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                      <input class="form-control" name="phone_no" id="phone_no" maxlength="11" type="text" value="{{ Auth::user()->phone_number}}" >
-                                    </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-6">
-                                      <label class="form-label" for="validationemail-b">Email<span class="txt-danger">*</span></label>
-                                      <input class="form-control" id="email_id" name="email_id" type="email"  value="{{ Auth::user()->email}}" readonly>
-                                    </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Country<span class="txt-danger">*</span></label>
-                                      <select class="form-select" name="country" id="country" >
-                                    <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Nationality<span class="txt-danger">*</span></label>
-                                     <select class="form-select" name="nationality" id="nationality" >
-                                        <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="State">State<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="state" name="state" >
-                                        <option value="">Choose...</option>
-                                      </select>
-                                      </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">L.G.A<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="lga" name="lga" >
-                                        <option value="">Loading...</option>
-                                      </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                    <label class="form-label">Current Home Address<span class="txt-danger">*</span></label>
-                                    <textarea class="form-control" rows="3" id="caddress" name="caddress" placeholder="Enter your home Address">{{ Auth::user()->address}}</textarea>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Nearest Bus Stop<span class="txt-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="nbus_address" name="nbus_address"></textarea>
-                                    </div>
-
-                                    <div class="mb-3 mt-3 col-md-6">
-                                    <label class="form-label" for="formFileMultiple">Recent Passport<span class="txt-danger">*</span></label>
-                                    <input class="form-control" name="image" id="image" type="file">
-                                  </div>
-
-                                  <div class="mb-3 mt-3 col-md-6">
-                                  <center><img class="img-100 rounded" id="preview"  src="{{ asset('images/images.png')}}" width="100px" height="100px" /></center>
-                                  </div>
-
-
-                                    <div class="col-md-12  rounded" style=" border: 1px dashed rgba(106, 113, 133, 0.3);"><label class="form-label" style="text-transform:none" for="formFileMultiple">Do you study Abroad ?</label>
-                                      <div class="mb-3 d-flex gap-3 checkbox-checked">
-                                          <div class="form-check"> 
-                                            <input class="form-check radio radio-primary"  id="flexRadioDefault1" value="Yes"  type="radio" name="flexRadioDefault">
-                                            <label class="form-check-label mb-0" for="flexRadioDefault1">Yes </label>
-                                          </div>
-                                          <div class="form-check">
-                                            <input class="form-check radio radio-primary"  id="flexRadioDefault2" value="No" type="radio" name="flexRadioDefault" checked="">
-                                            <label class="form-check-label mb-0" for="flexRadioDefault2">No</label>
-                                          </div>
-                                      </div>
-                                    </div>
-
-                                   
-                                    <div class="col-xxl-4 col-sm-6" style="display:none" id="intPhone">
-                                      <div class="">
-                                        <label class="form-label">International Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="intl_phone" id="phone" maxlength="11" type="text">
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-12" id="intaddr" style="display:none" >
-                                        <label class="form-label">International Address <span class="txt-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="intl_address" name="intl_address"></textarea>
-                                    </div>
-
-                                    <div class="col-12 text-end"> 
-                                      <a href="#" class="btn btn-dark" id="next1">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                            
-                            <div class="tab-pane fade" id="next-kin" role="tabpanel" aria-labelledby="next-kin-tab">
-                                  <div class="row">
-                                  <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Title<span class="txt-danger">*</span></label>
-                                      <select class="form-select" name="title" id="title" >
-                                        <option value="">Choose...</option>
-                                        <option>Mr</option>
-                                        <option>Mrs</option>
-                                        <option>Miss</option>
-                                      </select>
-                                    </div>
-                                    <div class="col-xxl-8 col-sm-8">
-                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
-                                      <select class="form-select" name="nok_rel" id="nok_rel" >
-                                        <option value="">Choose...</option>
-                                        <option>Father</option>
-                                        <option>Mother</option>
-                                        <option>Wife</option>
-                                        <option>Brother</option>
-                                        <option>Sister</option>
-                                        <option>Friend</option>
-                                        <option>Relative</option>
-                                      </select>
-                                    </div>
-                                                                
-                                <div class="col-md-4 col-sm-4 mt-3">
-                                  <label class="form-label" for="validationDates">Next of Kin (Full Name)<span class="txt-danger">*</span></label>
-                                  <input class="form-control" name="nok_sname" id="nok_sname" type="text"  placeholder="Surname">
-                                </div>
-
-                                <div class="col-md-4 col-sm-4  mt-3">
-                                  <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="nok_fname" name="nok_fname" type="text"  placeholder="First Name">
-                                </div>
-
-                                <div class="col-md-4 col-sm-4  mt-3">
-                                  <label class="form-label" for="validationDates">&nbsp;</label>
-                                  <input class="form-control" id="nok_mname" name="nok_mname" type="text"  placeholder="Middle Name">
-                                </div>
-                                <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">Gender<span class="txt-danger">*</span></label>
-                                      <select class="form-select" name="nok_gender" id="nok_gender" >
-                                        <option value="">Choose...</option>
-                                        <option value="Male">Male </option>
-                                        <option value="Female">Female </option>
-                                      </select>
-                                    </div>
-                                <div class="col-md-6 col-sm-6  mt-3">
-                                  <label class="form-label" for="dob">Date of Birth<span class="txt-danger">*</span></label>
-                                  <input class="form-control" id="nok_dob" name="nok_dob" type="date" >
-                                </div>
-
-                                <div class="col-md-6 col-sm-6  mt-3">
-                                  <label class="form-label" for="">Phone Number<span class="txt-danger">*</span></label>
-                                  <input class="form-control" name="nok_phone" maxlength="11" id="next_of_kin_phone" type="text" >
-                                </div>
-                                 
-                                <div class="col-md-6 col-sm-6 mt-3">
-                                  <label class="form-label" for="">Email Address</label>
-                                  <input class="form-control" id="nok_email" name="nok_email" type="email" >
-                                </div>
-
-                                <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">State<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="nok_state" name="nok_state">
-                                        <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-                
-                                    <div class="col-xxl-6 col-sm-6 mt-3">
-                                      <label class="form-label" for="validationCustom04">LGA<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="nok_lga" name="nok_lga" >
-                                        <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-md-6 mt-3">
-                                    <label class="form-label">Current Home Address<span class="txt-danger">*</span></label>
-                                    <textarea class="form-control" rows="3" id="nok_address" name="nok_address"></textarea>
-                                    </div>
-                                    <div class="col-md-6 mt-3">
-                                        <label class="form-label">Nearest Bus Stop<span class="txt-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="nok_bus_stop" name="nok_bus_stop"></textarea>
-                                    </div>
-
-                                <div class="col-12 text-end mt-4"> 
-                                  <a href="#" class="btn btn-dark" id="pre1"><i class="fa fa-arrow-circle-left"></i> Previous</a>
-                                  <a href="#" class="btn btn-dark" id="next2">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                            </div> 
-                          </div>
-
-                            <div class="tab-pane fade custom-input" id="education" role="tabpanel" aria-labelledby="wizard-education-tab">
-                              
-                              <div class="row">
-                                   <div class="col-xxl-4 col-sm-4">
-                                      <label class="form-label" for="validationCustom04">Category<span class="txt-danger">*</span></label>
-                                      <select class="js-example-basic-single" id="schl_category" name="schl_category" >
-                                        <option value="">Choose...</option>
-                                        <option>University</option>
-                                        <option>Polytechnics/Monotechnics/Colleges</option>
-                                        <option>Secondary Schools</option>
-                                      </select>
-                                    </div>
-                                    <div class="col-xxl-8 col-sm-8"><!--js-searchBox-->
-                                      <label class="form-label" for="validationCustom04">School<span class="txt-danger">*</span></label>
-                                      <select class="js-example-basic-single col-sm-6 " id="school_name" name="school_name">
-                                        <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-4  mt-3">
-                                      <label class="form-label" for="validationCustom04">Section<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="section" name="section" >
-                                        <option value="">Choose...</option>
-                                        <option>JSS </option>
-                                        <option>SS </option>
-                                        <option>NCE </option>
-                                        <option>ND/HND </option>
-                                        <option>DEGREE </option>
-                                        <option>MASTERS </option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-xxl-8 col-sm-8 mt-3"  id="">
-                                      <div class="">
-                                        <label class="form-label">Course of Study<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="course" id="course"  type="text">
-                                      </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-sm-6 mt-3"  id="">
-                                      <div class="">
-                                        <label class="form-label">No of years<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="no_of_years" maxlength="1" id="no_of_years" type="text">
-                                      </div>
-                                    </div>
-                                    <div class="col-xxl-4 col-sm-6 mt-3"  id="">
-                                      <div class="">
-                                        <label class="form-label">Requested Amount.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="ramount" maxlength="8" id="ramount" type="text">
-                                      </div>
-                                    </div>
-                              
-                                <div class="col-12 text-end mt-3"> 
-                                  <a href="#" class="btn btn-dark" id="pre2"><i class="fa fa-arrow-circle-left"></i>&nbsp; Previous</a>
-                                  <a href="#" class="btn btn-dark" id="next3">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                               
-                                </div>
-                               </div>
-
-
-                            <div class="tab-pane fade custom-input" id="gurantor" role="tabpanel" aria-labelledby="wizard-banking-tab">
-                               
-                            <div class="row g-3 mb-3 needs-validation">
-
-                            <div class="col-xxl-12 col-sm-12" id="">
-                                      <div class="">
-                                        <label class="form-label"><span class="badge badge-dark">Gurantor 1 </span></label>
-                                       </div>
-                                </div>
-
-                                <div class="col-xxl-6 col-sm-6" id="">
-                                      <div class="">
-                                        <label class="form-label">Names<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gname" id="gname" type="text"  >
-                                      </div>
-                                </div>
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="grelationship"  name="grelationship">
-                                        <option value="">Choose...</option>
-                                        <option>Father</option>
-                                        <option>Mother</option>
-                                        <option>Wife</option>
-                                        <option>Brother</option>
-                                        <option>Sister</option>
-                                        <option>Friend</option>
-                                        <option>Relative</option>
-                                      </select>
-                                    </div>
-                                    <div class="col-xxl-4 col-sm-6" >
-                                      <div class="">
-                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gphone" maxlength="11" id="gphone" type="text">
-                                      </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-6">
-                                      <div class="">
-                                        <label class="form-label">Email Address.</label>
-                                        <input class="form-control" name="gemail" id="gemail" type="text" >
-                                      </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label">Home Address<span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="gaddress" name="gaddress"></textarea>
-                                    </div>
-
-                                    <!-------Gurantor 2---->
-
-                                    <div class="">
-                                        <label class="form-label"><span class="badge badge-dark">Gurantor 2</span></label>
-                                       </div>
-
-                                       <div class="col-xxl-6 col-sm-6" id="">
-                                      <div class="">
-                                        <label class="form-label">Names<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gname2" id="gname2" type="text">
-                                      </div>
-                                </div>
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
-                                      <select class="form-select" id="grelationship2" name="grelationship2">
-                                      <option value="">Choose...</option>
-                                        <option>Father</option>
-                                        <option>Mother</option>
-                                        <option>Wife</option>
-                                        <option>Brother</option>
-                                        <option>Sister</option>
-                                        <option>Friend</option>
-                                        <option>Relative</option>
-                                      </select>
-                                    </div>
-                                    <div class="col-xxl-4 col-sm-6">
-                                      <div class="">
-                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="gphone2" maxlength="11" id="gphone2" type="text">
-                                      </div>
-                                    </div>
-
-                                    <div class="col-xxl-4 col-sm-6">
-                                      <div class="">
-                                        <label class="form-label">Email Address.</label>
-                                        <input class="form-control" name="gemail2" id="gemail2" type="email">
-                                      </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label">Home Address<span class="txt-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="gaddress2" name="gaddress2"></textarea>
-                                    </div>
-                                
-                                <div class="col-12 text-end mt-3"> 
-                                  <a href="#" class="btn btn-dark" id="pre3"><i class="fa fa-arrow-circle-left"></i> Previous</a>
-                                  <a href="#" class="btn btn-dark" id="next4">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                              
-                                </div> </div>
-
-
-
-                            <div class="tab-pane fade custom-input" id="school" role="tabpanel" aria-labelledby="wizard-banking-tab">
-                              <div class="row g-3 mb-3">
-                                 
-                                   <div class="col-xxl-6 col-sm-6" id="">
-                                      <div class="">
-                                        <label class="form-label">Head of School<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="hos_name" id="head_of_schl_name" type="text">
-                                      </div>
-                                    </div>
-
-                                    <div class="col-xxl-6 col-sm-6">
-                                        <label class="form-label">Phone No.<span class="text-danger">*</span></label>
-                                        <input class="form-control" maxlength="11" name="hos_phone" id="hos_phone" maxlength="11" type="text">
-                                      </div>
-                                   
-                                    <div class="col-xxl-6 col-sm-6" id="">
-                                      <div class="">
-                                        <label class="form-label">Email Address.<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="hos_email" id="hos_email" type="text">
-                                      </div>
-                                    </div>
-                                    <div class="col-xxl-6 col-sm-6">
-                                      <label class="form-label" for="validationCustom04">State<span class="text-danger">*</span></label>
-                                      <select class="form-select" name="hos_state" id="hos_state" >
-                                        <option value="">Choose...</option>
-                                      </select>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">City<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="hos_city" id="hos_city" type="text">
-                                    </div>
-                                    <div class="col-xxl-12 col-sm-12">
-                                      <div class="">
-                                        <label class="form-label">School Address<span class="text-danger">*</span></label>
-                                        <textarea class="form-control" rows="3" id="hos_address" name="hos_address"></textarea>
-                                      </div>
-                                    </div>
-
-                                <div class="col-12 text-end"> 
-                                  <a href="#" class="btn btn-dark" id="pre4"><i class="fa fa-arrow-circle-left"></i> Previous</a>
-                                  <a href="#" class="btn btn-dark" id="next5">Next <i class="fa fa-arrow-circle-right"></i></a>
-                                </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade custom-input" id="media" role="tabpanel" aria-labelledby="wizard-banking-tab">
-                              <div class="row g-3 mb-3">
-                                 
-                                   <div class="col-xxl-6 col-sm-6" id="">
-                                      <div class="">
-                                        <label class="form-label">Documents Upload<span class="text-danger">*</span></label>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 mt-3">
-                                    <label class="form-label" for="formFileMultiple" style="text-transform:none">Kindly Upload a PDF file containig the required document(student id card, recent payment slip,addmission letter, and offline form duly signed and stamped)
-                                     Click here to <a href="https://fsscholarship.com/Offline-Form.pdf" target="_blank"><i class="fa fa-download"></i>&nbsp;Download form</a> .
-                                    </label>
-                                    
-                                    </div>
-                                    <div class="mb-5 mt-5">
-                                    <input class="form-control" name="file" id="file" type="file">
-                                   </div>
-                                <div class="col-12 text-end"> 
-                                  <a href="#" class="btn btn-dark" id="pre5"><i class="fa fa-arrow-circle-left"></i> Previous</a>
-                                  <button id="submit" type="button" class="btn btn-dark">Finish</button>
-                                  
-                                </div>
-                                </div>
-                            </div>
-
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-                      <!--End --->
-                      </div>
+                     
                        
                     </div>
                   </div>
@@ -1082,7 +453,6 @@
     <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
     <script src="{{ asset('js/loadstates.js') }}"></script>
     <script src="{{ asset('js/loadlga.js') }}"></script>
-    <script src="{{ asset('js/init_fees.js') }}"></script>
     <script src="{{ asset('js/loadcountries.js') }}"></script>
     <script src="{{ asset('js/loadschools.js') }}"></script>
 
@@ -1094,7 +464,7 @@
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
-    <script src="{{ asset('js/app_handler.js') }}"></script>
+    <script src="{{ asset('js/loan.js') }}"></script>
     <!-- Plugin used-->
   </body>
 </html>

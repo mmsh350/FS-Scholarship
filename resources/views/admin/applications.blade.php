@@ -355,7 +355,11 @@
                                        <span id="disbursed"></span>
                                   </th>
                                 </tr>
-                               
+                                <tr>
+                                  <th id="repayrow" style="display:none" class="border-end" width="50%"><span>Repayment Status</span>
+                                  <br> <span id="repaystatus" class="f-w-400"></span>
+                                  </th>
+                                </tr>
                                 <tr>
                                   <th class="border-end" width="50%"><span>Initiated By</span>
                                   <br> <span id="initiator" class="f-w-400"></span>

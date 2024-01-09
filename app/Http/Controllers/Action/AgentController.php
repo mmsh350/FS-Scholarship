@@ -151,10 +151,14 @@ class AgentController extends Controller
           // of specified length
           $password = substr(str_shuffle($str_result), 0, 8);
           $request->validate([
+            'user_state' => 'required','numeric',
+             'user_image' => 'required|image|mimes:jpeg,png,jpg|max:500',
+             'user_bvn' => 'required|numeric|digits:11',
+             'phone_number' => 'required|numeric|digits:11|unique:users',
             'firstname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
             'lastname' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
-            'phone_number' => 'required|numeric|digits:11|unique:users',
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            
           ]);
 
          $agentData=[
@@ -173,6 +177,15 @@ class AgentController extends Controller
               ], 422);
            }
 
+           $image_path = '';
+
+           if($request->file('user_image'))
+           {
+               $path = $request->file('user_image');
+               $data = file_get_contents($path);
+               $image_path = base64_encode($data); 
+           }
+
          $user = User::create([
           'first_name' => ucwords($request->firstname),
           'last_name' => ucwords($request->lastname),
@@ -185,6 +198,9 @@ class AgentController extends Controller
           'registrar_id' => $loginUserId, 
           'state_id'=>$stateId,
           'role'=>'agent',
+          'id_cards'=>$image_path,
+          'bvn'=>$request->user_bvn,
+          'state_id'=>$request->user_state,
         ]);
 
         $lastInsertedId = $user->id;

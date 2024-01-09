@@ -8,13 +8,7 @@ $('#register').click(function(evt) {
        
         $("#error1").empty();
         $("#spinner").show();
-        var first_name = $('#firstname').val();
-        var last_name = $('#lastname').val();
-        var email = $('#email').val();
-        var phoneno = $('#phoneno').val();
         
-        
-        if (first_name !== "" && last_name !== "" && email !== "" && phoneno !== "") {
         // Stop the button from submitting the form:
             evt.preventDefault();
 
@@ -51,20 +45,6 @@ $('#register').click(function(evt) {
                         }, 2000);
                 }
             });
-    } else 	{
-
-                        $("#error1").show().empty();
-                        $('#error1').append('<strong>All fields are required!</strong>');
-                        setTimeout(function(){  	
-                            $('#register').prop("disabled", false);
-                            $("#error1").fadeOut();
-                            $("#spinner").hide();  
-                        }, 2000); 
-
-            }
-     
-    
-
 });
 
 

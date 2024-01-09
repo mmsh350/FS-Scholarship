@@ -5,8 +5,7 @@ $(document).ready(function() {
  $("#app_amount" ).on( "focusout", function() {
     let appamt = $('#app_amount').val() ;
     let repay = appamt / 12;
-    $('#mrepay').val(Math.round(repay));
-    
+    $('#mrepay').val(Math.floor(repay));    
 });
 
 $.fn.dataTable.ext.errMode = 'none';
@@ -175,7 +174,7 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             $("td:first", nRow).html(iDisplayIndex +1);
             return nRow;
             },
-
+            
             });
 
             $('.repayModal tbody').on('click', '.remind', function () {
@@ -323,8 +322,7 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
             $("#appamount").html('&#8358; '+data.appamount);
             $("#initamount").html('&#8358; '+data.initamount);
             $("#cat").html(data.category);
-            $("#amount").html('&#8358; '+data.amount);
-           
+            $("#amount").html('&#8358; '+data.amount);          
              
             if(data.status == 'Approved')
             {
@@ -333,7 +331,7 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                 $("#dis3").show();
                 $("#dis4").show();
                 $('#action').hide() 
-            
+                
                 if(data.app_accept == '1')
                 {
                     $("#app_accept").html('<span class="badge badge-success">Accepted</span>');
@@ -360,9 +358,12 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                 $("#acct_number").html(data.acct_number);
                 $("#acct_name").html(data.acct_name);
                 $("#acct_bankname").html(data.acct_bankname);
+                $("#repayrow").show();
+                $("#repaystatus").html('<span class="badge badge-primary">'+data.approvalDataStatus+'</span>');
             }
             else{
                 $("#acct_info").hide();
+                $("#repayrow").hide();
             }
            
             if(data.disbursed == '1'){

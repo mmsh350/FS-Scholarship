@@ -40,7 +40,7 @@ class ApplicationController extends Controller
            Auth::logout();
                return view('error') ;
         }
-        
+
         if(Auth::user()->gender == '' || Auth::user()->dob == '')
         {
                return view('profile.edit');
@@ -751,6 +751,12 @@ class ApplicationController extends Controller
         //Get country & Nationality
         $country = Countries::select('CountryName')->where('id',$appDetails->country)->first();
 
+        $approvalDataStatus = "Pending";
+        $approvalData = Approval::select('status')->where('app_id', $id)->first();
+        if( $approvalData !=null){
+            $approvalDataStatus = $approvalData->status;
+        }
+        
         $nationality = Countries::select('CountryName')->where('id',$appDetails->nationality)->first();
         //Update dob 
         $dob = date("d-m-Y", strtotime($appDetails->dob) );
@@ -802,7 +808,8 @@ class ApplicationController extends Controller
                          "school"=>$schlname,
                          "hoss" => $hos_state,
                         "appamount"=>$appamount,
-                        "initamount"=>$initamount
+                        "initamount"=>$initamount,
+                        'approvalDataStatus' =>$approvalDataStatus,
                          );
 
 
@@ -840,6 +847,12 @@ class ApplicationController extends Controller
         //Get country & Nationality
         $country = Countries::select('CountryName')->where('id',$appDetails->country)->first();
 
+        $approvalDataStatus = "Pending";
+        $approvalData = Approval::select('status')->where('app_id', $id)->first();
+        if( $approvalData !=null){
+            $approvalDataStatus = $approvalData->status;
+        }
+
         $nationality = Countries::select('CountryName')->where('id',$appDetails->nationality)->first();
         //Update dob 
         $dob = date("d-m-Y", strtotime($appDetails->dob) );
@@ -891,7 +904,8 @@ class ApplicationController extends Controller
                          "school"=>$schlname,
                          "hoss" => $hos_state,
                         "appamount"=>$appamount,
-                        "initamount"=>$initamount
+                        "initamount"=>$initamount,
+                        'approvalDataStatus' =>$approvalDataStatus,
                          );
 
 
@@ -1200,9 +1214,9 @@ class ApplicationController extends Controller
         else{
             $interest =   $ApprovalDetails->approved_amount * 0.1;
             $disbursed_amount =  $ApprovalDetails->approved_amount -  $interest;
-    
+             $diff = $ApprovalDetails->approved_amount -  ($monthly_repayment *12) ;
             //update approval
-            Approval::where('app_id', $appid)->update(['status' => 'ongoing',
+            Approval::where('app_id', $appid)->update(['status' => 'Ongoing',
                                                        'disbursed_date' => Carbon::now(),
                                                        'disbursed_amount' =>  $disbursed_amount,
                                                        'disbursed_interest'=>  $interest,
@@ -1212,7 +1226,7 @@ class ApplicationController extends Controller
             Repayment::insert([
                 [
                 'app_id' =>  $appid,
-                'repayment_amount' =>  $monthly_repayment,
+                'repayment_amount' =>  $monthly_repayment+ $diff,
                 'status' =>'Pending',
                 'repayment_date' =>$request->mt1
                ],
@@ -1371,27 +1385,35 @@ class ApplicationController extends Controller
                         $date = Carbon::parse($row->repayment_date);
                         $now = Carbon::now();
                         $diff = $date->diffInDays($now->toDateString());
-    
-                       if( $date->isPast()){
-                            //Check if its due date
-                            if($date->eq($now->toDateString()))
-                                return  "<span class='badge badge-warning'> Due Today</span>";
-                             else
-                                return  "<span class='badge badge-danger'>".'Overdue for ('.$diff." days) </span>";
-                       }else
-                        return  "<span class='badge badge-success'>".'Due in ('.$diff." days) </span>";
-    
+                        if($row->status != 'Paid')
+                        {
+                            if( $date->isPast()){
+                                    //Check if its due date
+                                    if($date->eq($now->toDateString()))
+                                        return  "<span class='badge badge-warning'> Due Today</span>";
+                                    else
+                                        return  "<span class='badge badge-danger'>".'Overdue for ('.$diff." days) </span>";
+                            }
+                            else
+                            {
+                                return  "<span class='badge badge-success'>".'Due in ('.$diff." days) </span>";
+                            }
+                        }
+                   
     
                           })->escapeColumns('status')
              
                    
               ->addIndexColumn()
               ->addColumn('action', function($row){
-                    
-                // Button Customizations
-                $btn = "
-                  <a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>";
-                return $btn;
+                    $btn='';
+                    if($row->status != 'Paid')
+                    {
+                        // Button Customizations
+                        $btn = "<a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>";
+                        return $btn;
+                    }else{ return $btn;}
+
             }) ->rawColumns(['action']) 
             ->make(true);
     

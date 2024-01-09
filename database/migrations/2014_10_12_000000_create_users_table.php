@@ -34,7 +34,7 @@ return new class extends Migration
             $table->bigInteger('lga_id')->nullable();
             $table->longText('address')->nullable();
             $table->longText('profile_pic')->nullable();
-            $table->longText('id_card')->nullable();
+            $table->longText('id_cards')->nullable();
             $table->string('bvn')->nullable();
             $table->timestamp('current_sign_in_at')->nullable();
             $table->timestamp('last_sign_in_at')->nullable();

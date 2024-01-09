@@ -343,6 +343,11 @@
                                        <span id="disbursed"></span>
                                   </th>
                                 </tr>
+                                <tr>
+                                  <th id="repayrow" style="display:none" class="border-end" width="50%"><span>Repayment Status</span>
+                                  <br> <span id="repaystatus" class="f-w-400"></span>
+                                  </th>
+                                </tr>
                                
                                 <tr>
                                   <th class="border-end" width="50%"><span>Initiated By</span>
@@ -746,22 +751,48 @@
                       </div>
                     </div>
                      <!--Close Modal ---> 
-                       <!---------Repayment Modal----------->
-                       <div class="modal fade repayModal"  id="staticBackdrop" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="myExtraLargeModal" style="display: none;" aria-hidden="true">
+                      <!---------Repayment Modal----------->
+                      <div class="modal fade repayModal"  id="staticBackdrop" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="myExtraLargeModal" style="display: none;" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                           <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title"id="staticBackdropLabel">Repayment Plan</h4>
-                              <button class="btn-close py-0" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-header" style="background-color:#2b3751; border-bottom: 1px dashed white;">
+                              <h4 class="modal-title txt-light" id="staticBackdropLabel">Repayment Plan</h4>
+                              <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
+                                <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)"></path><path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)"></path>
+                                </svg>
                             </div>
                             <div class="modal-body dark-modal">
-                              <div class="large-modal-header"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-right"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
-                                <h5 class="f-w-600">Start with your goals </h5>
+                              <div class="large-modal-header">
+                                <!-- Preloader -->
+                            <div id="modal-preloader2" style="display:none">
+                              <div class="modal-preloader_status">
+                              <div class="modal-preloader_spinner">
+                                  <div class="d-flex justify-content-center">
+                                  <div class="spinner-border" role="status"></div>
+                                    Sending Mail..
+                                  </div>
                               </div>
-
-                              <div class="large-modal-body"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-up-right"><polyline points="15 14 20 9 15 4"></polyline><path d="M4 20v-7a4 4 0 0 1 4-4h12"></path></svg>
-                                <p class="ps-1">Does it advance your core business aims?                          </p>
                               </div>
+                          </div>
+                    <!-- End Preloader -->
+                          </div>
+                              <div id="err3" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible" role="alert"></div>
+                              <div id="done_3" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
+                  
+                                 <div class="table-responsive ">
+                                  <table class="display" style="overflow:auto" id="repaylist" style="width:130%">
+                                    <thead style="background-color:#2b3751;" class="text-light">
+                                        <tr>
+                                            <th>SN</th>
+                                            <th>Repayment</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                            <th>Days</th>
+                                            <th style="width:20%">Action</th>
+                                        </tr>
+                                    </thead>
+                                  </table>
+                                </div>
                             </div>
                           </div>
                         </div>

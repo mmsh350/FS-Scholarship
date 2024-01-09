@@ -12,6 +12,7 @@ use App\Http\Controllers\Action\AgentController;
 use App\Http\Controllers\Action\StateController;
 use App\Http\Controllers\Action\LgaController;
 use App\Http\Controllers\Action\CountriesController;
+use App\Http\Controllers\Action\LoanController;
 use App\Http\Controllers\Action\SchoolController;
 use App\Http\Controllers\Action\UserController;
 use App\Http\Controllers\AppNotificationController;
@@ -98,7 +99,8 @@ use App\Http\Controllers\AppNotificationController;
     Route::post('get-schools', [SchoolController::class, 'fetchSchools']);
 
 
-    Route::get('/loan', [ProfileController::class, 'show'])->name('loan');
+    Route::get('/loan', [LoanController::class, 'show'])->name('loan');
+    Route::post('/make-repayment', [LoanController::class, 'repayment'])->name('make-repayment');
 
     
 });

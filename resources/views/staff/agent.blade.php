@@ -322,8 +322,37 @@
                                     </div>
                                   </div>
                                 </div>
-                             
-                               
+                                 
+                                <div class="mb-3 row"> 
+                                  <label class="col-sm-3">ID Card <span class="text-danger">(Format JPEG or PNG) e.g NIN*</span></label>
+                                  <div class="col-sm-9"> 
+                                    <div class="form-floating">
+                                      <input class="form-control" name="user_image" id="image2" type="file" multiple="">
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="mb-3 row"> 
+                                  <label class="col-sm-3">BVN No.<span class="txt-danger">*</span></label>
+                                  <div class="col-sm-9"> 
+                                    <div class="form-floating">
+                                      <input class="form-control" maxlength="11" name="user_bvn" id="user_bvn" type="text">
+                                      <label for="floatingPassword1">Input BVN</label>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="mb-3 row"> 
+                                  <label class="col-sm-3">State<span class="txt-danger">*</span></label>
+                                  <div class="col-sm-9"> 
+                                    <div class="form-floating">
+                                      <select class="form-select" id="state2" name="user_state" >
+                                        <option value="">Choose...</option>
+                                      </select>
+                                      <label for="floatingPassword1">Select State</label>
+                                    </div>
+                                  </div>
+                                </div>                             
                               </div>
                             </div>
                           </div>
@@ -562,7 +591,7 @@
     <script src="{{ asset('js/header-slick.js')}}"></script>
     <!-- calendar js-->
     <script src="{{ asset('js/sweetalert.js') }}"></script>
-    
+    <script src="{{ asset('js/loadstates.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}" ></script>
 
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>

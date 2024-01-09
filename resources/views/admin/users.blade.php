@@ -364,7 +364,7 @@
                           </div>
                          <div class="row">
                           <div id="idcards" class=" mt-3 col-xxl-6 col-sm-6" style="display:none;">
-                            <label class="form-label" for="formFileMultiple">ID Card <span class="text-danger">(Format JPEG or PNG) e.g NIN, BVN*</span></label>
+                            <label class="form-label" for="formFileMultiple">ID Card <span class="text-danger">(Format JPEG or PNG) e.g NIN*</span></label>
                             <input class="form-control" name="user_image" id="image2" type="file" multiple="">
                           </div>
                            
