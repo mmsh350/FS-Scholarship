@@ -90,7 +90,7 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('agents', [AgentController::class, 'index'])->name('staff.agents');
     Route::post('add-agent', [AgentController::class, 'save'])->name('agent.list');
 
-    Route::get('staff/schools', [ApplicationController::class, 'show'])->name('staff.schools');
+    //Route::get('staff/schools', [ApplicationController::class, 'show'])->name('staff.schools');
 
     //Utility Routes
     Route::post('get-state', [StateController::class, 'fetchState']);
