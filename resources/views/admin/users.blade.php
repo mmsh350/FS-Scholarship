@@ -45,6 +45,7 @@
       .paginate_button.current  {background-color: #2b3751 !important; }
       .dataTables_filter input { border: 1px dashed #2b3751 !important; }
       </style>
+       <style> .light-a { color:white !important}</style>
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -233,11 +234,13 @@
                           <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                         </svg><span>Dashboard</span></a>
                         <ul class="sidebar-submenu expand">
-                            <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                            <li><a class="active" href="{{ route('admin.users') }}">Users</a></li>
-                            <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
-                            <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
-                            <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
+                          <li><a  href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a  class="active" href="{{ route('admin.users') }}">Users</a></li>
+                          <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
+                          <li><a href="{{ route('admin.schools') }}">Schools</a></li>
+                          <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
+                          <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
+                          <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
                         </ul>
                     </li>
                   </ul>
@@ -258,7 +261,7 @@
                 <div class="card">
                   <div class="card-header">
                     <h4>Manage Users</h4>
-                    <p class="mt-1 f-m-light" style="text-transform:none;">Manage all user account, including activation/de-activation, Email verification and password reset etc.</p>
+                    <p class="mt-1 f-m-light" style="text-transform:none;">Manage all user account, including activation/de-activation, Email verification,  and wallet/transaction management etc.</p>
                   </div>
                   <div class="card-body">
                     <ul class="simple-wrapper nav nav-tabs" id="myTab" role="tablist">
@@ -413,6 +416,7 @@
                             <!-- End Preloader -->
                             <div class="modal-header" style="background-color:#2b3751; border-bottom: 1px dashed white;" >
                             <h4 class="modal-title txt-white" style="color:aliceblue" id="staticBackdropLabel"> Edit User Account </h4>
+                            <p class="txt-light"><i class="icon-wallet f-16"></i>  <span id="wbalance2" >0.00</a></span></p>
                             <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
                                 <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)"></path><path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)"></path>
                                 </svg>
@@ -512,7 +516,14 @@
                                                     <div class="col-xxl-12 col-sm-12 mt-2">
                                                         <label class="form-label" for="validationCustom0-a">BVN. <span style="font-size:10px;" class="txt-danger">(BVN and Id cards compulsory for Agent)*</span></label>
                                                         <input class="form-control" name="bvn" maxlength="11" id="bvn" type="text">
-                                                    </div>                                                   
+                                                    </div> 
+                                                    
+                                                    <div class=" mt-2 col-xxl-12 col-sm-12">
+                                                      <label class="form-label" for="formFileMultiple">Update Wallet Balance <span style="font-size:10px;" class="text-danger ">(Enter topUp amount and hit the enter button)</span></label>
+                                                      <input class="form-control mb-2" style="text-align:center" maxlength="6" id="topup" onkeypress="return isNumberKey(event)" type="text">
+                                                          <button type="button" class="btn btn-success" style="display:none" id="add"><i class="fa fa-plus"></i> Add</button>
+                                                          <button type="button" class="btn btn-warning" style="display:none" id="minus"><i class="fa fa-minus"></i> Minus</button>
+                                                </div>
                                                 </div>
                                             </div>
                                              
@@ -528,9 +539,11 @@
                                                     <label class="form-label" for="formFileMultiple">ID Card <span style="font-size:10px;" class="text-danger ">(Format JPEG or PNG), e.g NIN! *</span></label>
                                                     <input class="form-control" name="image" id="image" type="file" multiple="">
                                                     <input class="form-control" name="oldpath" id="oldpath" type="hidden">
-                                                  </div>
+                                              </div>
 
                                             </div>
+
+
                                             </div>
                                                 
                                     </div>
@@ -576,6 +589,8 @@
                       <!-- End Preloader -->
                       <div class="modal-header" style="background-color:#2b3751; border-bottom: 1px dashed white;" >
                       <h4 class="modal-title txt-white" style="color:aliceblue" id="staticBackdropLabel"> User Profile </h4>
+                      <p class="txt-light"><i class="icon-wallet f-16"></i> <span id="wbalance" >0.00</a></span></p>
+                     
                       <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
                           <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)"></path><path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)"></path>
                           </svg>
@@ -619,7 +634,8 @@
                               <table border="1" class="table">
                                 <thead style="background-color:#2b3751;">
                                   <tr>
-                                    <th colspan="2" class="text-light"><i class="fa fa-user">&nbsp;</i>Profile Information</th>
+                                    <th colspan="2" class="text-light"><i class="fa fa-user">&nbsp;</i>Profile Information
+                                    </th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -666,8 +682,24 @@
                                   </tr>
                                 </tbody>
                               </table>
-
-                              <table border="1" class="table">
+                              <span><i class="fa fa-history txt-danger mt-2 "></i> Last (3) Recent Transaction</span>
+                              <table border="1" id="transactions" class="table mt-2" width="100%">
+                                <thead style="background-color:#2b3751;">
+                                  <tr>
+                                    <tr class="border-bottom-primary">
+                                      <th class="light-a">ID</th>
+                                      <th class="light-a">Date</th>
+                                      <th class="light-a">Ref. No.</th>
+                                      <th class="light-a">Payer</th>
+                                      <th class="light-a">Desc.</th>
+                                      <th class="light-a">Amount</th>
+                                    </tr>
+                                  </tr>
+                                </thead>
+                                <tbody id="result">
+                                </tbody>
+                              </table>
+                              <table border="1" class="table mt-2">
                                 <thead style="background-color:#2b3751;">
                                   <tr>
                                     <th colspan="2" class="text-light"><i class="icon-credit-card"></i> Identity Card</th>
@@ -676,11 +708,13 @@
                                 <tbody>
                                   <tr>
                                     <th>
-                                     <img src="" id="label_doc" width="450" height="300" alt="Identity Card"/>
+                                     <center><img src="" id="label_doc" width="450" height="300" alt="Identity Card"/></center>
                                     </th>
                                   </tr>
                                 </tbody>
                               </table>
+
+                              
                             </div>
                           </div>
                        </div>

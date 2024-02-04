@@ -289,16 +289,22 @@
                     <div class="card-body">
                     <ul class="nav nav-tabs" id="icon-tab" role="tablist">
                       <li class="nav-item" role="presentation"><a class="nav-link txt-dark active" id="icon-home-tab" data-bs-toggle="tab" href="#icon-home" role="tab" aria-controls="icon-home" aria-selected="true"><i class="icofont icofont-newspaper"></i>My Applications</a></li>
-                      <li class="nav-item" role="presentation"><a class="nav-link txt-dark" id="profile-icon-tabs" data-bs-toggle="tab" href="#profile-icon" role="tab" aria-controls="profile-icon" aria-selected="false" tabindex="-1"><i class="fa fa-plus text-primary"></i>New Application</a></li>
-                     </ul>
+                       @if($balance >= 1000)
+                       <li class="nav-item" role="presentation"><a class="nav-link txt-dark" id="profile-icon-tabs" data-bs-toggle="tab" href="#profile-icon" role="tab" aria-controls="profile-icon" aria-selected="false" tabindex="-1"><i class="fa fa-plus text-primary"></i>New Application</a></li>
+                       @endif 
+                    </ul>
                     <div class="tab-content" id="icon-tabContent">
                       <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">
                      
                       <div class="alert alert-light-dark mt-3" role="alert">
                           <p style="text-transform:none" class="txt-dark ">Each application can be tracked using its status, application status are indicated using <span class="bagde badge-light text-warning">Pending</span>,  <span class="bagde badge-light text-success">Approved</span> and  <span class="bagde badge-light text-danger">Rejected</span>. 
-
+                      
                         </div>
-                      <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
+                        @if($balance < 1000)
+                          <p class=" txt-danger">Sorry, Your wallet is insufficent,  to begin an application you need atleast 1000 Naira in your wallet.</p>
+                         @endif
+                         
+                        <div class="table-responsive theme-scrollbar mt-4  border rounded-3 ">
                        
                     <table class="table">
                       <thead style="background-color:#2b3751;">
@@ -708,6 +714,9 @@
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
+                                        <option>Son</option>
+                                        <option>Daughter</option>
+                                        <option>Husband</option>
                                         <option>Wife</option>
                                         <option>Brother</option>
                                         <option>Sister</option>
@@ -865,6 +874,9 @@
                                         <option value="">Choose...</option>
                                         <option>Father</option>
                                         <option>Mother</option>
+                                        <option>Son</option>
+                                        <option>Daughter</option>
+                                        <option>Husband</option>
                                         <option>Wife</option>
                                         <option>Brother</option>
                                         <option>Sister</option>
@@ -906,13 +918,16 @@
                                       <label class="form-label" for="validationCustom04">Relationship<span class="txt-danger">*</span></label>
                                       <select class="form-select" id="grelationship2" name="grelationship2">
                                       <option value="">Choose...</option>
-                                        <option>Father</option>
-                                        <option>Mother</option>
-                                        <option>Wife</option>
-                                        <option>Brother</option>
-                                        <option>Sister</option>
-                                        <option>Friend</option>
-                                        <option>Relative</option>
+                                      <option>Father</option>
+                                      <option>Mother</option>
+                                      <option>Son</option>
+                                      <option>Daughter</option>
+                                      <option>Husband</option>
+                                      <option>Wife</option>
+                                      <option>Brother</option>
+                                      <option>Sister</option>
+                                      <option>Friend</option>
+                                      <option>Relative</option>
                                       </select>
                                     </div>
                                     <div class="col-xxl-4 col-sm-6">
@@ -1031,11 +1046,7 @@
                 </div>
                 </div>
               </div>
-            </div>
-             
-             
-            
-              
+            </div>            
               
             </div>
           </div>

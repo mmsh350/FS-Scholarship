@@ -74,13 +74,25 @@ class ApplicationController extends Controller
                     $reject_count = Application::all()
                                 ->where('user_id', $loginUserId)
                                 ->where('status', 'Rejected')->count();
-                    
+
+                 $balance=0;
+                //Check if wallet existed 
+                if (Wallet::where('userid', $loginUserId)->exists()) {
+                  //get requested user Wallet Balance information
+                  $wallet = Wallet::where('userid', $loginUserId)->first();
+                  $balance = $wallet->balance ;
+                 }
+                 
                     return view('application')
-                            ->with(compact('applications'))
-                            ->with(compact('notifications'))
-                            ->with(compact('notifycount'))
-                            ->with(compact('approve_count'))
-                            ->with(compact('reject_count'));
+                    ->with(compact('applications'))
+                    ->with(compact('notifications'))
+                    ->with(compact('notifycount'))
+                    ->with(compact('approve_count'))
+                    ->with(compact('reject_count'))
+                    ->with(compact('balance'));
+
+               
+                  
             
             }else if(Auth::user()->role == 'staff') 
             {
@@ -353,7 +365,7 @@ class ApplicationController extends Controller
 
 
             //Document Upload
-            'file' => 'required|mimes:pdf|max:5048',
+            'file' => 'required|mimes:pdf|max:1048',
             //Head Of School
             'hos_address' => ['required','string','max:255'],
             'hos_city' => ['required','string','max:255'],
@@ -705,10 +717,17 @@ class ApplicationController extends Controller
                 $affected = Wallet::where('userid', $loginUserId)
                             ->update(['balance' =>$availbal]);
 
+                $payer_name = Auth::user()->first_name.' '. Auth::user()->last_name;
+                $payer_email = auth()->user()->email;
+                $payer_phone = auth()->user()->phone_number;
+
                 //update transaction history
                 $user = Transaction::create([
                     'userid' => $loginUserId,
                     //'payerid' => '',
+                    'payer_name' =>  $payer_name,
+                    'payer_email' => $payer_email,
+                    'payer_phone' => $payer_phone,
                     'referenceId' => strtoupper($referenno),
                     'service_type' => '2',
                     'service_description' => "Initial 1% Payment Fee",  
@@ -938,15 +957,18 @@ class ApplicationController extends Controller
              $appName =  $appUserId->names;
              $email = $appUserId->email;
              $apptype =  $appUserId->category;
+
+             $Monthly_Repay = $request->Monthly_Repayment;
               
              if($status == 'approved'){
                   //Check if Scholarship
                 if($apptype == 'Scholarship'){
                         $request->validate([
                             'Approve_Amount' =>  'required|numeric|min:5000|max:1000000',
-                            'Initial_Fee' =>     'required|numeric|min:0|max:0',
+                            'Initial_Fee' =>     'required|numeric',
                             'Monthly_Repayment'=>'required|numeric|min:0|max:0',
                         ]);
+                        $Monthly_Repay = 0;
                  }else{
                     $request->validate([
                         'Approve_Amount' =>  'required|numeric|min:5000|max:1000000',
@@ -957,7 +979,7 @@ class ApplicationController extends Controller
                  Application::where('id', $appid)->update(['status' => 'Approved',
                                                            'approved_amount'=>$request->Approve_Amount,
                                                          'initial_fee'=>$request->Initial_Fee,
-                                                         'monthly_repayment'=>$request->Monthly_Repayment]);
+                                                         'monthly_repayment'=> $Monthly_Repay]);
  
                     //Approval Record
                     Approval::create([
@@ -1154,14 +1176,14 @@ class ApplicationController extends Controller
 
         if($apptype == 'Scholarship'){
 
-            $interest =   $ApprovalDetails->approved_amount * 0.1;
-            $disbursed_amount =  $ApprovalDetails->approved_amount -  $interest;
+            $interest =   0;
+            $disbursed_amount =  $ApprovalDetails->approved_amount;
     
             //update approval
             Approval::where('app_id', $appid)->update(['status' => 'Completed',
                                                        'disbursed_date' => Carbon::now(),
                                                        'disbursed_amount' =>  $disbursed_amount,
-                                                       'disbursed_interest'=>  '0',
+                                                       'disbursed_interest'=>   $interest,
                                                       ]);
              
     
@@ -1175,11 +1197,17 @@ class ApplicationController extends Controller
                            $referenno .= substr($data, (rand() % (strlen($data))), 1);}
     
                    $loginUserId = Auth::user()->id;//login staff or admin
-    
+                   $payer_name = Auth::user()->first_name.' '. Auth::user()->last_name;
+                   $payer_email = auth()->user()->email;
+                   $payer_phone = auth()->user()->phone_number;
+                   
                    //update transaction history
                     Transaction::create([
                        'userid' => $user_id,
                        'payerid' =>   $loginUserId,
+                       'payer_name' =>  $payer_name,
+                       'payer_email' => $payer_email,
+                       'payer_phone' => $payer_phone,
                        'referenceId' => strtoupper($referenno),
                        'service_type' => '3',
                        'service_description' => "Loan Disbursement-FS",  
@@ -1310,11 +1338,17 @@ class ApplicationController extends Controller
                            $referenno .= substr($data, (rand() % (strlen($data))), 1);}
     
                    $loginUserId = Auth::user()->id;//login staff or admin
+                   $payer_name = Auth::user()->first_name.' '. Auth::user()->last_name;
+                   $payer_email = auth()->user()->email;
+                   $payer_phone = auth()->user()->phone_number;
     
                    //update transaction history
                     Transaction::create([
                        'userid' => $user_id,
                        'payerid' =>   $loginUserId,
+                       'payer_name' =>  $payer_name,
+                       'payer_email' => $payer_email,
+                       'payer_phone' => $payer_phone,
                        'referenceId' => strtoupper($referenno),
                        'service_type' => '3',
                        'service_description' => "Loan Disbursement-FS",  

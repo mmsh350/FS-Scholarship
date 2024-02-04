@@ -65,7 +65,7 @@
             <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
           </div>
           <div class="col-4 col-xl-4 page-title">
-            <h4 class="f-w-700"> Applicant Dashboard</h4>
+            <h4 class="f-w-700"> Admin Dashboard</h4>
             <nav>
               <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -235,13 +235,15 @@
                         <svg class="fill-icon">
                           <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                         </svg><span>Dashboard</span></a>
-                      <ul class="sidebar-submenu expand">
-                        <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                        <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                        <li><a  href="{{ route('application') }}">Applications</a></li>
-                        <li><a  href="{{ route('wallet') }}"> Fund Wallet</a></li>
-                        <li><a class="active" href="{{ route('transactions') }}">Transactions</a></li>
-                      </ul>
+                        <ul class="sidebar-submenu expand">
+                          <li><a href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a  href="{{ route('admin.users') }}">Users</a></li>
+                          <li><a  href="{{ route('admin.applications') }}">Applications</a></li>
+                          <li><a href="{{ route('admin.schools') }}">Schools</a></li>
+                          <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
+                          <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
+                          <li><a class="active" href="{{ route('admin.transactions') }}">Transactions</a></li> 
+                        </ul>
                     </li>
                   </ul>
                 </div>
@@ -342,7 +344,6 @@
     <script src="{{ asset('js/logout.js') }}"></script>
     <script src="{{ asset('js/script.js')}}"></script>
     <script  src="{{ asset('js/transaction.history.js') }}"></script>
-        
     <!-- Plugin used-->
   </body>
 </html>

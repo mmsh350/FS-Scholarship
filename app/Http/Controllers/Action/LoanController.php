@@ -152,10 +152,17 @@ class LoanController extends Controller
                 $affected = Wallet::where('userid', $loginUserId)
                             ->update(['balance' =>$availbal]);
 
+                $payer_name = Auth::user()->first_name.' '. Auth::user()->last_name;
+                $payer_email = auth()->user()->email;
+                $payer_phone = auth()->user()->phone_number;
+                
                 //update transaction history
                 $user = Transaction::create([
                     'userid' => $loginUserId,
                     //'payerid' => '',
+                    'payer_name' =>  $payer_name,
+                    'payer_email' => $payer_email,
+                    'payer_phone' => $payer_phone,
                     'referenceId' => strtoupper($referenno),
                     'service_type' => '4',
                     'service_description' => "Monthly Loan Repayment",  

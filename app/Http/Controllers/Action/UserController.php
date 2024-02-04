@@ -7,7 +7,9 @@ use App\Mail\NewUserNotify;
 use App\Models\App_Notification;
 use App\Models\Application;
 use App\Models\State;
+use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -61,7 +63,7 @@ class UserController extends Controller
                               })
 
                           ->editColumn('role', function ($row) {
-                                return '<span class="badge badge-light-primary">'.ucwords(strtolower($row->role)).'</span>';
+                                return '<span class="badge badge-dark-primary bg-primary">'.ucwords(strtolower($row->role)).'</span>';
                               })
                            
                            
@@ -112,7 +114,8 @@ class UserController extends Controller
 
         $created_at = date("M j, Y", strtotime($userDetails->created_at) );
         $updated_at = date("M j, Y", strtotime($userDetails->updated_at) );
-      
+       
+        $walletDetails = Wallet::select('balance')->where('userid', $id)->first();
         
         $userStatedata = State::select('stateName')->where('id',$userDetails->state_id)->first(); 
 
@@ -120,7 +123,20 @@ class UserController extends Controller
         if(!empty($userStatedata) || $userStatedata != null){
             $userState = $userStatedata->stateName;
         }
-        $data = array( "created_at" => $created_at, "updated_at" => $updated_at,"statename"=>  $userState );
+        $Wbalance = 0;
+        if(!empty($walletDetails) || $walletDetails != null){
+            $Wbalance = number_format($walletDetails->balance);
+        }
+
+        $tnx = 0;
+        $getTransaction = Transaction::where('userid',$id)->orderBy('id', 'desc')->take(3)->get();
+        
+        if(!empty($getTransaction))
+            $tnx = $getTransaction;
+           
+        $data = array( "created_at" => $created_at, "updated_at" => $updated_at,"statename"=>  $userState , 
+        "Wbalance" =>   $Wbalance, "Transaction"=>$tnx);
+
         $array = array_merge($userDetails->toArray(), $data);
          
            return response()->json($array);

@@ -38,12 +38,16 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('admin-applications', [ApplicationController::class, 'show'])->name('admin.applications');
     Route::get('admin-activities', [ApplicationController::class, 'show'])->name('admin.activities');
     Route::get('admin-schools', [ApplicationController::class, 'show'])->name('admin.schools');
+    Route::get('admin-transactions', [TransactionController::class, 'index'])->name('admin.transactions');
    
     Route::get('get-users', [UserController::class, 'getUserDetails'])->name('get-users');
     Route::post('verifyEmail', [UserController::class, 'verifyEmail'])->name('verifyEmail');
     Route::post('activateUser', [UserController::class, 'enableDisableUser'])->name('activateUser');
     Route::post('updateUser', [UserController::class, 'updateUser'])->name('updateUser');
     Route::post('createUser', [UserController::class, 'save'])->name('createUser');
+
+    Route::post('topup', [WalletController::class, 'topup'])->name('topup');
+    Route::get('admin-wallet', [WalletController::class, 'show'])->name('admin.wallet');
 
 
      
@@ -98,7 +102,9 @@ use App\Http\Controllers\AppNotificationController;
     Route::post('get-countries', [CountriesController::class, 'fetchCountry']);
     Route::post('get-schools', [SchoolController::class, 'fetchSchools']);
 
+    Route::get('get-statecount', [StateController::class, 'fetchStateCount']);
 
+   
     Route::get('/loan', [LoanController::class, 'show'])->name('loan');
     Route::post('/make-repayment', [LoanController::class, 'repayment'])->name('make-repayment');
 

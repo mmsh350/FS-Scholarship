@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Wallet;
 use App\Models\Application;
+use App\Models\Approval;
 use App\Models\School;
 use App\Models\State;
+use App\Models\Transaction;
 use App\Models\User;
 class DashboardController extends Controller
 {
@@ -176,9 +178,7 @@ class DashboardController extends Controller
             }
             else if(Auth::user()->role == 'admin') {
                  
-                //Retrieve users state
-                $state_id = Auth::user()->state_id;
-
+                
                 $notifycount =0;
                 $notifications = 0;
                     
@@ -191,60 +191,92 @@ class DashboardController extends Controller
                                             ->where('status', 'unread')
                                             ->count();
              
-                 //Fetch State Name
-                 $getName = State::select('stateName')
-                 ->where('id', $state_id)->first();
-                  $stateName =  $getName->stateName;
-                  
-
+                
                 //Get Application Count Details
                 $school_count = 0;
                 $agent_count = 0;
                 $app_count = 0;
                 $verify_count = 0;
                 
-                $school_count = School::all()
-                                ->where('state_id', $state_id)->count();
 
-                $agent_count = User::all()
-                                 ->where('state_id', $state_id)
-                                // ->where('registrar_id', $loginUserId)
-                                 ->where('role', 'agent')->count();
-                                
+                //School Count
+                $school_count = School::all()->count();
+                
+                //Agent Count
+                $agent_count = User::all()->where('role', 'agent')->count();
+
+                //Staff Count
+                $staff_count = User::all()->where('role', 'staff')->count();
+
+                //Applicant Count
+                $applicant_count = User::all()->where('role', 'applicant')->count();
+
+                //Total Applications
+                $app_total_count = Application::all()->count();
+                
+                //Pending verification
                 $verify_count = Application::all()
-                                ->where('location_id', $state_id)
+                                ->where('app_verify', '1')->count();
+
+                //Pending approval
+                $pending_approval_count = Application::all()
+                                ->where('status', 'Pending')
                                 ->where('app_verify', '1')
-                               // ->where('app_status', 'Open')
-                                ->where('verify_id',  $loginUserId)->count();
+                                ->count();
 
-                $reject_count = Application::all()
-                                ->where('location_id', $state_id)
-                                ->where('app_verify', '0')
-                                //->where('status', 'Rejected')
-                               // ->where('app_status', 'Close')
-                                ->where('verify_id',  $loginUserId)->count();
-
-                $pending_app_count = Application::all()
-                                ->where('location_id', $state_id)
-                                //->where('status', 'Pending')
+                //Pending approval
+                $pending_verify_count = Application::all()
+                                ->where('status', 'Pending')
                                 ->where('verify_id', '')
                                 ->where('app_verify', '0')
                                 ->count();
 
-                $app_total_count = Application::all()
-                                ->where('location_id', $state_id)
-                                ->count();
 
+                //Rejected
+                $reject_count = Application::all()
+                                ->where('status', 'Rejected')->count();
+
+            
+
+                 //Approval count
+                $app_approve_count = Application::all()->where('status','Approved')->count();
+                
+                $interest = Approval::all()->sum('disbursed_interest');
+
+                $disbursed_amt = Approval::where('disbursed_interest', '!=','0')->sum('disbursed_amount');
+
+                $disbursed_schl = Application::where('category', 'Scholarship')
+                ->where('disbursed','1')->sum('approved_amount');
+
+                $wallet_bal = Wallet::all()->sum('balance');
+
+                $upfront  = Application::where('pay_status', 'Paid')->sum('initial_fee');
+
+                $repay  = Application::where('disbursed', '1')->sum('total_paid');
+
+                  //Fetch Transactions
+                 
+                $transactions =  Transaction::all()->sortByDesc('id')->take(5);
                 
                 return view('admin.dashboard')
+                        ->with(compact('transactions'))
                         ->with(compact('app_total_count'))
-                        ->with(compact('pending_app_count'))
+                        ->with(compact('app_approve_count'))
                         ->with(compact('verify_count'))
+                        ->with(compact('pending_approval_count'))
+                        ->with(compact('pending_verify_count'))
                         ->with(compact('agent_count'))
                         ->with(compact('reject_count'))
                         ->with(compact('notifications'))
                         ->with(compact('notifycount'))
-                        ->with(compact('stateName'))
+                        ->with(compact('interest'))
+                        ->with(compact('disbursed_amt'))
+                        ->with(compact('wallet_bal'))
+                        ->with(compact('upfront'))
+                        ->with(compact('repay'))
+                        ->with(compact('disbursed_schl'))
+                        ->with(compact('staff_count'))
+                        ->with(compact('applicant_count'))
                         ->with(compact('school_count'));
             }
             else if(Auth::user()->role == 'agent'){

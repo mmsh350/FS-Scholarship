@@ -5,8 +5,8 @@ var table3 = $('#transactions').DataTable({
     pagingType: "full_numbers",
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
-        [5,10, 25, 50, -1],
-        [5,10, 25, 50, 'All'],
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All'],
     ],
     order: [[0, 'desc']],
     columns: [

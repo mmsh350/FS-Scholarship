@@ -38,6 +38,7 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/sweetalert.css')}}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/responsive.css') }}">
+    <style> .light-a { color:white !important}</style>
   </head>
   <body> 
     <div class="loader-wrapper"> 
@@ -230,12 +231,12 @@
                         <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
                         <li><a  href="{{ route('admin.users') }}">Users</a></li>
                         <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
+                        <li><a href="{{ route('admin.schools') }}">Schools</a></li>
                         <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
-                        <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
+                        <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
+                        <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
                       </ul>
                   </li>             
-               
-                 
                 </ul>
               </div>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
@@ -248,8 +249,73 @@
           <div class="container-fluid dashboard-2">
             <div class="row">
 				 
-                      
-                      <div class="col-md-3">
+            
+              <div class="col-md-4">
+                <div class="btn-light1-success b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/interest.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Loan Interest</h6>  
+                        <span class="f-16 txt-dark"> &#8358; {{ number_format($interest, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="btn-light1-secondary b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Wallet Value</h6>  
+                        <span class="f-16 txt-dark">&#8358; {{ number_format($wallet_bal, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="btn-light1-primary b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/payments.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Upfront Fee</h6>  
+                    <span class="f-16 txt-dark">&#8358; {{ number_format($upfront, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="btn-light1-danger b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/loan.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Loan</h6>  
+                    <span class="f-16 txt-dark">&#8358; {{ number_format($disbursed_amt, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="btn-light1-dark b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-dark"> <img src="{{ asset('images/dashboard-2/svg-icon/repay.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Repayment</h6>  
+                    <span class="f-16 txt-dark">&#8358; {{ number_format($repay, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="btn-light1-info b-r-10"> 
+                  <div class="upcoming-box"> <a href="#">
+                    <div class="upcoming-icon bg-info"> <img src="{{ asset('images/dashboard-2/svg-icon/gift.png') }}" alt=""></div>
+                    <h6 class="p-b-10">Scholarship</h6>  
+                    <span class="f-16 txt-dark">&#8358; {{ number_format($disbursed_schl, 2); }}</span>
+                  </div></a>
+                </div>
+              </div>
+            </div>
+            
+             
+
+              <div id="more" class="row" style="display:none" > 
+
+                      <div class="col-md-6" >
                         <div class="btn-light1-primary b-r-10"> 
                           <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
@@ -259,29 +325,29 @@
                         </div>
                       </div>
 
-                      <div class="col-md-3">
-                        <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('staff.applications') }}">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/pending.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Pending</h6>
-							                <span id="pending_app_count" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$pending_app_count}}</span>
+
+                      <div class="col-md-3"  >
+                        <div class="btn-light1-success b-r-10"> 
+                          <div class="upcoming-box">  <a href="{{ route('staff.applications') }}">
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
+                           <h6 class="p-b-10">Verified</h6>
+							                <span id="verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$verify_count}}</span>
+                             <span hidden id="verified" >{{ $verify_count }}</span>
                             </div>
                         </div> </a>
                       </div>
 
                       <div class="col-md-3">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('staff.applications') }}">
-                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Verified</h6>
-							                <span id="verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$verify_count}}</span>
-                             <span hidden id="pending_app_count" >{{ $pending_app_count }}</span>
+                          <div class="upcoming-box ">  <a href="{{ route('staff.applications') }}">
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved2.png') }}" alt=""></div>
+                           <h6 class="p-b-10">Approved</h6>
+							                <span id="app_approve_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$app_approve_count}}</span>
                             </div>
                         </div> </a>
                       </div>
 
-
-                      <div class="col-md-3">
+                      <div class="col-md-6">
                         <div class="btn-light1-danger b-r-10"> 
                           <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
@@ -291,40 +357,151 @@
                         </div>
                       </div>
 
-                      <span id="show"><a href="#">More >></a></span>
-                       <div id="more" class="row col-md-12" style="display:none"> 
-                      <div class="col-md-6">
+
+                      <div class="col-md-3">
                         <div class="btn-light1-warning b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
-                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Agents</h6> 
-                           <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-warning badge-light  text-dark f-14">{{$agent_count}}</span>
+                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/pending.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Pending Verification</h6>  
+                             <span id="pending_verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-warning badge-light  text-dark f-14">{{ $pending_verify_count }}</span>
                           </div></a>
                         </div>
                       </div>
-                      <div class="col-md-6">
-                        <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.schools') }}">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Schools</h6> 
-                           <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$school_count}}</span>
+
+                      <div class="col-md-3">
+                        <div class="btn-light1-warning b-r-10"> 
+                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/processing.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Pending Approval</h6>  
+                             <span id="pending-approval" class="mt-2 badge rounded-circle badge-p-space border border-warning badge-light  text-dark f-14">{{ $pending_approval_count }}</span>
                           </div></a>
                         </div>
                       </div>
-                    </div>
-					  
-					                       
+
                    
-					
+                      <div class="col-md-12">
+                        <div class="btn-light1-dark b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('staff.schools') }}">
+                            <div class="upcoming-icon bg-dark"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Schools/Institution</h6> 
+                           <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-dark badge-light  text-dark f-14">{{$school_count}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+                     
+
+                      <div class="col-md-4">
+                        <div class="btn-light1-info b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                            <div class="upcoming-icon bg-info"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Agents</h6> 
+                           <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-info badge-light  text-dark f-14">{{$agent_count}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+
+
+                      <div class="col-md-4">
+                        <div class="btn-light1-success b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Staff</h6> 
+                           <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$staff_count}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="btn-light1-secondary b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Applicant</h6> 
+                           <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$applicant_count}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+
+                    
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <ul class="fw-bold list-group list-group-horizontal-sm pb-1">
+                          <li class="list-group-item  bg-dark"><i class="fa fa-history txt-danger "></i><a href="{{ route('admin.transactions') }}" style="color: #fff; text-decoration: none;">All Transactions</a></li>
+                          <li class="list-group-item bg-secondary"><i class="fa fa-list-alt" aria-hidden="true"></i> <a href="#" style="color: #f3f3f3; text-decoration: none;" id="show">Tiles [in/out]</a></li>
+                          <li class="list-group-item bg-info"><a style="color: #000; text-decoration: none;" href="#graph"><i class="fa fa-bar-chart" aria-hidden="true"></i> Graphical Data</a></li>
+                          <li class="list-group-item bg-warning"><a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.users') }}"><i class="fa fa-users" aria-hidden="true"></i> Accounts </a></li>
+                          <li class="list-group-item bg-success"><a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.applications')  }}"><i class="fa fa-tasks" aria-hidden="true"></i> Applications </a></li>
+                          <li class="list-group-item bg-light"> <a style="color: #000; text-decoration: none;" href="{{ route('admin.schools')  }}"><i class="fa fa-institution"></i>Schools</a></li>
+                          <li class="list-group-item bg-danger"> <a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.activities')  }}"><i class="fa fa-hand-o-right"></i> Activities</a></li>
+                        </ul>
+                      </div>
+                        <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">
+                      <div class="table-responsive  bg-white theme-scrollbar mt-4  border rounded-3 ">
+                        <table class="table">
+                          <thead style="background-color:#2b3751;">
+                            <tr class="border-bottom-primary">
+                              <th class="light-a">ID</th>
+                              <th class="light-a">Transaction Date</th>
+                              <th class="light-a">Reference Number</th>
+                              <th class="light-a">Payer Name</th>
+                              <th class="light-a">Payer Phone </th>
+                              <th class="light-a">Service Description</th>
+                              <th class="light-a"><center>Amount (NGN)</center></th>
+                            </tr>
+                          </thead>
+                          
+                            <tbody>
+                            @if($transactions != null)
+    
+                            @php $i = 1; @endphp
+                           @foreach($transactions as $data)
+                          <tr class="border-bottom-secondary">
+                              <th scope="row">{{ $i }}</th>
+                              <td>{{ $data->created_at}}</td>
+                              <td>{{ $data->referenceId}}</td>
+                              <td>{{ $data->payer_name}}</td>
+                              <td>{{ $data->payer_phone}}</td>
+                              <td>{{ $data->service_description}}</td>
+                            
+                              <td> 
+                                <center>
+                                @if($data->type == "plus")
+                                <span class="badge badge-light-success">{{ number_format($data->amount, 2)}}</span>
+                                @else
+                                <span class="badge badge-light-danger">{{ number_format($data->amount, 2)}}</span>
+                                @endif
+                                </center>
+                              </td>
+                              
+                          </tr>
+                          @php $i++ @endphp
+                          @endforeach
+                          @else
+                          <tr class="border-bottom-secondary">
+                          <td> No Record Found</td>
+                          </tr>
+                         
+                          
+                          @endif
+                          </tbody>
+                            
+                             
+                          
+                        </table>
+                      </div>
+                    </div>   
+                    
+                        
+                  </div>             
+                   
+                </div>
+              <div class="row"> 
 					<!-------Might remove----->
-                    <div class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
+                    <div id="graph" class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
                         <div class="card">
                           <div class="card-header">
                             <h4>Graphical Data</h4>
-                              
-                             
-                            <p class="f-m-light mt-1">
-                              </p>
                             <div class="card-header-right">
                               <ul class="list-unstyled card-option">
                                 <li><i class="icon-more-alt"></i></li>
@@ -338,24 +515,23 @@
                             <p class="mb-1   pb-0 " style="text-align:justify"></p>
                             <div class="table-responsive">
                                 <div class="row">
-                                <div class="col-md-6  ">
-                               <div id="container" style="height: 370px; width: 100%;"></div>
-                               </div>
-                               <div class="col-md-6">
-                               <div id="container2" style="height: 370px; width: 100%;"></div>
-                               </div>
-                               </div>
-                               </div>
+                                    <div class="col-md-6  ">
+                                       <div id="container" style="height: 370px; width: 100%;"></div>
+                                     </div>
+                                    <div class="col-md-6">
+                                      <div id="container2" style="height: 370px; width: 100%;"></div>
+                                    </div>
+                                    <div class="col-md-12">
+                                      Application by states
+                                      <div id="container3" style="height: 800px; width: 100%;"></div>
+                                    </div>
+                                </div>
+                              </div>
                             
                           </div>
                         </div>
                       </div>
                      
-             
-             
-             
-            
-              
               
             </div>
           </div>
@@ -404,7 +580,7 @@
     <script>
     $(document).ready(function() {  
 
-
+      var _token = $('#_token').val(); 
             //More Option
             $('#show').click(function() {
                 $('#more').toggle("slide");
@@ -412,21 +588,20 @@
 
             //Get counts and generate Graph
             let app_total_count = $('#app_total_count').html();
-            let verify_count = $('#verify_count').html();
-            let reject_count = $('#reject_count').html();
-            let pending_app_count = $('#pending_app_count').html();
+            let pendingApproval = $('#pending-approval').html();
+            let app_approve_count = $('#app_approve_count').html();
+            let verified = $('#verified').html();
+            let reject_count = $('#reject_count').html();           
             
-            
-            setchart1(pending_app_count,verify_count,reject_count);
+            setchart1(pendingApproval,app_approve_count,reject_count);
 
-            let schools=  $('#schools').html();;
-            let agents= $('#agents').html();
-            
-            setchart2(schools,agents,app_total_count);
+            //let schools=  $('#schools').html();;
+            //let agents= $('#agents').html();
+            setchart2(app_total_count,verified,app_approve_count,pendingApproval,reject_count);
    
 					
 					
-				function setchart1(pending_app_count,verify_count,reject_count){
+				function setchart1(pendingApproval,app_approve_count,reject_count){
 					var dom = document.getElementById('container');
 					var myChart = echarts.init(dom, null, {
 					  renderer: 'canvas',
@@ -455,9 +630,10 @@
 					  type: 'pie',
 					  radius: '50%',
 					  data: [
-						{ value: pending_app_count, name: 'Pending' },
-						{ value: verify_count, name: 'Verified' },
-						{ value: reject_count, name: 'Rejected' },
+            { value: verified, name: 'Verified', itemStyle:{ color: 'blue'} },
+						{ value: app_approve_count, name: 'Approved' , itemStyle:{ color: 'green'} },
+            { value: pendingApproval, name: 'Pending' , itemStyle:{ color: 'yellow'} },
+						{ value: reject_count, name: 'Rejected' , itemStyle:{ color: 'red'} },
                         
 						
 					  ],
@@ -481,7 +657,7 @@
 				}
 				
 				
-				function setchart2(schools,agents,app_total_count)
+				function setchart2(app_total_count,verified,app_approve_count,pendingApproval,reject_count)
                 {
 					
 					var app = {};
@@ -491,28 +667,154 @@
                     var option;
 
                     option = {
-                    legend: {},
-                    tooltip: {},
-                    dataset: {
-                        dimensions: ['product', 'Applications', 'Agents', 'Schools'],
-                        source: [
-                        { product: 'Statistics',
-                             Applications: app_total_count, 
-                             Agents:agents, Schools: schools }
-                        
-                        ]
-                    },
-                    xAxis: { type: 'category' },
-                    yAxis: {},
-                    // Declare several bar series, each will be mapped
-                    // to a column of dataset.source by default.
-                    series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
-                    };
+                            xAxis: {
+                              type: 'category',
+                              data: ['Apps', 'Verified', 'Approved', 'Pending', 'Rejected']
+                            },
+                            yAxis: {
+                              type: 'value'
+                            },
+                            series: [
+                              {
+                                data: [
+                                
+                                  {
+                                    value: app_total_count,
+                                    itemStyle: {
+                                      color: '#a90000'
+                                    }
+                                  },
+                                  {
+                                    value: verified,
+                                    itemStyle: {
+                                      color: 'blue'
+                                    }
+                                  },
+                                  {
+                                    value: app_approve_count,
+                                    itemStyle: {
+                                      color: 'green'
+                                    }
+                                  },
+                                  {
+                                    value: pendingApproval,
+                                    itemStyle: {
+                                      color: 'yellow'
+                                    }
+                                  },
+                                  {
+                                    value: reject_count,
+                                    itemStyle: {
+                                      color: 'red'
+                                    }
+                                  },
+                                  
+                                ],
+                                type: 'bar'
+                              }
+                            ]
+                          };
 
                     option && myChart.setOption(option);
 
                     window.addEventListener('resize', myChart.resize);
                                 }
+
+        $.ajax({
+            url: 'get-statecount',
+            type: "GET",
+            data:{_token},
+            dataType: "json",
+            success: function(data) {
+             
+
+              var chartDom = document.getElementById('container3');
+              var myChart = echarts.init(chartDom);
+              var option;
+
+              option = {
+                dataset: {
+                  source: [
+                    ['score', 'Total', 'product'],
+                    [ data[1], data[1], 'Abia'],
+                    [ data[2], data[2], 'Adamawa'],
+                    [ data[3], data[3], 'Akwa Ibom'],
+                    [ data[4], data[4], 'Anambra'],
+                    [ data[5], data[5], 'Bauchi'],
+                    [ data[6], data[6], 'Bayelsa'],
+                    [ data[7], data[7], 'Benue'],
+                    [ data[8], data[8], 'Borno'],
+                    [ data[9], data[9], 'Cross River'],
+                    [ data[10], data[10], 'Delta'],
+                    [ data[11], data[11], 'Ebonyi'],
+                    [ data[12], data[12], 'Edo'],
+                    [ data[13], data[13], 'Ekiti'],
+                    [ data[14], data[14], 'Enugu'],
+                    [ data[15], data[15], 'FCT'],
+                    [ data[16], data[16], 'Gombe'],
+                    [ data[17], data[17], 'Imo'],
+                    [ data[18], data[18], 'Jigawa'],
+                    [ data[19], data[19], 'Kaduna'],
+                    [ data[20], data[20], 'Kano'],
+                    [ data[21], data[21], 'Katsina'],
+                    [ data[22], data[22], 'Kebbi'],
+                    [ data[23], data[23], 'Kogi'],
+                    [ data[24], data[24], 'Kwara'],
+                    [ data[25], data[25], 'Lagos'],
+                    [ data[26], data[26], 'Nasarawa'],
+                    [ data[27], data[27], 'Niger'],
+                    [ data[28], data[28], 'Ogun'],
+                    [ data[29], data[29], 'Ondo'],
+                    [ data[30], data[30], 'Osun'],
+                    [ data[31], data[31], 'Oyo'],
+                    [ data[32], data[32], 'Plateau'],
+                    [ data[33], data[33], 'Rivers'],
+                    [ data[34], data[34], 'Sokoto'],
+                    [ data[35], data[35], 'Taraba'],
+                    [ data[36], data[36], 'Yobe'],
+                    [ data[37], data[37], 'Zamfara'],
+                  ]
+
+                },
+                grid: { containLabel: true },
+                xAxis: { name: 'Total' },
+                yAxis: { type: 'category' },
+                visualMap: {
+                  orient: 'horizontal',
+                  left: 'center',
+                  min: 1,
+                  max: app_total_count,
+                  text: ['High Score', 'Low Score'],
+                  // Map the score column to color
+                  dimension: 0,
+                  inRange: {
+                    color: ['#65B581', '#FFCE34', '#FD665F']
+                  }
+                },
+                series: [
+                  {
+                    type: 'bar',
+                    encode: {
+                      // Map the "amount" column to X axis.
+                      x: 'Total',
+                      // Map the "product" column to Y axis
+                      y: 'product'
+                    }
+                  }
+                ]
+              };
+
+              option && myChart.setOption(option);
+               
+            },
+            error: function(data) {
+            
+            }  
+            
+        }); 
+
+
+
 
      });
     </script>

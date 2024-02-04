@@ -18,7 +18,10 @@ class Transaction extends Model
         'type', 
         'gateway', 
         'service_description', 
-        'payerid'         
+        'payerid',
+        'payer_name',
+        'payer_email',
+        'payer_phone',  
     ];
 
 }

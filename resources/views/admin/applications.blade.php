@@ -234,11 +234,13 @@
                           <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                         </svg><span>Dashboard</span></a>
                         <ul class="sidebar-submenu expand">
-                            <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                            <li><a  href="{{ route('admin.users') }}">Users</a></li>
-                            <li><a  class="active" href="{{ route('admin.applications') }}">Applications</a></li>
-                            <li><a   href="{{ route('admin.activities') }}">Activities</a></li>
-                            <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
+                          <li><a  href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a  href="{{ route('admin.users') }}">Users</a></li>
+                          <li><a class="active" href="{{ route('admin.applications') }}">Applications</a></li>
+                          <li><a href="{{ route('admin.schools') }}">Schools</a></li>
+                          <li><a  href="{{ route('admin.activities') }}">Activities</a></li>
+                          <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
+                          <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
                         </ul>
                     </li>
                   </ul>

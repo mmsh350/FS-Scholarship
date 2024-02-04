@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('gateway')->nullable();
             $table->enum('status', ['Approved','Pending'])->default('Pending');
+            $table->string('payer_name')->nullable();
+            $table->string('payer_phone')->nullable();
+            $table->string('payer_email')->nullable();
             $table->timestamps();
         });
     }

@@ -9,14 +9,15 @@ var table = $('#users').DataTable({
     pagingType: "full_numbers",
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
-        [5,10, 25, 50, -1],
-        [5,10, 25, 50, 'All'],
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All'],
     ],
     order: [[0, 'asc']],
     columns: [
         {data: 'id', name: 'id'},
         {data: 'email', name: 'email'},
         {data: 'fullname', name: 'fullname'},
+       // {data: 'phone_number', name: 'phone_number'},
         {data: 'role', name: 'role'},
         {data: 'is_active', name: 'is_active'},
         {data: 'created_at', name: 'created_at'},
@@ -68,7 +69,7 @@ var table = $('#users').DataTable({
         success: function(data) {
             $("#modal-preloader").hide();
             $("#userid").val(data.id);
-
+            $("#wbalance2").html('<span class="f-18 txt-danger">&#8358; '+data.Wbalance);
             //populate form
             if(data.profile_pic == "" || data.profile_pic == null)
                  $("#passport").attr({ "src": 'images/No-Image.png'});
@@ -169,18 +170,23 @@ $('.view').on('shown.bs.modal', function(event) {
                  $("#label_passport").attr({ "src": 'images/No-Image.png'});
             else
                 $("#label_passport").attr({ "src": 'data:image/;base64,'+data.profile_pic });
+            
+            let middle ='';
+            (data.middle_name == null) ? middle = "" : middle = data.middle_name;          
 
-             $("#username").html(data.first_name+' '+data.middle_name+' '+data.last_name);
+             $("#username").html(data.first_name+' '+middle+' '+data.last_name);
              $("#label_gender").html(data.gender );
              $("#label_phoneno").html(data.phone_number);
              $("#label_email").html(data.email);
              $("#label_dob").html(data.dob);
              $("#label_BVN").html(data.bvn);
+             $("#wbalance").html('<span class="f-18 txt-danger">&#8358; '+data.Wbalance);
+             
             
             if(data.id_cards == "" || data.id_cards == null)
-              $("#label_doc").attr({ "alt": 'Identity Card not available.'});
+              $("#label_doc").attr({ "alt": 'Identity Card not available.', "src": 'images/noimage.png'}).height(50).width(50);
             else  
-              $("#label_doc").attr({ "src": 'data:image/;base64,'+data.id_cards});
+              $("#label_doc").attr({ "src": 'data:image/;base64,'+data.id_cards}).height(250).width(450);;
            
              $("#label_address").html(data.address);
              $("#label_state").html(data.statename);
@@ -210,6 +216,34 @@ $('.view').on('shown.bs.modal', function(event) {
             }else{
                 $("#label_astatus").html('<span class="badge badge-danger">In-Active</span>');
             }
+
+            //Transactions
+            $('#result').empty();
+            if(data.Transaction == 0){
+                $("#result").append('<tr>'+'<td> No transaction record found !</td></tr>');
+            }else{
+              
+                var counter=0;
+                $.each(data.Transaction, function(key, value){
+                   counter++;
+                
+                    var d = new Date(value['created_at']);
+                    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                    d = d.toLocaleDateString("en-US", options);
+                    let amt = value['amount'];
+                  
+                $("#result").append('<tr>'+
+                '<td>'+counter+'</td>\
+                <td>'+d+'</td>\
+                <td>'+value['referenceId']+'</td>\
+                <td>'+value['payer_name']+'</td>\
+                <td>'+value['service_description']+'</td>\
+                <td>'+ ReplaceNumberWithCommas(amt)+'</td>\
+                    </tr>');
+                
+                });
+                
+      }
         },
         error: function(data) {
             $(".view").scrollTop(0);
@@ -224,6 +258,17 @@ $('.view').on('shown.bs.modal', function(event) {
             return match.toUpperCase();
         });
     }
+
+    function ReplaceNumberWithCommas(yourNumber) {
+        //Seperates the components of the number
+        var n= yourNumber.toString().split(".");
+        //Comma-fies the first part
+        n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //Combines the two sections
+        return n.join(".");
+    }
+    
+    
     
 }); 
 
@@ -232,7 +277,7 @@ $('#verify').click(function(evt) {
 
   $('#verify').prop("disabled", true); 
 
-   var _token = $('#_token').val();   
+   var _token = $('#_token').val(); 
    var userid = $('#userid').val(); 
 
    $('#verify').html("Processing ...");
@@ -329,7 +374,7 @@ $('#activate').click(function(evt) {
                         $('#btnSave').html("Redirecting ...");
                         setTimeout(function(){  
                             $("#error_update").hide();
-                            //$('form').trigger("reset");
+                             
                             window.location.reload(); 
                             $("#spinner").hide();
                         }, 2000);
@@ -447,6 +492,110 @@ $('#register').click(function(evt) {
     }    
 
 });
+		// Target email field
+		var input = document.getElementById("topup");
 
- 
+		// Execute a function when the user releases a key on the keyboard
+		input.addEventListener("keyup", function(event) {
+		  // Number 13 is the "Enter" key on the keyboard
+		  if (event.keyCode === 13) {
+			// Cancel the default action, if needed
+			event.preventDefault();
+			// Trigger the button element with a click
+            $("#add").show();
+            $("#minus").show();
+		  }
+		});
+
+
+        //Credit Wallet
+$('#add').click(function(evt) {
+
+    $('#add').prop("disabled", true); 
+  
+     var _token = $('#_token').val(); 
+     var userid = $('#userid').val(); 
+     var type= "Add";  
+     var amt = $('#topup').val();
+
+     $.ajax({    //create an ajax request to get session data 
+      type: "POST",
+      url: "topup",   //expect json File to be returned  
+      data: {userid:userid,_token,type:type,amt:amt},		
+      success: function(response){  
+                     $('#add').prop("disabled", false); 
+                      $(".bd-example-modal-xl").scrollTop(0);
+                      $("#done_update").show();
+                      $('#done_update').append('<strong>Wallet TopUp Complete.</strong>');
+  
+                      setTimeout(function(){  
+                        window.location.reload(); 
+                      }, 3000);
+          },
+          error: function(data) {
+              $(".bd-example-modal-xl").scrollTop(0);
+              $("#error_update").show();
+              $.each(data.responseJSON.errors, function (key, value) {
+                  $("#error_update").empty();
+                  $('#error_update').append('<strong>'+value+'</strong>');
+              });
+              
+              setTimeout(function(){ 
+                      $('#add').prop("disabled", false);
+                      $("#error_update").empty();
+                      $("#error_update").hide();
+                  }, 3000);
+          }
+      });
+   });
+
+   $('#minus').click(function(evt) {
+
+    $('#minus').prop("disabled", true); 
+  
+     var _token = $('#_token').val(); 
+     var userid = $('#userid').val(); 
+     var type= "minus";  
+     var amt = $('#topup').val();
+
+     $.ajax({    //create an ajax request to get session data 
+      type: "POST",
+      url: "topup",   //expect json File to be returned  
+      data: {userid:userid,_token,type:type,amt:amt},		
+      success: function(response){  
+                     $('#minus').prop("disabled", false); 
+                      $(".bd-example-modal-xl").scrollTop(0);
+                      $("#done_update").show();
+                      $('#done_update').append('<strong>Wallet Adjustment Complete.</strong>');
+  
+                      setTimeout(function(){  
+                        window.location.reload(); 
+                      }, 3000);
+          },
+          error: function(data) {
+              $(".bd-example-modal-xl").scrollTop(0);
+              $("#error_update").show();
+              $.each(data.responseJSON.errors, function (key, value) {
+                  $("#error_update").empty();
+                  $('#error_update').append('<strong>'+value+'</strong>');
+              });
+              
+              setTimeout(function(){ 
+                      $('#minus').prop("disabled", false);
+                      $("#error_update").empty();
+                      $("#error_update").hide();
+                  }, 3000);
+          }
+      });
+   });       
+
 });
+function isNumberKey(evt)
+        {
+          var e = evt || window.event; //window.event is safer, thanks @ThiefMaster
+          var charCode = e.which || e.keyCode;                        
+          if (charCode > 31 && (charCode < 47 || charCode > 57))
+          return false;
+          if (e.shiftKey) return false;
+          return true;
+       }

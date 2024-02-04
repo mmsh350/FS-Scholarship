@@ -246,6 +246,12 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                         $("#appr_initfee").html('&#8358; '+response.initial_fee);
                         $("#appr_monthly").html('&#8358; '+response.monthly_repayment);
                         $("#appr_date").html(response.created_at);
+                       
+                       let apptype =  $("#cat").html();
+                      
+                       if(apptype == 'Scholarship')
+                          $("#appr_interest").html('&#8358; 0.00');
+                       else
                         $("#appr_interest").html('&#8358; '+response.interest);
                         
 

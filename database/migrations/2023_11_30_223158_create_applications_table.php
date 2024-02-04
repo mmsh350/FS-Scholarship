@@ -43,7 +43,7 @@ return new class extends Migration
             $table->string('monthly_repayment')->nullable()->default(0);
             $table->enum('pay_status', ['Paid','Pending'])->default('Pending');
             $table->enum('app_verify', [0,1])->default(0);
-            $table->tinyInteger('verify_id')->nullable();
+            $table->bigInteger('verify_id')->nullable();
             $table->enum('app_accept', [0,1,2])->default(0);
             $table->string('acct_name')->nullable();
             $table->string('acct_number')->nullable();

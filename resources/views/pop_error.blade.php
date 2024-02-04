@@ -226,18 +226,13 @@
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
                     <ul class="sidebar-submenu expand">
-                      <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                      <li><a href="{{ route('dashboard') }}">Overview</a></li>
                       <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
-                      <li><a class="" href="{{ route('application') }}">Applications</a></li>
+                      <li><a  class="active" class="" href="{{ route('application') }}">Applications</a></li>
                       <li><a href="{{ route('wallet') }}"> Fund Wallet</a></li>
                       <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
-                   
-                  
-                 
-               
-               
                  
                 </ul>
               </div>
@@ -250,83 +245,23 @@
           <!-- Container-fluid starts-->
           <div class="container-fluid dashboard-2">
             <div class="row">
-              
-				 <div class="row"> 
-                      <div class="col-md-3">
-                        <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('wallet') }}">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Wallet Balance</h6>
-							            <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; {{ number_format($balance, 2); }}</button>
-                      </a>
-              </div>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('application') }}">
-                            <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Submitted Application</h6>  
-                             <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$submit_count}}</span>
-                          </div></a>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('application') }}">
-                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Approved Application</h6> 
-                           <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
-                          </div></a>
-                        </div>
-                      </div>
-					  
-					  <div class="col-md-3">
-                        <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
-                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Rejected Application</h6>
-							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
-                          </div>
-                        </div> </a>
-                      </div>                       
-                    </div>
+         
 					
 					<!-------Might remove----->
                <div class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
                 <div class="card">
-                  <div class="card-header">
-                    <h4>FS-Scholarship &nbsp; <img  class="bg-primary" width="2%" src="{{ asset('images/dashboard-2/svg-icon/verified.png') }}" alt=""> </h4>
-					  
-					 
-                    <p class="f-m-light mt-1">
-                      </p>
-                    <div class="card-header-right">
-                      <ul class="list-unstyled card-option">
-                        <li><i class="icon-more-alt"></i></li>
-                        <li><i class="icofont icofont-maximize full-card"></i></li>
-                        <li><i class="icofont icofont-refresh reload-card"></i></li>
-                        <li><i class="icofont icofont-error"> </i></li>
-                      </ul>
-                    </div>
-                  </div>
+                  
                   <div class="card-body">
-                    <p class="mb-1   pb-0 " style="text-align:justify">Welcome to FS-Scholarship – Your Gateway to a Brighter Future! At FS-Scholarship, we believe in nurturing talent, fostering dreams, and empowering the next generation of leaders. Our commitment to excellence and educational advancement is unparalleled. Explore a world of opportunities, unlock your potential, and embark on a journey towards academic success. Join us in shaping a future filled with knowledge, innovation, and endless possibilities. Discover the key to your educational aspirations with FS-Scholarship. Your success story begins here.<br/> </p>
-                    <p class=" ">To get started, Click on the button below to submit an application</p>
-                    <p class="txt-danger"> Note* You must have atleast 100 Naira in your wallet before you can begin an application</p>
                     <center>
-                    <a href="{{ route('application') }}"><button class="mt-2 example-popover btn btn-dark mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-original-title="Get started"><i class="fa fa-hand-o-right"> </i> Submit Application </button></a>
+                    <p class=" txt-danger">Sorry, Your wallet is insufficent,  to begin an application you need atleast 100 Naira in your wallet.</p>
+                  
+                    <a href="{{ route('wallet') }}"><button class="mt-2 example-popover btn btn-danger mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-original-title="Top Up">
+                      <i class="fa fa-hand-o-right"> </i> Top Up Here </button></a>
                     </center>
                     
                   </div>
                 </div>
-              </div>
-             
-             
-             
-            
-              
-              
+              </div>              
             </div>
           </div>
           <!-- Container-fluid Ends-->

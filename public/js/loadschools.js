@@ -1,7 +1,8 @@
 $(document).ready(function() { 
     var _token = $('#_token').val();          
     $("#schl_category").change(function(){
-      
+        $("#school_name").attr('disabled', true);
+        
       var getId = $(this).val();
     
       $.ajax({    //create an ajax request to get session data 
@@ -11,7 +12,7 @@ $(document).ready(function() {
       data: {getId:getId,_token},		
       success: function(response){                  
            var len = response.length;
-
+                      $("#school_name").attr('disabled', false);
                       $("#school_name").empty();   
                       $("#school_name").append("<option value=''>"+"Choose..."+"</option>");
                       for( var i = 0; i<len; i++)

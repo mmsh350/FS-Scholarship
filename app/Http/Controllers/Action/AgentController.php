@@ -194,7 +194,7 @@ class AgentController extends Controller
           'phone_number' => $request->phone_number,
           'password' => Hash::make($password),
           'registeredby' => 'staff',
-          'is_active' => 0,
+          'is_active' => 1,
           'registrar_id' => $loginUserId, 
           'state_id'=>$stateId,
           'role'=>'agent',

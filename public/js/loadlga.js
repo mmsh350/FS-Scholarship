@@ -1,7 +1,7 @@
 $(document).ready(function() {  
     var _token = $('#_token').val();         
     $("#state").change(function(){
-      
+        $("#lga").attr('disabled', true);
       var getId = $(this).val();
     
       $.ajax({    //create an ajax request to get session data 
@@ -11,7 +11,7 @@ $(document).ready(function() {
       data: {getId:getId,_token},		
       success: function(response){                  
            var len = response.length;
-
+                      $("#lga").attr('disabled', false);
                       $("#lga").empty();   
                       $("#lga").append("<option value=''>"+"Choose..."+"</option>");
                       for( var i = 0; i<len; i++)
@@ -37,7 +37,7 @@ $(document).ready(function() {
   
    $("#nok_state").change(function(){
     var getId = $(this).val();
-    
+    $("#nok_lga").attr('disabled', true);
     $.ajax({    //create an ajax request to get session data 
     type: "POST",
     url: "get-lga",
@@ -45,7 +45,7 @@ $(document).ready(function() {
     data: {getId:getId,_token},			
     success: function(response){                  
          var len = response.length;
-
+                    $("#nok_lga").attr('disabled', false);
                     $("#nok_lga").empty();   
                     $("#nok_lga").append("<option value=''>"+"Choose..."+"</option>");
                     for( var i = 0; i<len; i++)
