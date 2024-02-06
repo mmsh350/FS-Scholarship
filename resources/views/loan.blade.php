@@ -451,10 +451,6 @@
     <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
     <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
-    <script src="{{ asset('js/loadstates.js') }}"></script>
-    <script src="{{ asset('js/loadlga.js') }}"></script>
-    <script src="{{ asset('js/loadcountries.js') }}"></script>
-    <script src="{{ asset('js/loadschools.js') }}"></script>
 
     <!-- Touchspin JS -->
     <script src="{{ asset('js/select2/select2.full.min.js') }}"></script>

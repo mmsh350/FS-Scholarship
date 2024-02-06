@@ -170,8 +170,8 @@ class ApplicationController extends Controller
 
             }
             else if(Auth::user()->role == 'admin') {
-                $notifycount =0;
-                $notifications =0;
+                $notifycount = 0;
+                $notifications = 0;
 
 
                 $notifications = App_Notification::all()->where('user_id', $loginUserId)
@@ -260,10 +260,10 @@ class ApplicationController extends Controller
                      'phone',
                      'ramount', 
                      'status', 
-                     'app_status',
+                     'disbursed',
                     )
           
-             
+              ->where('disbursed','0' )
              ->where('status', 'Approved');
             return Datatables($data)
     
@@ -277,12 +277,12 @@ class ApplicationController extends Controller
                 return  date("M j, Y", strtotime($row->created_at) );
                   })
     
-                  ->editColumn('app_status', function ($row) {
-                     if($row->app_status == 'Close')
-                         return  "<span class='badge badge-danger'>".$row->app_status."</span>";
+                  ->editColumn('disbursed', function ($row) {
+                     if($row->disbursed == 0)
+                         return  "<span class='badge badge-danger'>Pending</span>";
                         else
-                        return  "<span class='badge badge-success'>".$row->app_status."</span>";
-                      })->escapeColumns('app_status')
+                        return  "<span class='badge badge-success'>Pending</span>";
+                      })->escapeColumns('disbursed')
              
                    
               ->addIndexColumn()
@@ -301,8 +301,114 @@ class ApplicationController extends Controller
             }
     
             
-          return view('staff.application');
+          return view('admin.applications');
       }
+
+      public function pendingdismt(Request $request){
+        $loginUserId = Auth::user()->id;
+        
+        if ($request->ajax()) {
+                        
+            $data = DB::table('applications')
+            ->select(
+                          'applications.id',
+                          'applications.created_at',
+                          'applications.names',
+                          'applications.ramount',
+                          'applications.phone',                    
+                          'approvals.status')
+            ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+            ->where('approvals.status','Ongoing' );
+
+            return Datatables($data)
+    
+            ->editColumn('ramount', function ($row) {
+                return  "&#8358;".number_format($row->ramount ,2);
+               
+                  })->escapeColumns('ramount')
+    
+             ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })
+    
+                  ->editColumn('status', function ($row) {
+                        return  "<span class='badge badge-warning'>".$row->status."</span>";
+                   })->escapeColumns('status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                    <a 
+                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                    Look up<i class='icofont icofont-look'> </i> </a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            }
+    
+            
+          return view('admin.applications');
+      }
+
+      public function completed(Request $request){
+        $loginUserId = Auth::user()->id;
+        
+        if ($request->ajax()) {
+
+            $data = DB::table('applications')
+            ->select(
+                          'applications.id',
+                          'applications.created_at',
+                          'applications.names',
+                          'applications.ramount',
+                          'applications.phone',                    
+                          'approvals.status')
+            ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+            ->where('approvals.status','Completed' );
+
+            return Datatables($data)
+    
+            ->editColumn('ramount', function ($row) {
+                return  "&#8358;".number_format($row->ramount ,2);
+               
+                  })->escapeColumns('ramount')
+    
+             ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })
+    
+                  ->editColumn('status', function ($row) {
+                        return  "<span class='badge badge-success'>".$row->status."</span>";
+                   })->escapeColumns('status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                    <a 
+                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                    Look up<i class='icofont icofont-look'> </i> </a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            }
+    
+            
+          return view('admin.applications');
+      }
+
+      
 
   public function verifiedlist(Request $request){
     $loginUserId = Auth::user()->id;
@@ -1444,7 +1550,10 @@ class ApplicationController extends Controller
                     if($row->status != 'Paid')
                     {
                         // Button Customizations
-                        $btn = "<a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>";
+                        $btn = "
+                        <a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>
+                        &nbsp;<a id='paynow' class='btn btn-pill btn-dark btn-air-dark btn-xs paynow'><i class='icofont icofont-pay'> </i> Pay</a>
+                        ";
                         return $btn;
                     }else{ return $btn;}
 
@@ -1455,7 +1564,7 @@ class ApplicationController extends Controller
           return view('admin.applications');
         }
        public function reminder(Request $request)
-         {
+       {
              $id = $request->input('id');
 
             //Get Repayment details
@@ -1525,6 +1634,12 @@ class ApplicationController extends Controller
                
                 
             }         
+    }
+
+    public function convert(Request $request)
+    {
+        $id = $request->input('appid');
+        Application::where('id',$id)->update(['category' => 'Scholarship']);
     }
 
 

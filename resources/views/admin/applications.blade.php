@@ -319,8 +319,10 @@
                               <tbody>
                                
                                 <tr>
-                                  <th class="border-end" width="50%"><span>Type</span>
+                                  <th class="border-end" width="50%"><span>Type</span> 
+                                   <a style="display:none" id="convert" href="#"> <i class="fa fa-exchange f-2" ></i> Convert </a>
                                   <br> <span id="cat" class="f-w-300"></span>
+                                  <button style="display:none" name="confirm_convert" id="confirm_convert" class="badge rounded-pill badge-danger">Confirm</button>
                                   </th>
                                 </tr>
                                 <tr>
@@ -822,6 +824,16 @@
                               </div>
                               </div>
                           </div>
+                          <div id="modal-preloader3" style="display:none">
+                            <div class="modal-preloader_status">
+                            <div class="modal-preloader_spinner">
+                                <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status"></div>
+                                  Making Repayment..
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                     <!-- End Preloader -->
                           </div>
                               <div id="err3" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible" role="alert"></div>
@@ -836,7 +848,7 @@
                                             <th>Due Date</th>
                                             <th>Status</th>
                                             <th>Days</th>
-                                            <th style="width:20%">Action</th>
+                                            <th style="width:30%">Action</th>
                                         </tr>
                                     </thead>
                                   </table>
@@ -1039,8 +1051,15 @@
                       <li class="nav-item" role="presentation">
                         <a class="nav-link txt-success" id="verified-tab" data-bs-toggle="tab" href="#verified" role="tab" aria-controls="verified" aria-selected="true" ><i class="fa fa-check-circle" aria-hidden="true"></i>Approved</a>
                       </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link txt-danger" id="disbursement-tab" data-bs-toggle="tab" href="#disbursement" role="tab" aria-controls="disbursement" aria-selected="true" ><i class="icofont icofont-ui-rotation"></i>Ongoing</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link txt-dark" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="true" ><i class="icofont icofont-tasks-alt"></i>Completed</a>
+                      </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
+
                       <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
                         <div class="table-responsive  mt-5">
                           <table class="display" style="overflow:auto" id="verifiedlist" style="width:130%">
@@ -1052,7 +1071,7 @@
                                     <th style="width: 15%;">Req. Amount</th>
                                     <th>Phone No.</th>
                                     <th style="width: 10%;">Approval</th>
-                                    <th>Status</th>
+                                    <th>DISBMT</th>
                                    <th>Action</th>
                                 </tr>
                             </thead>
@@ -1074,6 +1093,42 @@
                                     <th>Verification</th>
                                    <th>Action</th>
                                 </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="tab-pane fade" id="disbursement" role="tabpanel" aria-labelledby="disbursement-tabs">
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="disbursementlist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                              <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th style="width: 25%;">Applicant Names</th>
+                                <th style="width: 15%;">Req. Amount</th>
+                                <th>Phone No.</th>
+                                <th>Status</th>
+                               <th>Action</th>
+                            </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tabs">
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="completedlist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                              <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th style="width: 25%;">Applicant Names</th>
+                                <th style="width: 15%;">Req. Amount</th>
+                                <th>Phone No.</th>
+                                <th>Status</th>
+                               <th>Action</th>
+                            </tr>
                             </thead>
                           </table>
                         </div>

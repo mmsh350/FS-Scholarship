@@ -49,16 +49,19 @@ use App\Http\Controllers\AppNotificationController;
     Route::post('topup', [WalletController::class, 'topup'])->name('topup');
     Route::get('admin-wallet', [WalletController::class, 'show'])->name('admin.wallet');
 
-
      
     Route::get('admin-applications-verify', [ApplicationController::class, 'approvedlist'])->name('admin.applications-verify');
+    Route::get('admin-applications-pendingdismt', [ApplicationController::class, 'pendingdismt']);
+    Route::get('admin-applications-completed', [ApplicationController::class, 'completed']);
     Route::get('get-application-data', [ApplicationController::class, 'getApplicationData'])->name('get-application-data');
     Route::post('repay-data', [ApplicationController::class, 'repaylist'])->name('repay-data');
     Route::get('approval-data', [ApplicationController::class, 'approvalData'])->name('approval-data');
     Route::post('disburse', [ApplicationController::class, 'disburse'])->name('disburse');
+    Route::post('convert', [ApplicationController::class, 'convert'])->name('convert');
 
-
+    
     Route::post('send-reminder', [ApplicationController::class, 'reminder'])->name('send-reminder');
+   // Route::post('paynow', [ApplicationController::class, 'repayment'])->name('paynow');
    
     //Profile Routes  (General) 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

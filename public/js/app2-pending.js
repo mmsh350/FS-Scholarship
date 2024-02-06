@@ -17,8 +17,8 @@ var table = $('#pendinglist').DataTable({
     pagingType: "full_numbers",
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
-        [5,10, 25, 50, -1],
-        [5,10, 25, 50, 'All'],
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All'],
     ],
     
     columns: [
@@ -38,14 +38,14 @@ var table = $('#pendinglist').DataTable({
         exportOptions: {
             columns: [ 0, 1, 2, 3,4,5]
         },
-        title: 'Applicant List (Pending Approval)'
+        title: 'Applicantion List (Pending Approval)'
     },
     {
         extend: 'pdfHtml5',
         exportOptions: {
             columns: [ 0, 1, 2, 3,4,5]
         },
-        title: 'Applicant List (Pending Approval)'
+        title: 'Applicantion List (Pending Approval)'
     },
  
 ],
@@ -59,7 +59,7 @@ var table = $('#pendinglist').DataTable({
 
 $('#verified-tab').click(function(evt) {
    
-//Ftech Verified list    
+//Fetch Approved list    
 var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote, message ) {
                 // console.log( 'An error has been reported by DataTables: ', message );
 }).DataTable({
@@ -69,8 +69,8 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
     pagingType: "full_numbers",
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
-        [5,10, 25, 50, -1],
-        [5,10, 25, 50, 'All'],
+        [10, 25, 50, -1],
+        [10, 25, 50, 'All'],
     ],
     
     columns: [
@@ -80,7 +80,7 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
         {data: 'ramount', name: 'ramount'},
         {data: 'phone', name: 'phone'},
         {data: 'status', name: 'status'},
-        {data: 'app_status', name: 'app_status'},
+        {data: 'disbursed', name: 'disbursed'},
         {data: 'action', name: 'action'},       
     ],
     
@@ -89,16 +89,16 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
     {
         extend: 'print',
         exportOptions: {
-            columns: [ 0, 1, 2, 3,4,5 ]
+            columns: [ 0, 1, 2, 3,4,5,6 ]
         },
-        title: 'Applicant List (Approved Application)'
+        title: 'Applicantion List (Approved & Pending Disbursement)'
     },
     {
         extend: 'pdfHtml5',
         exportOptions: {
-            columns: [ 0, 1, 2, 3,4,5,]
+            columns: [ 0, 1, 2, 3,4,5,6]
         },
-        title: 'Applicant List (Approved Application)'
+        title: 'Applicantion List (Approved & Pending Disbursement)'
     },
  
 ],
@@ -110,6 +110,156 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
 });
 
 });
+
+$('#disbursement-tab').click(function(evt) {
+   
+    //Ftech Disburse list    
+    var table002 = $('#disbursementlist').on( 'error.dt', function ( e, settings, techNote, message ) {
+                    // console.log( 'An error has been reported by DataTables: ', message );
+    }).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "admin-applications-pendingdismt",
+        pagingType: "full_numbers",
+        language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'names', name: 'names'},
+            {data: 'ramount', name: 'ramount'},
+            {data: 'phone', name: 'phone'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action'},       
+        ],
+        
+        dom: 'Blfrtip',
+        buttons: [
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3,4,5]
+            },
+            title: 'Applicantion List (Disbursed & Pending Repayment)'
+        },
+        {
+            extend: 'pdfHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3,4,5]
+            },
+            title: 'Applicantion List (Disbursed & Pending Repayment)'
+        },
+     
+    ],
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+            $("td:first", nRow).html(iDisplayIndex +1);
+           return nRow;
+        },
+     
+    });
+    
+    });
+    $('#completed-tab').click(function(evt) {
+   
+        //Ftech Disburse list    
+        var table001 = $('#completedlist').on( 'error.dt', function ( e, settings, techNote, message ) {
+                        // console.log( 'An error has been reported by DataTables: ', message );
+        }).DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "admin-applications-completed",
+            pagingType: "full_numbers",
+            language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'created_at', name: 'created_at'},
+                {data: 'names', name: 'names'},
+                {data: 'ramount', name: 'ramount'},
+                {data: 'phone', name: 'phone'},
+                {data: 'status', name: 'status'},
+                {data: 'action', name: 'action'},       
+            ],
+            
+            dom: 'Blfrtip',
+            buttons: [
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3,4,5 ]
+                },
+                title: 'Applicantion List (Repaid Applications)'
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3,4,5]
+                },
+                title: 'Applicantion List (Repaid Applications)'
+            },
+         
+        ],
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+               return nRow;
+            },
+         
+        });
+        
+        });
+
+$("#convert").on( "click", function() {
+
+            $('#confirm_convert').show();  
+            let appid = $('#appid').val() ;
+            let _token = $('#_token').val();    
+});
+
+$('#confirm_convert').click(function(evt) {
+
+    $('#confirm_convert').prop("disabled", true); 
+    
+     var _token = $('#_token').val();   
+     var appid = $('#appid').val(); 
+
+     $.ajax({    //create an ajax request to get session data 
+      type: "POST",
+      url: "convert",   //expect json File to be returned  
+      data: {appid:appid,_token},		
+      success: function(response){  
+                      $(".bd-example-modal-xl").scrollTop(0);
+                      $("#done_1").show();
+                      $('#done_1').append('<strong>Application Converted to Scholarship !.</strong>');
+                      
+                      setTimeout(function(){  
+                         window.location.reload(); 
+                      }, 3000);
+          },
+          error: function(data) {
+              $(".bd-example-modal-xl").scrollTop(0);
+              $("#err").show();
+              $.each(data.responseJSON.errors, function (key, value) {
+                  $("#err").empty();
+                  $('#err').append('<strong>'+value+'</strong>');
+              });
+              
+                  setTimeout(function(){ 
+                      $('#confirm_convert').prop("disabled", false);
+                      $("#err").empty();
+                      $("#err").hide();
+                  }, 3000);
+          }
+      });
+   });
+        
 
 $("#repay").on( "click", function() {
     $('.repayModal').modal('show');  
@@ -209,6 +359,44 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                                 }, 3000);
                         }
                     });
+                });
+
+                    //Make payment
+
+                    $('.repayModal tbody').on('click', '.paynow', function () {
+                        var row = $(this).closest('tr');
+                        var id = table3.row( row ).data().id;
+                        var _token = $('#_token').val();   
+                        $("#modal-preloader3").show();
+                        $.ajax({    //create an ajax request to get session data 
+                            type: "POST",
+                            url: "make-repayment",   //expect json File to be returned  
+                            data: {loanid:id,_token},		
+                            success: function(response){  
+                                $("#modal-preloader3").hide();
+                                            $(".disburseModal").scrollTop(0);
+                                            $("#done_3").show();
+                                            $('#done_3').append('<strong>Repayment Successful.</strong>');
+                                            $('.paynow').hide();
+                                            setTimeout(function(){ 
+                                                $("#done_3").empty();
+                                                $("#done_3").hide();
+                                            }, 3000);
+                                },
+                                error: function(data) {
+                                    $(".disburseModal").scrollTop(0);
+                                    $("#err3").show();
+                                    $.each(data.responseJSON.errors, function (key, value) {
+                                        $("#err3").empty();
+                                        $('#err3').append('<strong>'+value+'</strong>');
+                                    });
+                                    $("#modal-preloader3").hide();
+                                        setTimeout(function(){ 
+                                            $("#err3").empty();
+                                            $("#err3").hide();
+                                        }, 3000);
+                                }
+                            });
     
 
               });
@@ -311,6 +499,7 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
         success: function(data) {
             $("#appid").val(data.id);
             $("#modal-preloader").hide();
+            $('#confirm_convert').hide();
             //populate form
             $('#comments').val(null);
             $("#passport").attr({ "src": 'data:image/;base64,'+data.passport });
@@ -330,6 +519,11 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
             $("#cat").html(data.category);
             $("#amount").html('&#8358; '+data.amount);          
              
+            //check type and enable convert 
+            if(data.category == 'Student Loan')
+                { $("#convert").show();} else  {$("#convert").hide(); $("#confirm_convert").hide(); }
+
+                
             if(data.status == 'Approved')
             {
                 $("#dis1").show();
@@ -337,6 +531,7 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                 $("#dis3").show();
                 $("#dis4").show();
                 $('#action').hide() 
+                $('#convert').hide();
                 
                 if(data.app_accept == '1')
                 {
@@ -364,8 +559,17 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                 $("#acct_number").html(data.acct_number);
                 $("#acct_name").html(data.acct_name);
                 $("#acct_bankname").html(data.acct_bankname);
-                $("#repayrow").show();
-                $("#repaystatus").html('<span class="badge badge-primary">'+data.approvalDataStatus+'</span>');
+
+                if(data.approvalDataStatus == 'Completed')
+                {
+                   $("#repayrow").show();
+                   $("#repaystatus").html('<span class="badge badge-success">'+data.approvalDataStatus+'</span>');
+                }
+                else{
+                    $("#repayrow").show();
+                    $("#repaystatus").html('<span class="badge badge-warning">'+data.approvalDataStatus+'</span>');
+                }
+
             }
             else{
                 $("#acct_info").hide();

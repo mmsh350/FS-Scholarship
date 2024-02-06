@@ -588,7 +588,7 @@
                         
                       <!-- End Preloader -->
                       <div class="modal-header" style="background-color:#2b3751; border-bottom: 1px dashed white;" >
-                      <h4 class="modal-title txt-white" style="color:aliceblue" id="staticBackdropLabel"> User Profile </h4>
+                      <h4 class="modal-title txt-white" style="color:aliceblue" id="staticBackdropLabel"> Account Profile </h4>
                       <p class="txt-light"><i class="icon-wallet f-16"></i> <span id="wbalance" >0.00</a></span></p>
                      
                       <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
