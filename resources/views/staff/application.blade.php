@@ -65,7 +65,7 @@
             <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
           </div>
           <div class="col-4 col-xl-4 page-title">
-            <h4 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h4>
+            <h5 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
             <nav>
               <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -806,6 +806,13 @@
                       <li class="nav-item" role="presentation">
                         <a class="nav-link txt-success" id="verified-tab" data-bs-toggle="tab" href="#verified" role="tab" aria-controls="verified" aria-selected="true" ><i class="fa fa-check-circle" aria-hidden="true"></i>Verified</a>
                       </li>
+                     
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link txt-danger" id="disbursement-tab" data-bs-toggle="tab" href="#disbursement" role="tab" aria-controls="disbursement" aria-selected="true" ><i class="icofont icofont-ui-rotation"></i>Ongoing</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link txt-dark" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="true" ><i class="icofont icofont-tasks-alt"></i>Completed</a>
+                      </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                       <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
@@ -841,6 +848,42 @@
                                     <th>Status</th>
                                    <th>Action</th>
                                 </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="tab-pane fade" id="disbursement" role="tabpanel" aria-labelledby="disbursement-tabs">
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="disbursementlist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                              <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th style="width: 25%;">Applicant Names</th>
+                                <th style="width: 15%;">Req. Amount</th>
+                                <th>Phone No.</th>
+                                <th>Status</th>
+                               <th>Action</th>
+                            </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="completed-tabs">
+                        <div class="table-responsive theme-scrollbar mt-5">
+                          <table class="display" style="overflow:auto" id="completedlist" style="width:130%">
+                            <thead style="background-color:#2b3751;" class="text-light">
+                              <tr>
+                                <th>ID</th>
+                                <th>Date</th>
+                                <th style="width: 25%;">Applicant Names</th>
+                                <th style="width: 15%;">Req. Amount</th>
+                                <th>Phone No.</th>
+                                <th>Status</th>
+                               <th>Action</th>
+                            </tr>
                             </thead>
                           </table>
                         </div>

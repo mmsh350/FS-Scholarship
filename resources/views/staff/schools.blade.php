@@ -66,12 +66,12 @@
             <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
           </div>
           <div class="col-4 col-xl-4 page-title">
-            <h4 class="f-w-700"> Admin Dashboard </h4>
+            <h5 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
             <nav>
               <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
                 <li class="breadcrumb-item f-w-400">School</li>
-                <li class="breadcrumb-item f-w-400 active">Manage Schools</li>
+                <li class="breadcrumb-item f-w-400 active">Available Schools</li>
               </ol>
             </nav>
           </div>
@@ -234,14 +234,10 @@
                           <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                         </svg><span>Dashboard</span></a>
                         <ul class="sidebar-submenu expand">
-                          <li><a  href="{{ route('dashboard') }}">Overview</a></li>
-                          <li><a  href="{{ route('admin.users') }}">Users</a></li>
-                          <li><a  href="{{ route('admin.applications') }}">Applications</a></li>
-                          <li><a class="active" href="{{ route('admin.schools') }}">Schools</a></li>
-                          <li><a href="{{ route('admin.activities') }}">Activities</a></li>
-                          <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
-                          <li><a href="{{ route('admin.transactions') }}">Transactions</a></li>
-                          <li><a href="{{ route('admin.reports') }}">Generate Report</a></li>  
+                          <li><a href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a href="{{ route('staff.applications') }}">Applications</a></li>
+                          <li><a href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
+                          <li><a class="active" href="{{ route('staff.schools') }}">Schools</a></li>
                         </ul>
                     </li>
                   </ul>
@@ -261,14 +257,11 @@
               <div class="col-sm-12 col-xl-12">
                 <div class="card">
                   <div class="card-header">
-                    <h4>Manage Schools</h4>
-                    <p class="mt-1 f-m-light" style="text-transform:none;">Manage all Schools, Create, Modify, Enable and Disabled etc.</p>
+                    <h4>Available Schools</h4>
+                    <p class="mt-1 f-m-light" style="text-transform:none;">Schools available in my location (State)</p>
                   </div>
                   <div class="card-body">
                     <ul class="simple-wrapper nav nav-tabs" id="myTab" role="tablist">
-                      <li class="nav-item" role="presentation">
-                        <a class="nav-link " id="newschool-tabs" data-bs-toggle="tab" href="#newschool" role="tab" aria-controls="newschool" tabindex="-1" aria-selected="false"><i class="fa fa-plus txt-primary" aria-hidden="true"></i>New School</a>
-                      </li>
                       <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="existingschools-tab" data-bs-toggle="tab" href="#existingschools" role="tab" aria-controls="existingschools" aria-selected="true" ><i class="fa fa-university txt-primary" aria-hidden="true"></i>Existing Schools</a>
                       </li>
@@ -276,178 +269,20 @@
                     <div class="tab-content" id="myTabContent">
                       <div class="tab-pane fade show active" id="existingschools" role="tabpanel" aria-labelledby="existingschools-tab">
                         <div class="table-responsive  mt-5">
-                          <table class="display" style="overflow:auto; width:100%" id="schools">
+                          <table class="display" style="overflow:auto; width:100%" id="staff-schools">
                             <thead style="background-color:#2b3751;" class="text-light">
                                 <tr>
-                                    <th>ID</th>
-                                    <th  style="width: 20%;" >Category</th>
-                                    <th  style="width: 25%;">School Name</th>
+                                    <th style="width: 5%;">ID</th>
+                                    <th  style="width: 40%;" >Category</th>
+                                    <th  style="width: 35%;">School Name</th>
                                     <th>Location</th>
                                     <th>Status</th>
-                                    <th>Created At</th>
-                                    <th style="width: 2%;">Action</th>
                                 </tr>
                             </thead>
                           </table>
                         </div>
                       </div>
-                 
-
-                      <div class="tab-pane fade " id="newschool" role="tabpanel" aria-labelledby="newschool-tabs">
-                        <div id="error1" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible mt-4" role="alert"></div>
-                        <div id="success1" style="display:none" class="alert alert-success alert-dismissible mt-4" role="alert"></div>
-            
-                  <form id="form" class="form theme-form col-md-8">
-                    @csrf
-                    <div class="card-body custom-input">
-                      <div class="row"> 
-                        <div class="col"> 
-                          <div class="mb-3 row"> 
-                            <label class="col-sm-3">Category</label>
-                            <div class="col-sm-9"> 
-                              <div class="form-floating mb-3">
-                                <select class="form-select" id="schl_category" name="schl_category" >
-                              <option value="">Choose...</option>
-                              <option>University</option>
-                              <option>Polytechnics/Monotechnics/Colleges</option>
-                              <option>Secondary Schools</option>
-                            </select>
-                            <label for="floatingPassword1">Select school category</label>
-                              </div>
-                            </div>
-                          </div>
-                           
-
-                          <div class="mb-3 row"> 
-                            <label class="col-sm-3">School Name</label>
-                            <div class="col-sm-9"> 
-                              <div class="form-floating">
-                                <input class="form-control" name="school_name" id="school_name" type="text">
-                                <label for="floatingPassword1">Input School Name</label>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="mb-3 row"> 
-                            <label class="col-sm-3">State/Location</label>
-                            <div class="col-sm-9"> 
-                              <div class="form-floating mb-3">
-                                <select class="form-select" id="state" name="location" >
-                                  <option value="">Choose...</option>
-                                </select>
-                                <label for="floatingPassword1">Select school location</label>
-                              </div>
-                            </div>
-                          </div>
-
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="card-footer text-end">
-                      <div class="col-sm-9 offset-sm-3">
-                        <input class="btn btn-danger" type="reset" value="Reset">
-                        <button class="btn btn-dark me-3" name="register" id="register" type="button">
-                          Submit  <div class="lds-ring" id="spinner2"><div></div><div></div><div></div><div></div></div>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                      </div>
-                    <!---------User Modal----------->
-                    <div class="modal fade bd-example-modal-xl"  id="staticBackdrop" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="myExtraLargeModal" style="display: none;" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                             <!-- Preloader -->
-                                <div id="modal-preloader">
-                                    <div class="modal-preloader_status">
-                                    <div class="modal-preloader_spinner">
-                                        <div class="d-flex justify-content-center">
-                                        <div class="spinner-border" role="status"></div>
-                                           Fetching  Record..
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
-                              
-                            <!-- End Preloader -->
-                            <div class="modal-header" style="background-color:#2b3751; border-bottom: 1px dashed white;" >
-                            <h4 class="modal-title txt-white" style="color:aliceblue" id="staticBackdropLabel"> Edit School Information </h4>
-                           <svg data-bs-dismiss="modal" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="32" height="32" viewBox="0 0 48 48">
-                                <path fill="#F44336" d="M21.5 4.5H26.501V43.5H21.5z" transform="rotate(45.001 24 24)"></path><path fill="#F44336" d="M21.5 4.5H26.5V43.501H21.5z" transform="rotate(135.008 24 24)"></path>
-                                </svg>
-                            </div>
-                            <div class="modal-body dark-modal">
-                                <div id="error_update" style="display:none" class="alert alert-danger alert-dismissible" role="alert"></div>
-                                <div id="done_update" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
-                  
-                             <div class="row">
-
-                                <div class="col-md-10">
-                                    <form class="card" id="profile" autocomplete="off">
-                                        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-                                          <input class="form-control" name="school_id" id="school_id" type="hidden">
-                                            <input class="form-control" name="status" id="status" type="hidden">
-                                            <div class="row"> 
-                                              <div class="col"> 
-                                                <div class="mb-3 row"> 
-                                                  <label class="col-sm-3">Category</label>
-                                                  <div class="col-sm-9"> 
-                                                    <div class="form-floating mb-3">
-                                                      <select class="form-select" id="schl_category_edit" name="category" >
-                                                    <option value="">Choose...</option>
-                                                    <option>University</option>
-                                                    <option>Polytechnics/Monotechnics/Colleges</option>
-                                                    <option>Secondary Schools</option>
-                                                  </select>
-                                                  <label for="floatingPassword1">Select school category</label>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                                 
-                      
-                                                <div class="mb-3 row"> 
-                                                  <label class="col-sm-3">School Name</label>
-                                                  <div class="col-sm-9"> 
-                                                    <div class="form-floating">
-                                                      <input class="form-control" name="schl_name" id="school_name_edit" type="text">
-                                                      <label for="floatingPassword1">Input School Name</label>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                      
-                                                <div class="mb-3 row"> 
-                                                  <label class="col-sm-3">State/Location</label>
-                                                  <div class="col-sm-9"> 
-                                                    <div class="form-floating mb-3">
-                                                      <select class="form-select" id="state2" name="schl_location" >
-                                                        <option value="">Choose...</option>
-                                                      </select>
-                                                      <label for="floatingPassword1">Select school location</label>
-                                                    </div>
-                                                  </div>
-                                                </div>
-
-                                              </div>
-                                            </div> 
-                                           
-                                    <div class="card-footer text-end mt-5">
-                                        <button class="btn btn-dark" id="btnSave" name="btnSave" type="button">
-                                          <i class="fa fa-save"></i> &nbsp; Update  <div class="lds-ring" id="spinner"><div></div><div></div><div></div><div></div></div>
-                                         </button>
-                                         <button class="btn btn-success" id="activate" name="activate" type="button">
-                                            <i class="fa fa-eye"></i> &nbsp; Enable  
-                                           </button>
-                                      </div>
-                                    </form>    
-                                </div>
-                             </div>
-                             
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                <!---------School Modal----------->
+                    
                      </div>
                     </div>
                   </div> 
@@ -503,7 +338,6 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.colVis.min.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
-    <script src="{{ asset('js/loadstates.js') }}"></script>
     <script src="{{ asset('js/logout.js') }}"></script>
     <script src="{{ asset('js/script.js')}}"></script>
     <script src="{{ asset('js/schools.js')}}"></script>

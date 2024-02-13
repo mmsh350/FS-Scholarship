@@ -69,7 +69,7 @@ var table = $('#agentlist').DataTable({
         {data: 'approveCount', name: 'approveCount'},
         {data: 'rejectCount', name: 'rejCount'},
         {data: 'status', name: 'status'},
-        {data: 'action', name: 'action'},
+        
     ],
     
     dom: 'Blfrtip',
@@ -77,14 +77,14 @@ var table = $('#agentlist').DataTable({
     {
         extend: 'print',
         exportOptions: {
-            columns: [ 0, 1, 2, 3,4,5,6 ]
+            columns: [ 0, 1, 2, 3,4,5]
         },
         title: '- Agent Activity List -'
     },
     {
         extend: 'pdfHtml5',
         exportOptions: {
-            columns: [ 0, 1, 2, 3,4,5,6 ]
+            columns: [ 0, 1, 2, 3,4,5 ]
         },
         title: '- Agent Activity List -'
     },

@@ -201,6 +201,10 @@ class DashboardController extends Controller
 
                 //School Count
                 $school_count = School::all()->count();
+
+                //Active and inactive school count
+                $school_count_active = School::where('is_active',1)->count();
+                $school_count_inactive = School::where('is_active',0)->count();
                 
                 //Agent Count
                 $agent_count = User::all()->where('role', 'agent')->count();
@@ -277,7 +281,9 @@ class DashboardController extends Controller
                         ->with(compact('disbursed_schl'))
                         ->with(compact('staff_count'))
                         ->with(compact('applicant_count'))
-                        ->with(compact('school_count'));
+                        ->with(compact('school_count'))
+                        ->with(compact('school_count_inactive'))
+                        ->with(compact('school_count_active') );
             }
             else if(Auth::user()->role == 'agent'){
                 return 400;

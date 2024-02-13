@@ -235,6 +235,7 @@
                         <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
                         <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
                         <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
+                        <li><a href="{{ route('admin.reports') }}">Generate Report</a></li> 
                       </ul>
                   </li>             
                 </ul>
@@ -317,7 +318,7 @@
 
                       <div class="col-md-6" >
                         <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box"> <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Applications</h6>  
                              <span id="app_total_count" class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$app_total_count}}</span>
@@ -328,7 +329,7 @@
 
                       <div class="col-md-3"  >
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box">  <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box">  <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                            <h6 class="p-b-10">Verified</h6>
 							                <span id="verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$verify_count}}</span>
@@ -339,7 +340,7 @@
 
                       <div class="col-md-3">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box ">  <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box ">  <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved2.png') }}" alt=""></div>
                            <h6 class="p-b-10">Approved</h6>
 							                <span id="app_approve_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$app_approve_count}}</span>
@@ -349,7 +350,7 @@
 
                       <div class="col-md-6">
                         <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box"> <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                             <h6 class="p-b-10">Rejected</h6>  
                              <span id="reject_count" class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{ $reject_count }}</span>
@@ -360,7 +361,7 @@
 
                       <div class="col-md-3">
                         <div class="btn-light1-warning b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box"> <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/pending.png') }}" alt=""></div>
                             <h6 class="p-b-10">Pending Verification</h6>  
                              <span id="pending_verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-warning badge-light  text-dark f-14">{{ $pending_verify_count }}</span>
@@ -370,7 +371,7 @@
 
                       <div class="col-md-3">
                         <div class="btn-light1-warning b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box"> <a href="{{ route('admin.applications') }}">
                             <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/processing.png') }}" alt=""></div>
                             <h6 class="p-b-10">Pending Approval</h6>  
                              <span id="pending-approval" class="mt-2 badge rounded-circle badge-p-space border border-warning badge-light  text-dark f-14">{{ $pending_approval_count }}</span>
@@ -379,12 +380,32 @@
                       </div>
 
                    
-                      <div class="col-md-12">
+                      <div class="col-md-6">
                         <div class="btn-light1-dark b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.schools') }}">
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.schools') }}">
                             <div class="upcoming-icon bg-dark"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
                             <h6 class="p-b-10">Schools/Institution</h6> 
                            <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-dark badge-light  text-dark f-14">{{$school_count}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="btn-light1-success b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.schools') }}">
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Active</h6> 
+                           <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$school_count_active}}</span>
+                          </div></a>
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="btn-light1-danger b-r-10"> 
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.schools') }}">
+                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
+                            <h6 class="p-b-10">In Active</h6> 
+                           <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$school_count_inactive}}</span>
                           </div></a>
                         </div>
                       </div>
@@ -392,7 +413,7 @@
 
                       <div class="col-md-4">
                         <div class="btn-light1-info b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.users') }}">
                             <div class="upcoming-icon bg-info"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
                             <h6 class="p-b-10">Agents</h6> 
                            <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-info badge-light  text-dark f-14">{{$agent_count}}</span>
@@ -403,7 +424,7 @@
 
                       <div class="col-md-4">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.users') }}">
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
                             <h6 class="p-b-10">Staff</h6> 
                            <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$staff_count}}</span>
@@ -413,7 +434,7 @@
 
                       <div class="col-md-4">
                         <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
+                          <div class="upcoming-box  ">  <a href="{{ route('admin.users') }}">
                             <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
                             <h6 class="p-b-10">Applicant</h6> 
                            <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$applicant_count}}</span>

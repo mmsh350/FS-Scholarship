@@ -239,6 +239,7 @@
                         <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
                         <li><a class="active" href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
                         <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
+                        <li><a href="{{ route('admin.reports') }}">Generate Report</a></li> 
                       </ul>
                   </li>
                 </ul>

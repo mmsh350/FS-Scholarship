@@ -50,10 +50,6 @@ var table = $('#users').DataTable({
     },
    
 });
-
-
- 
- 
  
 //  //show Edit Modal
  $('.bd-example-modal-xl').on('shown.bs.modal', function(event) {
@@ -121,12 +117,14 @@ var table = $('#users').DataTable({
             if(data.is_active == 1)
             {
                 $("#astatus").html('<span class="badge badge-success">Active </span>');
-                $("#activate").html('<i class="fa fa-eye-slash"></i> &nbsp; Disable');
+                $("#activate").html('<i class="fa fa-eye"></i> &nbsp; Disable');
                 $("#activate").attr('class', 'btn btn-danger');
                
 
             }else{
-                $("#astatus").html('<span class="badge badge-danger">In-Active</span>');
+                $("#astatus").html('<span class="badge badge-danger">Not-Active</span>');
+                $("#activate").html('<i class="fa fa-eye-slash"></i> &nbsp; Enable');
+                $("#activate").attr('class', 'btn btn-success');
             }
         },
         error: function(data) {

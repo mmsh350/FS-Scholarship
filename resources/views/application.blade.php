@@ -833,7 +833,7 @@
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">
                                       <div class="">
                                         <label class="form-label">No of years<span class="text-danger">*</span></label>
-                                        <input class="form-control" name="no_of_years" maxlength="1" id="no_of_years" type="text">
+                                        <input class="form-control" name="no_of_years" maxlength="1" value="1" id="no_of_years" type="text">
                                       </div>
                                     </div>
                                     <div class="col-xxl-4 col-sm-6 mt-3"  id="">

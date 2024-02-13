@@ -241,6 +241,7 @@
                           <li><a  href="{{ route('admin.activities') }}">Activities</a></li>
                           <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
                           <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
+                          <li><a href="{{ route('admin.reports') }}">Generate Report</a></li> 
                         </ul>
                     </li>
                   </ul>
@@ -838,7 +839,6 @@
                           </div>
                               <div id="err3" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible" role="alert"></div>
                               <div id="done_3" style="display:none" class="alert alert-success alert-dismissible" role="alert"></div>
-                  
                                  <div class="table-responsive ">
                                   <table class="display" style="overflow:auto" id="repaylist" style="width:130%">
                                     <thead style="background-color:#2b3751;" class="text-light">

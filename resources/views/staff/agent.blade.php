@@ -65,7 +65,7 @@
             <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
           </div>
           <div class="col-4 col-xl-4 page-title">
-            <h4 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h4>
+            <h5 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
             <nav>
               <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
                 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -237,7 +237,6 @@
                           <li><a class="" href="{{ route('staff.applications') }}">Applications</a></li>
                           <li><a class="active" href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
                           <li><a href="{{ route('staff.schools') }}">Schools</a></li>
-                       {{-- {{ route('staff.schools') }  --}}
                         </ul>
                     </li>
                   </ul>
@@ -342,7 +341,7 @@
                                   </div>
                                 </div>
 
-                                <div class="mb-3 row"> 
+                                {{-- <div class="mb-3 row"> 
                                   <label class="col-sm-3">State<span class="txt-danger">*</span></label>
                                   <div class="col-sm-9"> 
                                     <div class="form-floating">
@@ -352,7 +351,7 @@
                                       <label for="floatingPassword1">Select State</label>
                                     </div>
                                   </div>
-                                </div>                             
+                                </div>                              --}}
                               </div>
                             </div>
                           </div>
@@ -379,171 +378,11 @@
                                     <th>Approved</th>
                                     <th>Rejected</th>
                                     <th>Status</th>
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                           </table>
                         </div>
-                	<!--Open Modal --->
-                  <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                      <div class="modal-content" id="modal-content">
-                        <div class="modal-header" style="background:#2b3751;   border-bottom: 1px dashed white; ">
-                          <h4 class="modal-title text-light" id="myLargeModalLabel"><i class="icofont icofont-telescope"></i> Profile Information <span id='updt'></span> </h4>
-                          <button class="btn-close py-0 text-danger" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body dark-modal container-fluid ">
-                          <div class="large-modal-header">
-                       
-                          </div>
-
-                          <div class="row">
-                            <div class="col-sm-2 ">
-                              <center>
-                                <img class="img-responsive rounded border border-dark " width="80%" id="passport" src="" alt="Profile Photo" />
-                               </center>
-                           
-                          <!-------Next of kin------>
-                          <table border="1" class="table mt-4">
-                            <thead style="background-color:#2b3751;">
-                              <th class="text-light"><i class="icofont icofont-info-circle"></i> Account Info.</th> 
-                            </thead>
-                            <tbody>
-                             
-                              <tr>
-                                <th class="border-end" width="50%"><span>Type</span>
-                                <br> <span id="type" class="f-w-300"></span>
-                                </th>
-                              </tr>
-                              <tr>
-                                <th class="border-end" width="50%"><span>Status</span>
-                                <br> <span id="astatus"></span>
-                                </th>
-                              </tr>                           
-                              <tr>
-                                <th class="border-end" width="50%"><span>Registered By</span>
-                                <br> <span id="initiator" class="f-w-400"></span>
-                                </th>
-                              </tr>
-                              <tr>
-                                <th class="border-end" width="50%"><span>Created On</span>
-                                <br>
-                                <span id="regon" class="f-w-400"></span>
-                                </th>
-                              </tr>
-                              <tr>
-                                <th>
-                                  <button class="btn btn-primary d-flex align-items-center" type="button">Applications 
-                                    <span id="appcount" class="badge rounded-circle btn-p-space badge-light text-dark ms-2 "> 0
-                                    </span>
-                                  </button>
-                                </th>
-                              </tr>
-
-                              <tr>
-                                <th>
-                                  <button class="btn btn-success d-flex align-items-center" type="button">Approved 
-                                    <span id="approved" class="badge rounded-circle btn-p-space badge-light text-dark ms-2 "> 0
-                                    </span>
-                                  </button>
-                                </th>
-                              </tr>
-                              <tr>
-                                <th>
-                                  <button class="btn btn-danger d-flex align-items-center" type="button">Rejected 
-                                    <span id="rejected" class="badge rounded-circle btn-p-space badge-light text-dark ms-2 "> 0
-                                    </span>
-                                  </button>
-                                </th>
-                              </tr>
-                            </tbody>
-                          </table>
-                            </div>
-                            <div class="col-sm-10 ">
-                              <div class="col-sm-12">
-                                <div class="card">
-                                  
-                                  <div class="card-block row">
-                                    <div class="col-sm-12 col-lg-12 col-xl-12">
-                                      
-                                      <div id="err" style="display:none; text-transform:none" class="alert alert-danger alert-dismissible mt-4" role="alert"></div>
-                                      <div id="done_1" style="display:none" class="alert alert-success alert-dismissible mt-4" role="alert"></div>
-                          
-                                      <div class="table-responsive theme-scrollbar">
-                                        <table border="1" class="table">
-                                          <thead style="background-color:#2b3751;">
-                                            <tr>
-                                              <th colspan="2" class="text-light"><i class="fa fa-user">&nbsp;</i> Personal Information</th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            <tr>
-                                              <th class="border-end" width="50%">
-                                                <span>Agent Names</span>
-                                              <br> <span id="agent_name" class="f-w-300"></span>
-                                              <input type="hidden" id="appid" value="" name="appid" class="f-w-300"/>
-                                              </th>
-                                              <th><span>Gender</span>
-                                                <br><span id="agender" class="f-w-300">
-                                                </span>
-                                              </th>
-                                            </tr>
-
-                                            <tr>
-                                              <th class="border-end" width="50%"><span>Date Of Birth</span>
-                                              <br> <span id="adob" class="f-w-300"></span>
-                                              </th>
-                                              <th><span>Phone Number</span>
-                                                <br> <span id="aphoneno" class="f-w-300"></span>
-                                              </th>
-                                            </tr>
-
-                                            <tr>
-                                              <th class="border-end" width="50%">
-                                                <span>Email Address <span id="cverify">Not verified</span></span>
-                                               <br> <span id="aemail" class="f-w-300"></span>
-                                              </th>
-                                              <th class="border-end" width="50%">
-                                                <span>Home Address</span>
-                                               <br> <span id="aaddress" class="f-w-300"></span>
-                                              </th>
-                                            </tr>
-                                             
-                                          </tbody>
-                                        </table>
-
-                                         
-                                        <div class="table-responsive theme-scrollbar mt-5">
-                                          <table class="display" style="overflow:auto" id="activelist" style="width:130%">
-                                            <thead style="background-color:#2b3751;" class="text-light">
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Submitted On.</th>
-                                                    <th style="width: 25%;">Applicant Names</th>
-                                                    <th style="width: 10%;">Request Amount</th>
-                                                    <th>Phone Number</th>
-                                                    <th>Status</th>
-                                                   <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                          </table>
-                                        </div>
-                                           
-                                      
-                                       
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                           
-                          </div>
-                      </div>
-                    </div>
-                  </div>
-                     <!--Close Modal ---> 
+                 
                       </div>
 
                     </div>

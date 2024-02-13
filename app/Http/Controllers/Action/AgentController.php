@@ -31,7 +31,8 @@ class AgentController extends Controller
         }
         else
         {  
-             
+          if(Auth::user()->role == 'staff')
+          {
           $notifycount =0;
           $notifications =0;
 
@@ -119,13 +120,13 @@ class AgentController extends Controller
                 ->count();
                 
                 // Button Customizations
-                $btn = "
-                    <a 
-                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
-                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id 
-                     data-approve=$app_approve data-reject=$app_reject data-app_count= $app_count>
-                    Look up<i class='icofont icofont-look'> </i> </a>";
-                return $btn;
+                // $btn = "
+                //     <a 
+                //     class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                //      data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id 
+                //      data-approve=$app_approve data-reject=$app_reject data-app_count= $app_count>
+                //     Look up<i class='icofont icofont-look'> </i> </a>";
+                return "";
             }) ->rawColumns(['action']) ->make(true);
 
             }
@@ -133,6 +134,13 @@ class AgentController extends Controller
                   ->with(compact('notifications'))
                   ->with(compact('stateName'))
                   ->with(compact('notifycount'));
+
+
+           } else
+              {
+              Auth::logout();
+              return view('error') ;
+              }
 
      }   
     
@@ -151,7 +159,7 @@ class AgentController extends Controller
           // of specified length
           $password = substr(str_shuffle($str_result), 0, 8);
           $request->validate([
-            'user_state' => 'required','numeric',
+           // 'user_state' => 'required','numeric',
              'user_image' => 'required|image|mimes:jpeg,png,jpg|max:500',
              'user_bvn' => 'required|numeric|digits:11',
              'phone_number' => 'required|numeric|digits:11|unique:users',
@@ -200,7 +208,7 @@ class AgentController extends Controller
           'role'=>'agent',
           'id_cards'=>$image_path,
           'bvn'=>$request->user_bvn,
-          'state_id'=>$request->user_state,
+         // 'state_id'=>$request->user_state,
         ]);
 
         $lastInsertedId = $user->id;

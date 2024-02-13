@@ -59,6 +59,7 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
     serverSide: true,
     ajax: "staff-applications-verify",
     pagingType: "full_numbers",
+    destroy: true,
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
         [5,10, 25, 50, -1],
@@ -103,6 +104,114 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
 
 });
 
+
+$('#disbursement-tab').click(function(evt) {
+   
+    //Ftech Disburse list    
+    var table002 = $('#disbursementlist').on( 'error.dt', function ( e, settings, techNote, message ) {
+                    // console.log( 'An error has been reported by DataTables: ', message );
+    }).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "staff-applications-pendingdismt",
+        pagingType: "full_numbers",
+        destroy: true,
+        language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, 'All'],
+        ],
+        
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'names', name: 'names'},
+            {data: 'ramount', name: 'ramount'},
+            {data: 'phone', name: 'phone'},
+            {data: 'status', name: 'status'},
+            {data: 'action', name: 'action'},       
+        ],
+        
+        dom: 'Blfrtip',
+        buttons: [
+        {
+            extend: 'print',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3,4,5]
+            },
+            title: 'Applicantion List (Disbursed & Pending Repayment)'
+        },
+        {
+            extend: 'pdfHtml5',
+            exportOptions: {
+                columns: [ 0, 1, 2, 3,4,5]
+            },
+            title: 'Applicantion List (Disbursed & Pending Repayment)'
+        },
+     
+    ],
+        "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+            $("td:first", nRow).html(iDisplayIndex +1);
+           return nRow;
+        },
+     
+    });
+    
+    });
+    $('#completed-tab').click(function(evt) {
+   
+        //Ftech Disburse list    
+        var table001 = $('#completedlist').on( 'error.dt', function ( e, settings, techNote, message ) {
+                        // console.log( 'An error has been reported by DataTables: ', message );
+        }).DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "staff-applications-completed",
+            pagingType: "full_numbers",
+            destroy: true,
+            language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'created_at', name: 'created_at'},
+                {data: 'names', name: 'names'},
+                {data: 'ramount', name: 'ramount'},
+                {data: 'phone', name: 'phone'},
+                {data: 'status', name: 'status'},
+                {data: 'action', name: 'action'},       
+            ],
+            
+            dom: 'Blfrtip',
+            buttons: [
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3,4,5 ]
+                },
+                title: 'Applicantion List (Repaid Applications)'
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [ 0, 1, 2, 3,4,5]
+                },
+                title: 'Applicantion List (Repaid Applications)'
+            },
+         
+        ],
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+               return nRow;
+            },
+         
+        });
+        
+        });
+
 $("#repay").on( "click", function() {
     $('.repayModal').modal('show');  
 });
@@ -122,12 +231,13 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                 // console.log( 'An error has been reported by DataTables: ', message );
             }).DataTable({
                 ajax: {
-                    url: 'repay-data',
+                    url: 'repay-data2',
                     type: 'POST',
                     data:{appid,_token},
                 },
             processing: true,
             serverSide: true,
+            destroy: true,
             pagingType: "full_numbers",
             language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
             lengthMenu: [
@@ -169,11 +279,13 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             
             });
 
-            $('.repayModal tbody').on('click', '.remind', function () {
+            $('.repayModal tbody').off('click').on('click', '.remind', function () {
                 var row = $(this).closest('tr');
                 var id = table3.row( row ).data().id;
                 var _token = $('#_token').val();   
                 $("#modal-preloader2").show();
+
+
                 $.ajax({    //create an ajax request to get session data 
                     type: "POST",
                     url: "send-reminder",   //expect json File to be returned  
@@ -279,6 +391,17 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             if(data.disbursed == '1'){
                  $("#disbursed").html('<span class="badge badge-success">Disbursed</span>');
                  $("#repay").show();
+
+                 $("#caccept").hide();
+                 if(data.category == 'Scholarship'){
+                    $("#repay").hide();
+                 }else{
+                    $("#repay").show();
+                    
+                       if(data.approvalDataStatus == 'Completed')
+                       {$("#repay").hide();}
+                 }
+
             }
              else {
                     $("#disbursed").html('<span class="badge badge-warning">Pending</span>');

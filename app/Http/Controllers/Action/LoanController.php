@@ -112,9 +112,9 @@ class LoanController extends Controller
     {
         $loan_id = $request->input('loanid');
 
-       
+         $userrid = ''; $payerid=null;
          $loginUserId = Auth::user()->id;//login user
-
+      
          //get requested user Wallet Balance information
          $wallet = Wallet::where('userid', $loginUserId)->first();
        
@@ -155,11 +155,24 @@ class LoanController extends Controller
                 $payer_name = Auth::user()->first_name.' '. Auth::user()->last_name;
                 $payer_email = auth()->user()->email;
                 $payer_phone = auth()->user()->phone_number;
+
+                $role = Auth::user()->role;
+
+                if($role == 'applicant')
+                {
+                   $userrid = Auth::user()->id;//login user
+                  
+                }else
+                {
+                   $userrid = $appDetails->user_id;//login user
+                   $payerid = Auth::user()->id;
+                }
+                 
                 
                 //update transaction history
                 $user = Transaction::create([
-                    'userid' => $loginUserId,
-                    //'payerid' => '',
+                    'userid' => $userrid,
+                    'payerid' => $payerid,
                     'payer_name' =>  $payer_name,
                     'payer_email' => $payer_email,
                     'payer_phone' => $payer_phone,

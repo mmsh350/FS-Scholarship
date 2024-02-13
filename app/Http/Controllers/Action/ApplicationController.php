@@ -356,6 +356,61 @@ class ApplicationController extends Controller
           return view('admin.applications');
       }
 
+      public function pendingdismt2(Request $request){
+        $loginUserId = Auth::user()->id;
+         $stateId =  Auth::user()->state_id;
+        
+        if ($request->ajax()) {
+                        
+            $data = DB::table('applications')
+            ->select(
+                          'applications.id',
+                          'applications.created_at',
+                          'applications.names',
+                          'applications.ramount',
+                          'applications.phone',                    
+                          'approvals.status')
+            ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+            ->where('location_id',$stateId )
+            ->where('applications.verify_id',$loginUserId)
+            ->where('approvals.status','Ongoing' ); 
+
+            return Datatables($data)
+    
+            ->editColumn('ramount', function ($row) {
+                return  "&#8358;".number_format($row->ramount ,2);
+               
+                  })->escapeColumns('ramount')
+    
+             ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })
+    
+                  ->editColumn('status', function ($row) {
+                        return  "<span class='badge badge-warning'>".$row->status."</span>";
+                   })->escapeColumns('status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                    <a 
+                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                    Look up<i class='icofont icofont-look'> </i> </a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            }
+    
+            
+          return view('staff.application');
+      }
+
       public function completed(Request $request){
         $loginUserId = Auth::user()->id;
         
@@ -407,6 +462,62 @@ class ApplicationController extends Controller
             
           return view('admin.applications');
       }
+
+      public function completed2(Request $request){
+        $loginUserId = Auth::user()->id;
+         $stateId =  Auth::user()->state_id;
+        
+        if ($request->ajax()) {
+
+            $data = DB::table('applications')
+            ->select(
+                          'applications.id',
+                          'applications.created_at',
+                          'applications.names',
+                          'applications.ramount',
+                          'applications.phone',                    
+                          'approvals.status')
+            ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+            ->where('location_id',$stateId )
+            ->where('applications.verify_id',$loginUserId)
+            ->where('approvals.status','Completed' );
+
+            return Datatables($data)
+    
+            ->editColumn('ramount', function ($row) {
+                return  "&#8358;".number_format($row->ramount ,2);
+               
+                  })->escapeColumns('ramount')
+    
+             ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })
+    
+                  ->editColumn('status', function ($row) {
+                        return  "<span class='badge badge-success'>".$row->status."</span>";
+                   })->escapeColumns('status')
+             
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "
+                    <a 
+                    class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                     data-bs-toggle='modal' data-bs-target='.bd-example-modal-xl' data-id=$row->id>
+                    Look up<i class='icofont icofont-look'> </i> </a>";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);
+    
+            }
+    
+            
+          return view('staff.applications');
+      }
+
 
       
 
@@ -1563,6 +1674,81 @@ class ApplicationController extends Controller
             } 
           return view('admin.applications');
         }
+
+        public function repaylist2(Request $request){
+        
+            $appid = $request->input('appid');
+           
+            if ($request->ajax()) {
+                            
+                $data = Repayment::select(
+                         'id',
+                         'repayment_amount',
+                         'repayment_date',
+                         'status', 
+                )->where('app_id', $appid);
+                return Datatables($data)
+        
+                ->editColumn('repayment_amount', function ($row) {
+                    return  "&#8358;".number_format($row->repayment_amount ,2);
+                   
+                      })->escapeColumns('repayment_amount')
+        
+                ->editColumn('repayment_date', function ($row) {
+                    
+                    return  date("M j, Y", strtotime($row->repayment_date) );
+                      })
+        
+                      ->editColumn('status', function ($row) {
+                        if($row->status == 'Paid')
+                             return  "<span class='badge badge-success'>".$row->status."</span>";
+                        else
+                             return  "<span class='badge badge-warning'>".$row->status."</span>";
+                        })->escapeColumns('status')
+    
+                     ->editColumn('metadata', function ($row) {
+                        
+                            $date = Carbon::parse($row->repayment_date);
+                            $now = Carbon::now();
+                            $diff = $date->diffInDays($now->toDateString());
+                            if($row->status != 'Paid')
+                            {
+                                if( $date->isPast()){
+                                        //Check if its due date
+                                        if($date->eq($now->toDateString()))
+                                            return  "<span class='badge badge-warning'> Due Today</span>";
+                                        else
+                                            return  "<span class='badge badge-danger'>".'Overdue for ('.$diff." days) </span>";
+                                }
+                                else
+                                {
+                                    return  "<span class='badge badge-success'>".'Due in ('.$diff." days) </span>";
+                                }
+                            }
+                       
+        
+                              })->escapeColumns('status')
+                 
+                       
+                  ->addIndexColumn()
+                  ->addColumn('action', function($row){
+                        $btn='';
+                        if($row->status != 'Paid')
+                        {
+                            // Button Customizations
+                            $btn = "
+                            <a id='remind' class='btn btn-pill btn-primary btn-air-primary btn-xs remind'><i class='icofont icofont-email'> </i> Send Reminder</a>";
+                            return $btn;
+                        }else{ return $btn;}
+    
+                }) ->rawColumns(['action']) 
+                ->make(true);
+        
+                } 
+              return view('staff.application');
+            }
+
+
        public function reminder(Request $request)
        {
              $id = $request->input('id');

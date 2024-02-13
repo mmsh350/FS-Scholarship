@@ -67,6 +67,7 @@ var table2 = $('#verifiedlist').on( 'error.dt', function ( e, settings, techNote
     serverSide: true,
     ajax: "admin-applications-verify",
     pagingType: "full_numbers",
+    destroy: true,
     language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
     lengthMenu: [
         [10, 25, 50, -1],
@@ -121,6 +122,7 @@ $('#disbursement-tab').click(function(evt) {
         serverSide: true,
         ajax: "admin-applications-pendingdismt",
         pagingType: "full_numbers",
+        destroy: true,
         language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
         lengthMenu: [
             [10, 25, 50, -1],
@@ -173,6 +175,7 @@ $('#disbursement-tab').click(function(evt) {
             serverSide: true,
             ajax: "admin-applications-completed",
             pagingType: "full_numbers",
+            destroy: true,
             language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
             lengthMenu: [
                 [10, 25, 50, -1],
@@ -267,18 +270,22 @@ $("#repay").on( "click", function() {
 
 $('.repayModal').on('hidden.bs.modal', function () {
     $('.bd-example-modal-xl').css('z-index', '');
+    $('.repayModal').data('modal', null);
+    
 });
 
-var table3="";
+let table3="";
 //Plan Modal
 $('.repayModal').on('shown.bs.modal', function(event) {
     $('.bd-example-modal-xl').css('z-index', 1039);
     let appid = $('#appid').val() ;
     var _token = $('#_token').val();
+   
    //Ftech repay list    
-            var table3 = $('#repaylist').on( 'error.dt', function ( e, settings, techNote, message ) {
-                // console.log( 'An error has been reported by DataTables: ', message );
-            }).DataTable({
+           var table3 = $('#repaylist').on( 'error.dt', function ( e, settings, techNote, message ) {
+             //   console.log( 'An error has been reported by DataTables: ', message );
+                
+           }).DataTable({
                 ajax: {
                     url: 'repay-data',
                     type: 'POST',
@@ -287,10 +294,11 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             processing: true,
             serverSide: true,
             pagingType: "full_numbers",
+            destroy: true,
             language: { "processing": '<div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>' },
             lengthMenu: [
-            [5,10, 25, 50, -1],
-            [5,10, 25, 50, 'All'],
+            [6,12 -1],
+            [6,12,'All'],
             ],
 
             columns: [
@@ -301,7 +309,7 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             {data: 'metadata', name: 'metadata'},
             {data: 'action', name: 'action'},       
             ],
-
+   
             dom: 'Blfrtip',
             buttons: [
             {
@@ -325,13 +333,17 @@ $('.repayModal').on('shown.bs.modal', function(event) {
             return nRow;
             },
             
-            });
+            })
+            
 
-            $('.repayModal tbody').on('click', '.remind', function () {
+            $('.repayModal tbody').off('click').on('click', '.remind', function () {
                 var row = $(this).closest('tr');
                 var id = table3.row( row ).data().id;
                 var _token = $('#_token').val();   
                 $("#modal-preloader2").show();
+                
+              
+
                 $.ajax({    //create an ajax request to get session data 
                     type: "POST",
                     url: "send-reminder",   //expect json File to be returned  
@@ -345,6 +357,8 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                                         $("#done_3").empty();
                                         $("#done_3").hide();
                                     }, 3000);
+                                   
+                                       
                         },
                         error: function(data) {
                             $(".disburseModal").scrollTop(0);
@@ -359,6 +373,7 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                                 }, 3000);
                         }
                     });
+
                 });
 
                     //Make payment
@@ -367,7 +382,19 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                         var row = $(this).closest('tr');
                         var id = table3.row( row ).data().id;
                         var _token = $('#_token').val();   
-                        $("#modal-preloader3").show();
+                       
+
+                        swal({
+                            title: "Make Repayment?",
+                            text: "Are you sure you want to Proceed !",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Yes",
+                            closeOnConfirm: false,
+                          },
+                          function(){
+                            $("#modal-preloader3").show();
                         $.ajax({    //create an ajax request to get session data 
                             type: "POST",
                             url: "make-repayment",   //expect json File to be returned  
@@ -397,7 +424,10 @@ $('.repayModal').on('shown.bs.modal', function(event) {
                                         }, 3000);
                                 }
                             });
-    
+                            swal.close();	
+
+                        });
+                        $(".sweet-alert").css('background-color', '#e6e6e6');//Optional changes the color of the sweetalert 
 
               });
             
@@ -537,7 +567,6 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                 {
                     $("#app_accept").html('<span class="badge badge-success">Accepted</span>');
                     $("#caccept").show();
-                    
                 }
                 else  if(data.app_accept == '2')
                     $("#app_accept").html('<span class="badge badge-danger">Rejected</span>');
@@ -580,8 +609,14 @@ $('.disburseModal').on('shown.bs.modal', function(event) {
                  $("#disbursed").html('<span class="badge badge-success">Disbursed</span>');
                  
                  $("#caccept").hide();
-                 if(data.category != 'Scholarship'){
+                 if(data.category == 'Scholarship'){
+                    $("#repay").hide();
+                 }else{
                     $("#repay").show();
+                    
+                       if(data.approvalDataStatus == 'Completed')
+                       {$("#repay").hide();}
+
                  }
             }
              else {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Action\activityController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Action\StateController;
 use App\Http\Controllers\Action\LgaController;
 use App\Http\Controllers\Action\CountriesController;
 use App\Http\Controllers\Action\LoanController;
+use App\Http\Controllers\Action\reportController;
 use App\Http\Controllers\Action\SchoolController;
 use App\Http\Controllers\Action\UserController;
 use App\Http\Controllers\AppNotificationController;
@@ -36,15 +38,27 @@ use App\Http\Controllers\AppNotificationController;
     
     Route::get('users',  [UserController::class, 'show'])->name('admin.users');
     Route::get('admin-applications', [ApplicationController::class, 'show'])->name('admin.applications');
-    Route::get('admin-activities', [ApplicationController::class, 'show'])->name('admin.activities');
-    Route::get('admin-schools', [ApplicationController::class, 'show'])->name('admin.schools');
+    Route::get('admin-activities', [activityController::class, 'show'])->name('admin.activities');
+    Route::get('admin-schools', [SchoolController::class, 'index'])->name('admin.schools');
     Route::get('admin-transactions', [TransactionController::class, 'index'])->name('admin.transactions');
+
+    Route::get('agent-activity', [ActivityController::class, 'agent']);
+    Route::get('staff-activity', [ActivityController::class, 'show']);
+    Route::get('school-activity', [ActivityController::class, 'school']);
+
+    Route::get('reports', [reportController::class, 'show'])->name('admin.reports');
+    Route::post('generate', [reportController::class, 'getRevenue']);
    
     Route::get('get-users', [UserController::class, 'getUserDetails'])->name('get-users');
     Route::post('verifyEmail', [UserController::class, 'verifyEmail'])->name('verifyEmail');
     Route::post('activateUser', [UserController::class, 'enableDisableUser'])->name('activateUser');
     Route::post('updateUser', [UserController::class, 'updateUser'])->name('updateUser');
     Route::post('createUser', [UserController::class, 'save'])->name('createUser');
+
+    Route::post('createSchool', [SchoolController::class, 'save'])->name('createSchool');
+    Route::get('get-schools', [SchoolController::class, 'getSchoolDetails']);
+    Route::post('updateSchool', [SchoolController::class, 'updateSchool']);
+    Route::post('activateSchool', [SchoolController::class, 'enableDisableSchool']);
 
     Route::post('topup', [WalletController::class, 'topup'])->name('topup');
     Route::get('admin-wallet', [WalletController::class, 'show'])->name('admin.wallet');
@@ -55,6 +69,7 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('admin-applications-completed', [ApplicationController::class, 'completed']);
     Route::get('get-application-data', [ApplicationController::class, 'getApplicationData'])->name('get-application-data');
     Route::post('repay-data', [ApplicationController::class, 'repaylist'])->name('repay-data');
+    Route::post('repay-data2', [ApplicationController::class, 'repaylist2'])->name('repay-data2');
     Route::get('approval-data', [ApplicationController::class, 'approvalData'])->name('approval-data');
     Route::post('disburse', [ApplicationController::class, 'disburse'])->name('disburse');
     Route::post('convert', [ApplicationController::class, 'convert'])->name('convert');
@@ -85,11 +100,14 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
 
     //Staff Routes
+    Route::get('staff-applications-pendingdismt', [ApplicationController::class, 'pendingdismt2']);
+    Route::get('staff-applications-completed', [ApplicationController::class, 'completed2']);
     Route::get('staff-applications', [ApplicationController::class, 'show'])->name('staff.applications');
     Route::get('staff-applications-verify', [ApplicationController::class, 'verifiedlist'])->name('staff.applications-verify');
     Route::get('get-application', [ApplicationController::class, 'getApplicationDetails'])->name('get-application');
     Route::get('get-agentProfile', [AgentController::class, 'getAgentDetails'])->name('get-agentDetails');
-    Route::get('staff-schools', [ApplicationController::class, 'show'])->name('staff.schools');
+   
+    Route::get('staff-schools', [SchoolController::class, 'index'])->name('staff.schools');
     
     Route::post('verify', [ApplicationController::class, 'verifyApp'])->name('verify-app');
     

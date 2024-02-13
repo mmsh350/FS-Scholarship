@@ -58,7 +58,7 @@
           <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
         </div>
         <div class="col-4 col-xl-4 page-title">
-          <h4 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h4>
+          <h5 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -418,10 +418,10 @@
             
             setchart1(pending_app_count,verify_count,reject_count);
 
-            let schools=  $('#schools').html();;
-            let agents= $('#agents').html();
+            // let schools=  $('#schools').html();;
+            // let agents= $('#agents').html();
             
-            setchart2(schools,agents,app_total_count);
+            setchart2(app_total_count,verify_count,pending_app_count,reject_count);
    
 					
 					
@@ -454,9 +454,9 @@
 					  type: 'pie',
 					  radius: '50%',
 					  data: [
-						{ value: pending_app_count, name: 'Pending' },
-						{ value: verify_count, name: 'Verified' },
-						{ value: reject_count, name: 'Rejected' },
+						{ value: pending_app_count, name: 'Pending' , itemStyle:{ color: 'yellow'} },
+						{ value: verify_count, name: 'Verified' , itemStyle:{ color: '#0DA759'}},
+						{ value: reject_count, name: 'Rejected', itemStyle:{ color: 'red'}  },
                         
 						
 					  ],
@@ -480,7 +480,7 @@
 				}
 				
 				
-				function setchart2(schools,agents,app_total_count)
+        function setchart2(app_total_count,verify_count,pending_app_count,reject_count)
                 {
 					
 					var app = {};
@@ -490,23 +490,48 @@
                     var option;
 
                     option = {
-                    legend: {},
-                    tooltip: {},
-                    dataset: {
-                        dimensions: ['product', 'Applications', 'Agents', 'Schools'],
-                        source: [
-                        { product: 'Statistics',
-                             Applications: app_total_count, 
-                             Agents:agents, Schools: schools }
-                        
-                        ]
-                    },
-                    xAxis: { type: 'category' },
-                    yAxis: {},
-                    // Declare several bar series, each will be mapped
-                    // to a column of dataset.source by default.
-                    series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
-                    };
+                            xAxis: {
+                              type: 'category',
+                              data: ['Apps', 'Verified', 'Pending', 'Rejected']
+                            },
+                            yAxis: {
+                              type: 'value'
+                            },
+                            series: [
+                              {
+                                data: [
+                                
+                                  {
+                                    value: app_total_count,
+                                    itemStyle: {
+                                      color: '#a90000'
+                                    }
+                                  },
+                                  {
+                                    value: verify_count,
+                                    itemStyle: {
+                                      color: '#0DA759'
+                                    }
+                                  },
+                                   
+                                  {
+                                    value: pending_app_count,
+                                    itemStyle: {
+                                      color: 'yellow'
+                                    }
+                                  },
+                                  {
+                                    value: reject_count,
+                                    itemStyle: {
+                                      color: 'red'
+                                    }
+                                  },
+                                  
+                                ],
+                                type: 'bar'
+                              }
+                            ]
+                          };
 
                     option && myChart.setOption(option);
 

@@ -313,7 +313,7 @@
                   <div class="card-body">
                     <p class="mb-1   pb-0 " style="text-align:justify">Welcome to FS-Scholarship – Your Gateway to a Brighter Future! At FS-Scholarship, we believe in nurturing talent, fostering dreams, and empowering the next generation of leaders. Our commitment to excellence and educational advancement is unparalleled. Explore a world of opportunities, unlock your potential, and embark on a journey towards academic success. Join us in shaping a future filled with knowledge, innovation, and endless possibilities. Discover the key to your educational aspirations with FS-Scholarship. Your success story begins here.<br/> </p>
                     <p class=" ">To get started, Click on the button below to submit an application</p>
-                    <p class="txt-danger"> Note* You must have atleast 100 Naira in your wallet before you can begin an application</p>
+                    <p class="txt-danger"> Note* You must have atleast 1000 Naira in your wallet before you can begin an application</p>
                     <center>
                     <a href="{{ route('application') }}"><button class="mt-2 example-popover btn btn-dark mb-2 me-0" type="button" data-container="body" data-bs-toggle="tooltip" data-bs-placement="top"  data-bs-original-title="Get started"><i class="fa fa-hand-o-right"> </i> Submit Application </button></a>
                     </center>

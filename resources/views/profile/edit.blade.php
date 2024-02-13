@@ -203,11 +203,14 @@
                           </ul>
                         @elseif(Auth::user()->role == 'admin')
                         <ul class="sidebar-submenu expand">
-                          <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
-                          <li><a  href="{{ route('admin.users') }}">Users</a></li>
-                          <li><a class="" href="{{ route('admin.applications') }}">Applications</a></li>
-                          <li><a class="" href="{{ route('admin.activities') }}">Activities</a></li>
-                          <li><a href="{{ route('admin.schools') }}" disabled="true">Schools</a></li>
+                          <li><a  class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a href="{{ route('admin.users') }}">Users</a></li>
+                          <li><a href="{{ route('admin.applications') }}">Applications</a></li>
+                          <li><a href="{{ route('admin.schools') }}">Schools</a></li>
+                          <li><a href="{{ route('admin.activities') }}">Activities</a></li>
+                          <li><a href="{{ route('admin.wallet') }}"> Fund Wallet</a></li>
+                          <li><a href="{{ route('admin.transactions') }}">Transactions</a></li> 
+                          <li><a href="{{ route('admin.reports') }}">Generate Report</a></li> 
                         </ul>
                         @elseif(Auth::user()->role == 'agent')
                         @endif
