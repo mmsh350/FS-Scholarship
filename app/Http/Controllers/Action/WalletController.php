@@ -5,6 +5,7 @@ namespace App\Http\Controllers\action;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\App_Notification;
+use App\Models\State;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Wallet;
@@ -104,6 +105,88 @@ class WalletController extends Controller
                 }
         }
         else if(Auth::user()->role == 'agent') {
+
+                 $state_id = Auth::user()->state_id;
+
+                //Fetch State Name
+                 $getName = State::select('stateName')
+                 ->where('id', $state_id)->first();
+                  $stateName =  $getName->stateName;
+
+            if (Wallet::where('userid', $loginUserId)->exists()) {
+
+                $notifycount =0;
+                $notifications = 0;
+                
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+                
+                    //get requested user Wallet Balance information
+                    $wallet = Wallet::where('userid', $loginUserId)->first();                   
+                    
+                    //Defauls values
+                    $deposit =0;
+                    $balance = 0;
+
+                    //Fetch Transactions
+                    $transactions = Transaction::all()->where('userid', $loginUserId)
+                    ->where('service_type','!=', '3')
+                    ->sortByDesc('id')
+                    ->take(10);
+                    
+         
+                    if( $wallet != null )
+                    {                     
+                        //If the Wallet is not null get the data and fetch Transaction histories
+                        $balance = $wallet->balance;
+                        $deposit = $wallet->deposit;
+                    }
+                    if( $transactions == null || $transactions->count() == 0)
+                    {                     
+                        $transactions = null;
+                    }
+                    
+                    return view('agent.wallet') 
+                                    ->with(compact('balance'))
+                                    ->with(compact('deposit'))
+                                    ->with(compact('notifications'))
+                                    ->with(compact('notifycount'))
+                                    ->with(compact('stateName'))
+                                    ->with(compact('transactions'));
+                                
+            }else
+            {
+                //Defaults if Wallet is not created
+                $deposit = 0;
+                $balance = 0;
+                $transactions = null;
+                $notifycount =0;
+                $notifications = 0;
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+
+                return view('agent.wallet',compact('balance'))
+                ->with(compact('balance'))
+                ->with(compact('deposit'))
+                ->with(compact('notifications'))
+                ->with(compact('notifycount'))
+                ->with(compact('stateName'))
+                ->with(compact('transactions'));
+            }
 
         }
         else if(Auth::user()->role == 'admin') {

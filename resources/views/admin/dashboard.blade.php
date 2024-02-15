@@ -448,13 +448,13 @@
                     <div class="row">
                       <div class="col-md-12">
                         <ul class="fw-bold list-group list-group-horizontal-sm pb-1">
-                          <li class="list-group-item  bg-dark"><i class="fa fa-history txt-danger "></i><a href="{{ route('admin.transactions') }}" style="color: #fff; text-decoration: none;">All Transactions</a></li>
+                          <li class="list-group-item  bg-dark"><i class="fa fa-history txt-danger "></i><a href="{{ route('admin.transactions') }}" style="color: #fff; text-decoration: none;">Transactions &nbsp;</a></li>
                           <li class="list-group-item bg-secondary"><i class="fa fa-list-alt" aria-hidden="true"></i> <a href="#" style="color: #f3f3f3; text-decoration: none;" id="show">Tiles [in/out]</a></li>
                           <li class="list-group-item bg-info"><a style="color: #000; text-decoration: none;" href="#graph"><i class="fa fa-bar-chart" aria-hidden="true"></i> Graphical Data</a></li>
-                          <li class="list-group-item bg-warning"><a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.users') }}"><i class="fa fa-users" aria-hidden="true"></i> Accounts </a></li>
+                          <li class="list-group-item bg-warning"><a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.users') }}"><i class="fa fa-users" aria-hidden="true"></i> Accounts &nbsp;</a></li>
                           <li class="list-group-item bg-success"><a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.applications')  }}"><i class="fa fa-tasks" aria-hidden="true"></i> Applications </a></li>
                           <li class="list-group-item bg-light"> <a style="color: #000; text-decoration: none;" href="{{ route('admin.schools')  }}"><i class="fa fa-institution"></i>Schools</a></li>
-                          <li class="list-group-item bg-danger"> <a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.activities')  }}"><i class="fa fa-hand-o-right"></i> Activities</a></li>
+                          <li class="list-group-item bg-danger"> <a style="color: #f3f3f3; text-decoration: none;" href="{{ route('admin.activities')  }}"><i class="fa fa-hand-o-right"></i> Activities&nbsp;</a></li>
                         </ul>
                       </div>
                         <div class="tab-pane fade active show" id="icon-home" role="tabpanel" aria-labelledby="icon-home-tab">

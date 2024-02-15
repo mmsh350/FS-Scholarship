@@ -21,6 +21,7 @@ use App\Models\School;
 use App\Models\State;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -167,6 +168,49 @@ class ApplicationController extends Controller
                   ->with(compact('stateName'));
             }
             else if(Auth::user()->role == 'agent') {
+                $approve_count = 0;
+                $reject_count = 0;
+                $notifycount =0;
+
+                $getName = State::select('stateName')->where('id', $stateId)->first();
+                $stateName =  $getName->stateName;
+                
+                $applications = Application::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(5);
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+
+                $approve_count = Application::all() 
+                                ->where('user_id', $loginUserId)
+                                ->where('status', 'Approved')->count();
+                $reject_count = Application::all()
+                            ->where('user_id', $loginUserId)
+                            ->where('status', 'Rejected')->count();
+
+             $balance=0;
+            //Check if wallet existed 
+            if (Wallet::where('userid', $loginUserId)->exists()) {
+              //get requested user Wallet Balance information
+              $wallet = Wallet::where('userid', $loginUserId)->first();
+              $balance = $wallet->balance ;
+             }
+             
+                return view('agent.application')
+                ->with(compact('applications'))
+                ->with(compact('notifications'))
+                ->with(compact('notifycount'))
+                ->with(compact('approve_count'))
+                ->with(compact('reject_count'))
+                ->with(compact('stateName'))
+                ->with(compact('balance'));
 
             }
             else if(Auth::user()->role == 'admin') {
@@ -736,13 +780,46 @@ class ApplicationController extends Controller
         }
 
         //Insert into db
-
+       
         //Get default values
         $userid = auth()->user()->id; //Login User
-        $applicant_names = auth()->user()->first_name." ".auth()->user()->middle_name." ".auth()->user()->last_name;
-        $dob =  auth()->user()->dob;
-        $gender =  auth()->user()->gender;
-        $email =  auth()->user()->email;
+        $applicant_names = '';
+        $dob = '';
+        $gender = '';
+        $email = '';
+
+        if(auth()->user()->role =='agent'){
+            //Do some validation 
+
+            $request->validate([
+                'applicant_Names' => ['required','string','max:255','regex:/^[\pL\s\-]+$/u'],
+                'phone_no' => 'required|numeric|digits:11',
+                'gender' => ['required', 'string'],
+                'email_id' => ['required', 'string', 'email', 'max:255'],
+            ]);
+
+            $dobObject = new DateTime(date("Y-m-d", strtotime($request->dob)));
+            $nowObject = new DateTime();
+         
+            if($dobObject->diff($nowObject)->y < 10 || $dobObject->diff($nowObject)->y >50){
+                return response()->json([
+                    "message"=> "Age limit must be between 10 and 50 Years",
+                    "errors"=>array("Date of Birth"=> "Age limit must be between 10 and 50 Years")
+                ], 422);
+            }
+
+            $applicant_names = $request->applicant_Names;
+            $dob =  $request->dob;
+            $gender =  $request->gender;
+            $email = $request->email_id;
+        }
+        else{
+           
+            $applicant_names = auth()->user()->first_name." ".auth()->user()->middle_name." ".auth()->user()->last_name;
+            $dob =  auth()->user()->dob;
+            $gender =  auth()->user()->gender;
+            $email =  auth()->user()->email;
+        }
 
 
         if($request->file('image'))
@@ -753,7 +830,131 @@ class ApplicationController extends Controller
         }
 
         //Check if a pending application existed
+
+        if(auth()->user()->role =='agent'){
+
+            if (Application::where('user_id', $userid)->where('status','Pending')->where('app_status','Open')->count() > 10)
+            {
+                return response()->json([
+                    "message"=> "Application Limit Reached",
+                    "errors"=>array("Application Limit"=> "Sorry you have a pending application")
+                ], 422);
+    
+            }else{
+    
+                //get location, state id
+                $school = School::where('id', $request->school_name)->first();
+                $location_id =  $school->state_id;
+    
+                //Insert intO Application
+                $app = Application::create([
+                        'user_id' =>  $userid,
+                        'category' => $request->category,
+                        'school_id' => $request->school_name,
+                        'names' => $applicant_names,
+                        'dob' => $dob,
+                        'gender' => $gender,
+                        'phone' => $request->phone_no,
+                        'email' => $email,
+                        'country' => $request->country,
+                        'nationality' => $request->nationality,
+                        'state_id' => $request->state,
+                        'lga_id' => $request->lga,
+                        'home_address' => ucwords(strtolower($request->caddress)),
+                        'busstop_address' => ucwords(strtolower($request->nbus_address)),
+                        'passport' => $image_path,
+                        'dysabroad' => $request->flexRadioDefault,
+                        'intl_phone' => $request->intl_phone,
+                        'intl_address' => ucwords(strtolower($request->intl_address)),
+                        'ramount' => $request->ramount,
+                        'location_id' =>  $location_id,
+                    ]);
+    
+                    //insert into next of kin
+                     
+                    $kin = DB::table('next_kins')->insert([
+                        'application_id'=>$app->id,
+                        'nok_title' => $request->title,
+                        'nok_relationship' => $request->nok_rel,
+                        'nok_surname' =>ucwords(strtolower($request-> nok_sname)),
+                        'nok_middle_name' => ucwords(strtolower($request->nok_mname)),
+                        'nok_firstname' => ucwords(strtolower($request->nok_fname)),
+                        'nok_gender' => $request->nok_gender,
+                        'nok_dob' => $request->nok_dob,
+                        'nok_phone' => $request->nok_phone,
+                        'nok_email' => $request->nok_email,
+                        'nok_state' => $request->nok_state,
+                        'nok_lga' => $request->nok_lga,
+                        'nok_busstop' => ucwords(strtolower($request->nok_bus_stop)),
+                        'nok_address' => ucwords(strtolower($request->nok_address)),
+                        'created_at'=>Carbon::now(),
+                        'updated_at'=>Carbon::now(),
+                        ]);
+    
+                        //insert into Education
+                           $edu = DB::table('educations')->insert([
+                            'application_id'=>$app->id,
+                            'school_category' => $request->schl_category,
+                            'school_name' => $request->school_name,
+                            'school_section' =>$request->section,
+                            'school_course' => ucwords(strtolower($request->course)),
+                            'school_no_of_years' => $request->no_of_years,
+                            'school_ramount' => $request->ramount,
+                            'created_at'=>Carbon::now(),
+                            'updated_at'=>Carbon::now(),
+                            ]);
+    
+                            //Guarantor add 
+                            $gua = DB::table('guarantors')->insert([
+                                'application_id'=>$app->id,
+                                'gf_names' => ucwords(strtolower($request->gname)),
+                                'gf_relationship' => $request->grelationship,
+                                'gf_phone' =>$request->gphone,
+                                'gf_email' => $request->gemail,
+                                'gf_address' => ucwords(strtolower($request->gaddress)),
+                                'gs_names' => ucwords(strtolower($request->gname2)),
+                                'gs_relationship' => $request->grelationship2, 
+                                'gs_phone' => $request->gphone2, 
+                                'gs_email' => $request->gemail2, 
+                                'gs_address' => ucwords(strtolower($request->gaddress2)),
+                                'created_at'=>Carbon::now(),
+                                'updated_at'=>Carbon::now(),
+                                ]);       
+                              
+                            //Head of school 
+                            $hos = DB::table('head_of_schools')->insert([
+                                'application_id'=>$app->id,
+                                'name' => ucwords(strtolower($request->hos_name)),
+                                'phone' => $request->hos_phone,
+                                'email' =>$request->hos_email,
+                                'state' => $request->hos_state,
+                                'city' => ucwords(strtolower($request->hos_city)),
+                                'address' => ucwords(strtolower($request->hos_address)),
+                                'created_at'=>Carbon::now(),
+                                'updated_at'=>Carbon::now(),
+                                ]);  
+    
+             
+            //Upload Document
+            $fileName = $request->file->getClientOriginalName();
+            $filePath = 'uploads/' . $fileName;
+     
+            $path = Storage::disk('public')->put($filePath, file_get_contents($request->file));
+            $path = Storage::disk('public')->url($path);
+    
+            //Upload Files
+                            $uploads = DB::table('uploads')->insert([
+                                'application_id'=>$app->id,
+                                'path' => $filePath,
+                                'created_at'=>Carbon::now(),
+                                'updated_at'=>Carbon::now(),
+                                ]);  
+    
+    
+            }
+        }
         
+    else{
         if (Application::where('user_id', $userid)->where('status','Pending')->where('app_status','Open')->count() > 0)
         {
             return response()->json([
@@ -872,7 +1073,8 @@ class ApplicationController extends Controller
                             ]);  
 
 
-        }   
+        } 
+    }  
              
            
     }

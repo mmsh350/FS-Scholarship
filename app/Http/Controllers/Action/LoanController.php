@@ -9,10 +9,12 @@ use App\Models\App_Notification;
 use App\Models\Application;
 use App\Models\Approval;
 use App\Models\Repayment;
+use App\Models\State;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -21,6 +23,7 @@ class LoanController extends Controller
     public function show(Request $request)
     {
         $loginUserId = Auth::user()->id;
+        $stateId =  Auth::user()->state_id;
        
         $active =Auth::user()->is_active;
         //Check if user has been disabled
@@ -56,9 +59,9 @@ class LoanController extends Controller
 
                      $appdetails = Application::select('id','approved_amount','total_paid')
                      ->where('user_id', $loginUserId)
-                     ->where('disbursed', '1')
-                     ->limit(1)
-                     ->first();
+                     ->where('disbursed', '1')->limit(1)->orderBy('id', 'DESC')->first();
+ 
+                  
 
                      if($appdetails != null){
  
@@ -100,6 +103,85 @@ class LoanController extends Controller
                             ->with(compact('paid_amount'));
             
             } 
+            else if(Auth::user()->role == 'agent'){
+
+                 //Fetch State Name
+                 $getName = State::select('stateName')
+                 ->where('id', $stateId)->first();
+                  $stateName =  $getName->stateName;
+
+               
+                  $notifycount = 0;
+                  $notifications = 0;
+  
+  
+                  $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                  ->sortByDesc('id')
+                  ->take(3);
+  
+                  $notifycount = App_Notification::all()
+                                              ->where('user_id', $loginUserId)
+                                              ->where('status', 'unread')
+                                              ->count();
+  
+                  if ($request->ajax()) {
+                      
+                      $data = DB::table('applications')->select(
+                               'applications.id',
+                               'applications.created_at',
+                               'applications.names',
+                               'applications.approved_amount',
+                               'applications.total_paid', 
+                              )
+                    ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+                    ->where('approvals.status','Ongoing' )
+                     //  ->where('status','Approved' )
+                       ->where('applications.user_id',$loginUserId );
+                      // ->where('disbursed','1' );
+  
+                      return Datatables($data)
+  
+                      ->editColumn('approved_amount', function ($row) {
+                        
+                         return    "&#8358;".number_format($row->approved_amount ,2);
+                         
+                            })->escapeColumns('approved_amount')
+
+                            ->editColumn('balance', function ($row) {
+                                    $bal = $row->approved_amount - $row->total_paid ;
+                               
+                                    return  "&#8358;".number_format( $bal);
+                        
+                                   
+                                      })->escapeColumns('balance')
+  
+                      ->editColumn('created_at', function ($row) {
+                          
+                          return  date("M j, Y", strtotime($row->created_at) );
+                            })                            
+                             
+                        ->addIndexColumn()
+                        ->addColumn('action', function($row){
+                              
+                          // Button Customizations
+                          $btn = "
+                              <a 
+                              class='btn btn-pill btn-dark btn-air-primary btn-xs'
+                               data-bs-toggle='modal' data-bs-target='.repayModal' data-id=$row->id>
+                               <i class='icofont icofont-pay'> </i> Pay </a>";
+                          return $btn;
+                      }) ->rawColumns(['action']) 
+                      ->make(true);  
+                  
+                  }
+                    
+                  return view('agent.loan') 
+                  ->with(compact('notifications'))
+                  ->with(compact('stateName'))
+                  ->with(compact('notifycount'));
+                
+                
+            }
             else{
                 Auth::logout();
                 return view('error') ;
@@ -162,7 +244,10 @@ class LoanController extends Controller
                 {
                    $userrid = Auth::user()->id;//login user
                   
-                }else
+                } else if($role == 'agent'){
+                    $userrid = Auth::user()->id;//login user
+                }
+                else
                 {
                    $userrid = $appDetails->user_id;//login user
                    $payerid = Auth::user()->id;
@@ -258,5 +343,58 @@ class LoanController extends Controller
 
          }
                   
+    }
+
+    public function completed(Request $request){
+        $loginUserId = Auth::user()->id;
+        if ($request->ajax()) {
+                      
+            $data = Application::select(
+                     'applications.id',
+                     'applications.created_at',
+                     'applications.names',
+                     'applications.approved_amount',
+                    )
+          ->leftJoin('approvals', 'applications.id', '=', 'approvals.app_id')
+          ->where('approvals.status','Completed' )
+           //  ->where('status','Approved' )
+             ->where('applications.user_id',$loginUserId );
+            // ->where('disbursed','1' );
+
+            return Datatables($data)
+
+            ->editColumn('approved_amount', function ($row) {
+              
+               return   "&#8358;".number_format($row->approved_amount ,2) ;
+               
+                  })->escapeColumns('approved_amount')
+
+                  ->editColumn('status', function ($row) {
+                      
+              return   "<span class='badge badge-success txt-light'>Paid</span>";
+              
+                     
+                        })->escapeColumns('status')
+
+                 
+
+            ->editColumn('created_at', function ($row) {
+                
+                return  date("M j, Y", strtotime($row->created_at) );
+                  })                            
+                   
+              ->addIndexColumn()
+              ->addColumn('action', function($row){
+                    
+                // Button Customizations
+                $btn = "";
+                return $btn;
+            }) ->rawColumns(['action']) 
+            ->make(true);  
+        
+        }
+          
+        return view('agent.loan') ;
+
     }
 }

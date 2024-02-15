@@ -58,7 +58,7 @@
           <div class="logo-wrapper"><a href="{{ route('dashboard') }}"><img class="img-fluid for-light" src="{{ asset('images/logo/logo.png') }}" alt=""/><img class="img-fluid for-dark" src="{{ asset('images/logo/logo_light.png') }}" alt=""/></a></div>
         </div>
         <div class="col-4 col-xl-4 page-title">
-          <h5 class="f-w-700"> Staff Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
+          <h5 class="f-w-700"> Agent Dashboard - <span class="badge badge-primary border border-rounded border-light f-2"> <i class="icofont icofont-ui-home"></i> {{$stateName}} State</span></h5>
           <nav>
             <ol class="breadcrumb justify-content-sm-start align-items-center mb-0">
               <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"> <i data-feather="home"> </i></a></li>
@@ -125,7 +125,6 @@
                             <h6></h6>
                             <p>{{$data->messages}}</p>
                             <p class="txt-primary mb-0 pull-right"> ~ {{date("F j, Y", strtotime($data->created_at) );}} ~ </p>
-                       
                         </div>
                       </li>
 
@@ -219,21 +218,26 @@
                    
                   
                   <li class="sidebar-list" > 
-                      <a class="sidebar-link sidebar-title active"  href="javascript:void(0)">
+                  <a class="sidebar-link sidebar-title active"  href="javascript:void(0)">
                       <svg class="stroke-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#stroke-home') }}"></use>
                       </svg>
                       <svg class="fill-icon">
                         <use href="{{ asset('svg/icon-sprite.svg#fill-home') }}"></use>
                       </svg><span>Dashboard</span></a>
-                      <ul class="sidebar-submenu expand">
-                        <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
-                        <li><a class="" href="{{ route('staff.applications') }}">Applications</a></li>
-                        <li><a href="{{ route('staff.agents') }}" disabled="true">Agents</a></li>
-                        <li><a href="{{ route('staff.schools') }}">Schools</a></li>
-                      </ul>
+                    <ul class="sidebar-submenu expand">
+                      <li><a class="active" href="{{ route('dashboard') }}">Overview</a></li>
+                      <li><a href="{{ route('loan') }}" disabled="true">Loans</a></li>
+                      <li><a class="" href="{{ route('application') }}">Applications</a></li>
+                      <li><a href="{{ route('wallet') }}"> Fund Wallet</a></li>
+                      <li><a href="{{ route('transactions') }}">Transactions</a></li>
+                    </ul>
                   </li>
                    
+                  
+                 
+               
+               
                  
                 </ul>
               </div>
@@ -246,112 +250,97 @@
           <!-- Container-fluid starts-->
           <div class="container-fluid dashboard-2">
             <div class="row">
-				 
-                      
+              
+				 <div class="row"> 
+                      <div class="col-md-3">
+                        <div class="btn-light1-secondary b-r-10"> 
+                          <div class="upcoming-box"> <a href="{{ route('wallet') }}">
+                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/wallet2.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Wallet Balance</h6>
+							            <button class="mb-0 me-0 btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CLICK TOP UP">&#8358; {{ number_format($balance, 2); }}</button>
+                      </a>
+              </div>
+                        </div>
+                      </div>
                       <div class="col-md-3">
                         <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
+                          <div class="upcoming-box"> <a href="{{ route('application') }}">
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Applications</h6>  
-                             <span id="app_total_count" class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$app_total_count}}</span>
+                            <h6 class="p-b-10">Submitted Application</h6>  
+                             <span id="submit_count" class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$submit_count}}</span>
                           </div></a>
                         </div>
                       </div>
-
-                      <div class="col-md-3">
-                        <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('staff.applications') }}">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/pending.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Pending</h6>
-							                <span id="pending_app_count" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$pending_app_count}}</span>
-                            </div>
-                        </div> </a>
-                      </div>
-
                       <div class="col-md-3">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('staff.applications') }}">
-                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                           <h6 class="p-b-10">Verified</h6>
-							                <span id="verify_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$verify_count}}</span>
-                             <span hidden id="pending_app_count" >{{ $pending_app_count }}</span>
-                            </div>
-                        </div> </a>
-                      </div>
-
-
-                      <div class="col-md-3">
-                        <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('staff.applications') }}">
-                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Rejected</h6>  
-                             <span id="reject_count" class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{ $reject_count }}</span>
+                          <div class="upcoming-box  ">  <a href="{{ route('application') }}">
+                            <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
+                            <h6 class="p-b-10">Approved Application</h6> 
+                           <span id="approve_count" class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
                           </div></a>
                         </div>
                       </div>
-                    </div>
-
-                      <span id="show"><a href="#">More >></a></span>
-                    <div id="more" class="row" style="display:none" > 
-                      <div class="col-md-6">
-                        <div class="btn-light1-warning b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.agents') }}">
-                            <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Agents</h6> 
-                           <span id="agents" class="mt-2 badge rounded-circle badge-p-space border  border-warning badge-light  text-dark f-14">{{$agent_count}}</span>
-                          </div></a>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="btn-light1-secondary b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('staff.schools') }}">
-                            <div class="upcoming-icon bg-secondary"> <img src="{{ asset('images/dashboard-2/svg-icon/school.png') }}" alt=""></div>
-                            <h6 class="p-b-10">Schools</h6> 
-                           <span id="schools" class="mt-2 badge rounded-circle badge-p-space border  border-secondary badge-light  text-dark f-14">{{$school_count}}</span>
-                          </div></a>
-                        </div>
-                      </div>
-                    </div>
 					  
-					                       
-                   
-					
-					<!-------Might remove----->
-                    <div class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
-                        <div class="card">
-                          <div class="card-header">
-                            <h4>Graphical Data</h4>
-                              
-                             
-                            <p class="f-m-light mt-1">
-                              </p>
-                            <div class="card-header-right">
-                              <ul class="list-unstyled card-option">
-                                <li><i class="icon-more-alt"></i></li>
-                                <li><i class="icofont icofont-maximize full-card"></i></li>
-                                <li><i class="icofont icofont-minus minimize-card"></i></li>
-                                <li><i class="icofont icofont-refresh reload-card"></i></li>
-                              </ul>
-                            </div>
+					  <div class="col-md-3">
+                        <div class="btn-light1-danger b-r-10"> 
+                          <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
+                            <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
+                           <h6 class="p-b-10">Rejected Application</h6>
+							            <span id="reject_count" class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
                           </div>
-                          <div class="card-body">
-                            <p class="mb-1   pb-0 " style="text-align:justify"></p>
-                            <div class="table-responsive">
-                                <div class="row">
-                                <div class="col-md-6  ">
-                               <div id="container" style="height: 370px; width: 100%;"></div>
-                               </div>
-                               <div class="col-md-6">
-                               <div id="container2" style="height: 370px; width: 100%;"></div>
-                               </div>
-                               </div>
-                               </div>
+                        </div> </a>
+                      </div> 
+         </div>  
+                      
+                      <span id="show"><a href="#">More >></a></span>
+                      <div id="more" class="row col-md-12" style="display:none"> 
+                     <div class="col-md-6">
+                       <div class="btn-light1-warning b-r-10"> 
+                         <div class="upcoming-box  "> 
+                           <div class="upcoming-icon bg-warning"> <img src="{{ asset('images/dashboard-2/svg-icon/users.png') }}" alt=""></div>
+                           <h6 class="p-b-10">Registrar Details</h6> 
+                          <span id="agents" class="mt-2 badge  text-dark f-14">{{$staffName}} </span>
+                          <span id="agents" class="mt-2 badge   badge-light  text-dark f-6"><i class="icofont icofont-headphone-alt-2"></i>
+                            &nbsp; {{$staffNo}} </span>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                    </div>
+					
+                    <div class="col-xl-4 col-xl-12 col-md-12 proorder-md-1 mt-2"> 
+                      <div class="card">
+                        <div class="card-header">
+                          <h4>Graphical Data</h4>
                             
+                           
+                          <p class="f-m-light mt-1">
+                            </p>
+                          <div class="card-header-right">
+                            <ul class="list-unstyled card-option">
+                              <li><i class="icon-more-alt"></i></li>
+                              <li><i class="icofont icofont-maximize full-card"></i></li>
+                              <li><i class="icofont icofont-minus minimize-card"></i></li>
+                              <li><i class="icofont icofont-refresh reload-card"></i></li>
+                            </ul>
                           </div>
                         </div>
+                        <div class="card-body">
+                          <p class="mb-1   pb-0 " style="text-align:justify"></p>
+                          <div class="table-responsive">
+                              <div class="row">
+                              <div class="col-md-6  ">
+                             <div id="container" style="height: 370px; width: 100%;"></div>
+                             </div>
+                             <div class="col-md-6">
+                             <div id="container2" style="height: 370px; width: 100%;"></div>
+                             </div>
+                             </div>
+                             </div>
+                          
+                        </div>
                       </div>
-                     
-             
+                    </div>
              
              
             
@@ -366,7 +355,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12 footer-copyright d-flex flex-wrap align-items-center justify-content-between">
-                <p class="mb-0 f-w-600">Copyright©<script>document.write(new Date().getFullYear())</script> Fee24 Consultant Limited. All rights reserved.</p>
+                <p class="mb-0 f-w-600">Copyright©fee24 Consultant LTD <script>document.write(new Date().getFullYear())</script></p>
               </div>
             </div>
           </div>
@@ -383,10 +372,10 @@
     <!-- scrollbar js-->
     <script src="{{ asset('js/scrollbar/simplebar.js') }}"></script>
     <script src="{{ asset('js/scrollbar/custom.js') }}"></script>
-	<script src="{{ asset('js/tooltip-init.js') }}"></script>
-    <script src="{{ asset('js/sweetalert.js') }}"></script>
-    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
-	<script src="{{ asset('js/clipboard/clipboard.min.js') }}"></script>
+	    <script src="{{ asset('js/tooltip-init.js') }}"></script>
+        <script src="{{ asset('js/sweetalert.js') }}"></script>
+     
+		 <script src="{{ asset('js/clipboard/clipboard.min.js') }}"></script>
     <!-- Sidebar jquery-->
     <script src="{{ asset('js/config.js') }}"></script>
     <!-- Plugins JS start-->
@@ -396,151 +385,147 @@
     <script src="{{ asset('js/header-slick.js') }}"></script>
 	<script src="{{ asset('js/prism/prism.min.js') }}"></script>
        <script src="{{ asset('js/custom-card/custom-card.js') }}"></script>
+       <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
     <!-- calendar js-->
+    <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
+    <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
+    
     <script src="{{ asset('js/logout.js') }}"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
-    $(document).ready(function() {  
-
-
-            //More Option
-            $('#show').click(function() {
-                $('#more').toggle("slide");
+      $(document).ready(function() {  
+  
+  
+              //More Option
+              $('#show').click(function() {
+                  $('#more').toggle("slide");
+              });
+  
+              //Get counts and generate Graph
+              let submit_count = $('#submit_count').html();
+              let approve_count = $('#approve_count').html();
+              let reject_count = $('#reject_count').html();
+              
+             
+              
+              setchart1(submit_count,approve_count,reject_count);
+  
+            
+              setchart2(submit_count,approve_count,reject_count);
+     
+            
+            
+          function setchart1(submit_count,approve_count,reject_count){
+            var dom = document.getElementById('container');
+            var myChart = echarts.init(dom, null, {
+              renderer: 'canvas',
+              useDirtyRect: false
             });
-
-            //Get counts and generate Graph
-            let app_total_count = $('#app_total_count').html();
-            let verify_count = $('#verify_count').html();
-            let reject_count = $('#reject_count').html();
-            let pending_app_count = $('#pending_app_count').html();
+            var app = {};
             
+            var option;
+  
+            option = {
+                                  title: {
+                                  text: 'Applications',
+                                  subtext: 'submitted',
+                                  left: 'center'
+            },
+            tooltip: {
+            trigger: 'item'
+            },
+            legend: {
+            orient: 'vertical',
+            left: 'left'
+            },
+            series: [
+            {
+              name: 'Total', 
+              type: 'pie',
+              radius: '50%',
+              data: [
+              { value: submit_count, name: 'Submitted'},
+              { value: approve_count, name: 'Approved' , itemStyle:{ color: '#0DA759'}},
+              { value: reject_count, name: 'Rejected', itemStyle:{ color: 'red'}  },
+                          
+              
+              ],
+              emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+              }
+            }
+            ]
+          };
+  
+            if (option && typeof option === 'object') {
+              myChart.setOption(option);
+            }
+  
+            window.addEventListener('resize', myChart.resize);
             
-            setchart1(pending_app_count,verify_count,reject_count);
-
-            // let schools=  $('#schools').html();;
-            // let agents= $('#agents').html();
+          }
+          
+          
+          function setchart2(submit_count,approve_count,reject_count)
+                  {
             
-            setchart2(app_total_count,verify_count,pending_app_count,reject_count);
-   
-					
-					
-				function setchart1(pending_app_count,verify_count,reject_count){
-					var dom = document.getElementById('container');
-					var myChart = echarts.init(dom, null, {
-					  renderer: 'canvas',
-					  useDirtyRect: false
-					});
-					var app = {};
-					
-					var option;
-
-					option = {
-                                title: {
-                                text: 'Applications',
-                                subtext: 'submitted',
-                                left: 'center'
-				  },
-				  tooltip: {
-					trigger: 'item'
-				  },
-				  legend: {
-					orient: 'vertical',
-					left: 'left'
-				  },
-				  series: [
-					{
-					  name: 'Total',
-					  type: 'pie',
-					  radius: '50%',
-					  data: [
-						{ value: pending_app_count, name: 'Pending' , itemStyle:{ color: 'yellow'} },
-						{ value: verify_count, name: 'Verified' , itemStyle:{ color: '#0DA759'}},
-						{ value: reject_count, name: 'Rejected', itemStyle:{ color: 'red'}  },
-                        
-						
-					  ],
-					  emphasis: {
-						itemStyle: {
-						  shadowBlur: 10,
-						  shadowOffsetX: 0,
-						  shadowColor: 'rgba(0, 0, 0, 0.5)'
-						}
-					  }
-					}
-				  ]
-				};
-
-					if (option && typeof option === 'object') {
-					  myChart.setOption(option);
-					}
-
-					window.addEventListener('resize', myChart.resize);
-					
-				}
-				
-				
-        function setchart2(app_total_count,verify_count,pending_app_count,reject_count)
-                {
-					
-					var app = {};
-
-                    var chartDom = document.getElementById('container2');
-                    var myChart = echarts.init(chartDom);
-                    var option;
-
-                    option = {
-                            xAxis: {
-                              type: 'category',
-                              data: ['Apps', 'Verified', 'Pending', 'Rejected']
-                            },
-                            yAxis: {
-                              type: 'value'
-                            },
-                            series: [
-                              {
-                                data: [
-                                
-                                  {
-                                    value: app_total_count,
-                                    itemStyle: {
-                                      color: '#a90000'
-                                    }
-                                  },
-                                  {
-                                    value: verify_count,
-                                    itemStyle: {
-                                      color: '#0DA759'
-                                    }
-                                  },
-                                   
-                                  {
-                                    value: pending_app_count,
-                                    itemStyle: {
-                                      color: 'yellow'
-                                    }
-                                  },
-                                  {
-                                    value: reject_count,
-                                    itemStyle: {
-                                      color: 'red'
-                                    }
-                                  },
+            var app = {};
+  
+                      var chartDom = document.getElementById('container2');
+                      var myChart = echarts.init(chartDom);
+                      var option;
+  
+                      option = {
+                              xAxis: {
+                                type: 'category',
+                                data: ['Apps', 'Approved', 'Rejected']
+                              },
+                              yAxis: {
+                                type: 'value'
+                              },
+                              series: [
+                                {
+                                  data: [
                                   
-                                ],
-                                type: 'bar'
-                              }
-                            ]
-                          };
-
-                    option && myChart.setOption(option);
-
-                    window.addEventListener('resize', myChart.resize);
+                                    {
+                                      value: submit_count,
+                                      itemStyle: {
+                                        color: '#a90000'
+                                      }
+                                    },
+                                    {
+                                      value: approve_count,
+                                      itemStyle: {
+                                        color: '#0DA759'
+                                      }
+                                    },
+                                    {
+                                      value: reject_count,
+                                      itemStyle: {
+                                        color: 'red'
+                                      }
+                                    },
+                                    
+                                  ],
+                                  type: 'bar'
                                 }
-
-     });
-    </script>
+                              ]
+                            };
+  
+                      option && myChart.setOption(option);
+  
+                      window.addEventListener('resize', myChart.resize);
+                                  }
+  
+       });
+      </script>
     <!-- Plugin used-->
   </body>
 </html>

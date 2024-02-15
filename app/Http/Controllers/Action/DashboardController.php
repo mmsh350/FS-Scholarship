@@ -286,7 +286,97 @@ class DashboardController extends Controller
                         ->with(compact('school_count_active') );
             }
             else if(Auth::user()->role == 'agent'){
-                return 400;
+
+                $registrar =  Auth::user()->registrar_id;
+                //Retrieve users state
+                $state_id = Auth::user()->state_id;
+
+                //Fetch State Name
+                 $getName = State::select('stateName')
+                 ->where('id', $state_id)->first();
+                  $stateName =  $getName->stateName;
+
+
+                //Get Application Count Details
+                $approve_count = 0;
+                $reject_count = 0;
+                $submit_count = 0;
+                $notifycount =0;
+                $school_count = 0;
+
+                $notifications = App_Notification::all()->where('user_id', $loginUserId)
+                ->sortByDesc('id')
+                ->take(3);
+
+                $notifycount = App_Notification::all()
+                                            ->where('user_id', $loginUserId)
+                                            ->where('status', 'unread')
+                                            ->count();
+                
+                 //get assigned staff
+                 $staffinfo = User::where('id', $registrar)->first();
+                 $staffName =   $staffinfo->first_name." ". $staffinfo->last_name;
+                 $staffNo =   $staffinfo->phone_number;
+
+
+                 $school_count = School::all()
+                                            ->where('state_id', $state_id)->count();
+
+                $approve_count = Application::all()
+                                ->where('user_id', $loginUserId)
+                                ->where('status', 'Approved')->count();
+
+                $reject_count = Application::all()
+                                ->where('user_id', $loginUserId)
+                                ->where('status', 'Rejected')->count();
+
+                $submit_count = Application::all()
+                                ->where('user_id', $loginUserId)->count();
+
+
+                 if (Wallet::where('userid', $loginUserId)->exists()) {
+                      
+                      //get requested user Wallet Balance information
+                      $wallet = Wallet::where('userid', $loginUserId)->first();   
+                      if( $wallet == null)
+                      {
+                                  //Defauls values
+                                  $deposit =0;
+                                  $balance = 0;
+                      }
+                      else
+                      {
+                          $balance = $wallet->balance;
+                          $deposit = $wallet->deposit;
+                      }
+                         return view('agent.dashboard')
+                         ->with(compact('balance'))
+                         ->with(compact('approve_count'))
+                         ->with(compact('reject_count'))
+                         ->with(compact('notifications'))
+                         ->with(compact('notifycount'))
+                         ->with(compact('school_count'))
+                         ->with(compact('stateName'))
+                         ->with(compact('staffName'))
+                         ->with(compact('staffNo'))
+                         ->with(compact('submit_count'));
+      
+                  
+                }else{
+                     $balance = 0;
+                     return view('agent.dashboard')
+                     ->with(compact('balance'))
+                     ->with(compact('approve_count'))
+                     ->with(compact('reject_count'))
+                     ->with(compact('notifications'))
+                     ->with(compact('notifycount'))
+                     ->with(compact('school_count'))
+                     ->with(compact('stateName'))
+                     ->with(compact('staffName'))
+                     ->with(compact('staffNo'))
+                     ->with(compact('submit_count'));
+                 }
+
             }
             else{
                 Auth::logout();

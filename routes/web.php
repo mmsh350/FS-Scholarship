@@ -129,6 +129,10 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('/loan', [LoanController::class, 'show'])->name('loan');
     Route::post('/make-repayment', [LoanController::class, 'repayment'])->name('make-repayment');
 
+    //
+    Route::get('agent-pending', [LoanController::class, 'show']);
+    Route::get('agent-loan-completed', [LoanController::class, 'completed']);
+
     
 });
 

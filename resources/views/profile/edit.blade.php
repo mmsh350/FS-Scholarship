@@ -213,6 +213,13 @@
                           <li><a href="{{ route('admin.reports') }}">Generate Report</a></li> 
                         </ul>
                         @elseif(Auth::user()->role == 'agent')
+                        <ul class="sidebar-submenu expand">
+                          <li><a href="{{ route('dashboard') }}">Overview</a></li>
+                          <li><a href="{{ route('loan') }}">Loans</a></li>
+                          <li><a class="" href="{{ route('application') }}">Applications</a></li>
+                          <li><a href="{{ route('wallet') }}"> Fund Wallet</a></li>
+                          <li><a href="{{ route('transactions') }}">Transactions</a></li>
+                        </ul>
                         @endif
                   </li>
                    
