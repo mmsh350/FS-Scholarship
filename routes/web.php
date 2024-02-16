@@ -76,8 +76,7 @@ use App\Http\Controllers\AppNotificationController;
 
     
     Route::post('send-reminder', [ApplicationController::class, 'reminder'])->name('send-reminder');
-   // Route::post('paynow', [ApplicationController::class, 'repayment'])->name('paynow');
-   
+  
     //Profile Routes  (General) 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profileUpdate', [ProfileController::class, 'update']);
@@ -115,8 +114,6 @@ use App\Http\Controllers\AppNotificationController;
     Route::get('agents', [AgentController::class, 'index'])->name('staff.agents');
     Route::post('add-agent', [AgentController::class, 'save'])->name('agent.list');
 
-    //Route::get('staff/schools', [ApplicationController::class, 'show'])->name('staff.schools');
-
     //Utility Routes
     Route::post('get-state', [StateController::class, 'fetchState']);
     Route::post('get-lga', [LgaController::class, 'fetchLgas']);
@@ -135,14 +132,5 @@ use App\Http\Controllers\AppNotificationController;
 
     
 });
-
-
-
-
-// Route::get('/emails', function(){
-//     return view('emails.newAgent');
-// });
-
-
 
 require __DIR__.'/auth.php';
