@@ -123,7 +123,7 @@
                                @else
                                   <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
                                @endif
-                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }}</span>
+                      <div class="flex-grow-1"><span>{{ substr(Auth::user()->last_name, 0, 10); }} </span>
                       <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>

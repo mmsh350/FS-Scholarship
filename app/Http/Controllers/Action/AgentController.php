@@ -43,6 +43,7 @@ class AgentController extends Controller
 
           $notifications = App_Notification::all()->where('user_id', $loginUserId)
           ->sortByDesc('id')
+          ->where('status', 'unread')
           ->take(3);
 
           $notifycount = App_Notification::all()

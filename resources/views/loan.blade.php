@@ -28,7 +28,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/slick-theme.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/scrollbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/animate.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/datatables.css') }}">
     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/bootstrap.css') }}">
@@ -120,8 +119,11 @@
                   <div class="onhover-show-div notification-dropdown">
                     <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notifications</h5>
                     <ul>
-                     
-                      @if($notifications->count() != 0)                      
+                      @if($notifycount != 0)  
+                      <audio src="{{ asset('audio/notification.mp3')}}" autoplay="autoplay" ></audio>   
+                      @endif
+
+                      @if($notifications->count() != 0)                   
                       @foreach($notifications as $data)
 
                       <li class="d-flex"> 
@@ -136,18 +138,19 @@
                       @else
                       <li class="d-flex"> 
                         <div class="">
-                             <h6>No Notification yet!</h6>
+                             <h6><i>There are no new messages yet. !</i></h6>
                         </div>
                       </li>
-
                       @endif
 
+                      @if($notifycount != 0) 
                       <li class="d-flex"> 
                         <div class="">
                             <p><a id="read" href="#">Mark Read</a></p>
                             <p style="display:none" id="done" class="text-danger">Done</p>
                         </div>
                       </li>
+                      @endif
                     </ul>
                   </div>
                 </li>
@@ -168,7 +171,7 @@
                                @else
                                   <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
                                @endif
-                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }} </span>
+                      <div class="flex-grow-1"><span>{{ substr(Auth::user()->last_name, 0, 10); }} </span>
                       <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>
@@ -403,11 +406,6 @@
                 </div>
               </div>
             </div>
-             
-             
-            
-              
-              
             </div>
           </div>
           <!-- Container-fluid Ends-->
@@ -434,10 +432,8 @@
     <!-- scrollbar js-->
     <script src="{{ asset('js/scrollbar/simplebar.js') }}"></script>
     <script src="{{ asset('js/scrollbar/custom.js') }}"></script>
-	    <script src="{{ asset('js/tooltip-init.js') }}"></script>
-        <script src="{{ asset('js/sweetalert.js') }}"></script>
-     
-		 <script src="{{ asset('js/clipboard/clipboard.min.js') }}"></script>
+	  <script src="{{ asset('js/tooltip-init.js') }}"></script>
+    <script src="{{ asset('js/sweetalert.js') }}"></script>
     <!-- Sidebar jquery-->
     <script src="{{ asset('js/config.js') }}"></script>
     <!-- Plugins JS start-->
@@ -445,22 +441,12 @@
     <script src="{{ asset('js/slick/slick.min.js') }}"></script>
     <script src="{{ asset('js/slick/slick.js') }}"></script>
     <script src="{{ asset('js/header-slick.js') }}"></script>
-	<script src="{{ asset('js/prism/prism.min.js') }}"></script>
-       <script src="{{ asset('js/custom-card/custom-card.js') }}"></script>
-    <!-- calendar js-->
-    <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
-
-    <!-- Touchspin JS -->
-    <script src="{{ asset('js/select2/select2.full.min.js') }}"></script>
-    <script src="{{ asset('js/select2/select2-custom.js') }}"></script>
-     
+	  <script src="{{ asset('js/prism/prism.min.js') }}"></script>     
     <script src="{{ asset('js/logout.js') }}"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
-    <script src="{{ asset('js/script.js') }}"></script>
     <script src="{{ asset('js/loan.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     <!-- Plugin used-->
   </body>
 </html>

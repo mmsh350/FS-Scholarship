@@ -28,7 +28,6 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/slick-theme.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/scrollbar.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/animate.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/datatables.css') }}">
     <!-- Plugins css Ends-->
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendors/bootstrap.css') }}">
@@ -116,8 +115,11 @@
                   <div class="onhover-show-div notification-dropdown">
                     <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notifications</h5>
                     <ul>
-                     
-                      @if($notifications->count() != 0)                      
+                      @if($notifycount != 0)  
+                      <audio src="{{ asset('audio/notification.mp3')}}" autoplay="autoplay" ></audio>   
+                      @endif
+
+                      @if($notifications->count() != 0)                   
                       @foreach($notifications as $data)
 
                       <li class="d-flex"> 
@@ -132,18 +134,19 @@
                       @else
                       <li class="d-flex"> 
                         <div class="">
-                             <h6>No Notification yet!</h6>
+                             <h6><i>There are no new messages yet. !</i></h6>
                         </div>
                       </li>
-
                       @endif
 
+                      @if($notifycount != 0) 
                       <li class="d-flex"> 
                         <div class="">
                             <p><a id="read" href="#">Mark Read</a></p>
                             <p style="display:none" id="done" class="text-danger">Done</p>
                         </div>
                       </li>
+                      @endif
                     </ul>
                   </div>
                 </li>
@@ -164,7 +167,7 @@
                                @else
                                   <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
                                @endif
-                    <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }} </span>
+                    <div class="flex-grow-1"><span>{{ substr(Auth::user()->last_name, 0, 10); }} </span>
                       <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                     </div>
                   </div>
@@ -215,8 +218,6 @@
                   <li class="back-btn"><a href="{{ route('dashboard') }}"><img class="img-fluid" src="{{ asset('images/logo/logo-icon.png') }}" alt=""></a>
                     <div class="mobile-back text-end"><span>Back</span><i class="fa fa-angle-right ps-2" aria-hidden="true"></i></div>
                   </li>
-                   
-                  
                   <li class="sidebar-list" > 
                   <a class="sidebar-link sidebar-title active"  href="javascript:void(0)">
                       <svg class="stroke-icon">
@@ -233,12 +234,6 @@
                       <li><a href="{{ route('transactions') }}">Transactions</a></li>
                     </ul>
                   </li>
-                   
-                  
-                 
-               
-               
-                 
                 </ul>
               </div>
               <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
@@ -264,31 +259,37 @@
                       </div>
                       <div class="col-md-3">
                         <div class="btn-light1-primary b-r-10"> 
-                          <div class="upcoming-box"> <a href="{{ route('application') }}">
+                          <a href="{{ route('application') }}"> 
+                            <div class="upcoming-box"> 
                             <div class="upcoming-icon bg-primary"> <img src="{{ asset('images/dashboard-2/svg-icon/form.png') }}" alt=""></div>
                             <h6 class="p-b-10">Submitted Application</h6>  
                              <span class="mt-2 badge rounded-circle badge-p-space border  border-primary badge-light  text-dark f-14">{{$submit_count}}</span>
-                          </div></a>
+                          </div>
+                        </a>
                         </div>
                       </div>
                       <div class="col-md-3">
                         <div class="btn-light1-success b-r-10"> 
-                          <div class="upcoming-box  ">  <a href="{{ route('application') }}">
+                          <a href="{{ route('application') }}">
+                          <div class="upcoming-box  ">  
                             <div class="upcoming-icon bg-success"> <img src="{{ asset('images/dashboard-2/svg-icon/approved.png') }}" alt=""></div>
                             <h6 class="p-b-10">Approved Application</h6> 
                            <span class="mt-2 badge rounded-circle badge-p-space border  border-success badge-light  text-dark f-14">{{$approve_count}}</span>
-                          </div></a>
+                          </div>
+                        </a>
                         </div>
                       </div>
 					  
-					  <div class="col-md-3">
+					           <div class="col-md-3">
                         <div class="btn-light1-danger b-r-10"> 
-                          <div class="upcoming-box mb-0">  <a href="{{ route('application') }}">
+                          <a href="{{ route('application') }}">
+                          <div class="upcoming-box mb-0">  
                             <div class="upcoming-icon bg-danger"> <img src="{{ asset('images/dashboard-2/svg-icon/rejected.png') }}" alt=""></div>
                            <h6 class="p-b-10">Rejected Application</h6>
 							            <span class="mt-2 badge rounded-circle badge-p-space border  border-danger badge-light  text-dark f-14">{{$reject_count}}</span>
                           </div>
-                        </div> </a>
+                        </a>
+                        </div>
                       </div>                       
                     </div>
 					
@@ -321,12 +322,6 @@
                   </div>
                 </div>
               </div>
-             
-             
-             
-            
-              
-              
             </div>
           </div>
           <!-- Container-fluid Ends-->
@@ -367,14 +362,10 @@
 	<script src="{{ asset('js/prism/prism.min.js') }}"></script>
        <script src="{{ asset('js/custom-card/custom-card.js') }}"></script>
     <!-- calendar js-->
-    <script src="{{ asset('js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom.js') }}"></script>
-    <script src="{{ asset('js/datatable/datatables/datatable.custom1.js') }}"></script>
     <script src="{{ asset('js/logout.js') }}"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="{{ asset('js/script.js') }}"></script>
-    
     <!-- Plugin used-->
   </body>
 </html>

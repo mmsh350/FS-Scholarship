@@ -37,6 +37,7 @@ class SchoolController extends Controller
             $notifications =0;
 
             $notifications = App_Notification::all()->where('user_id', $loginUserId)
+            ->where('status', 'unread')
             ->sortByDesc('id')
             ->take(3);
 
@@ -103,6 +104,7 @@ class SchoolController extends Controller
 
             $notifications = App_Notification::all()->where('user_id', $loginUserId)
             ->sortByDesc('id')
+            ->where('status', 'unread')
             ->take(3);
 
             $notifycount = App_Notification::all()

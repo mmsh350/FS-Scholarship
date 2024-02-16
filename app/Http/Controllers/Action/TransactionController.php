@@ -37,8 +37,10 @@ class TransactionController extends Controller
 
               $notifycount =0;
               $notifications =0;
+
               $notifications = App_Notification::all()->where('user_id', $login_id)
               ->sortByDesc('id')
+              ->where('status', 'unread')
               ->take(3);
 
               $notifycount = App_Notification::all()
@@ -88,7 +90,9 @@ class TransactionController extends Controller
               {
                      $notifycount =0;
                      $notifications =0;
+
                      $notifications = App_Notification::all()->where('user_id', $login_id)
+                     ->where('status', 'unread')
                      ->sortByDesc('id')
                      ->take(3);
        
@@ -140,8 +144,10 @@ class TransactionController extends Controller
               {
                      $notifycount =0;
                      $notifications =0;
+
                      $notifications = App_Notification::all()->where('user_id', $login_id)
                      ->sortByDesc('id')
+                     ->where('status', 'unread')
                      ->take(3);
                      
        

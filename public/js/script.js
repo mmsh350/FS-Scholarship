@@ -1,13 +1,4 @@
 /*! -----------------------------------------------------------------------------------
-
-    Template Name: Mofi Admin
-    Template URI: http://admin.pixelstrap.com/Mofi/theme
-    Description: This is Admin theme
-    Author: Pixelstrap
-    Author URI: https://themeforest.net/user/pixelstrap
-
------------------------------------------------------------------------------------
-
         01. password show hide
         02. Background Image js
         03. sidebar filter

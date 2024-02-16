@@ -124,8 +124,11 @@
                     <div class="onhover-show-div notification-dropdown">
                       <h5 class="f-18 f-w-600 mb-0 dropdown-title">Notifications</h5>
                       <ul>
-                       
-                        @if($notifications->count() != 0)                      
+                        @if($notifycount != 0)  
+                        <audio src="{{ asset('audio/notification.mp3')}}" autoplay="autoplay" ></audio>   
+                        @endif
+  
+                        @if($notifications->count() != 0)                   
                         @foreach($notifications as $data)
   
                         <li class="d-flex"> 
@@ -140,18 +143,19 @@
                         @else
                         <li class="d-flex"> 
                           <div class="">
-                               <h6>No Notification yet!</h6>
+                               <h6><i>There are no new messages yet. !</i></h6>
                           </div>
                         </li>
-  
                         @endif
   
+                        @if($notifycount != 0) 
                         <li class="d-flex"> 
                           <div class="">
                               <p><a id="read" href="#">Mark Read</a></p>
                               <p style="display:none" id="done" class="text-danger">Done</p>
                           </div>
                         </li>
+                        @endif
                       </ul>
                     </div>
                   </li>
@@ -172,7 +176,7 @@
                                  @else
                                     <img class="img-30" src="{{ asset('images/dashboard/profile.png') }}" alt="">
                                  @endif
-                      <div class="flex-grow-1"><span>{{ Auth::user()->last_name; }}</span>
+                    <div class="flex-grow-1"><span>{{ substr(Auth::user()->last_name, 0, 10); }} </span>
                         <p class="mb-0 font-outfit">{{ ucwords(Auth::user()->role) }}<i class="fa fa-angle-down"></i></p>
                       </div>
                     </div>
