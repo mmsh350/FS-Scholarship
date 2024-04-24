@@ -82,7 +82,7 @@ public function getRevenue(Request $request){
     if(!empty( $interest))
        $interest = $interest->interest;
 
-   if(!empty( $interest))
+   if(!empty( $upfront))
        $fee = $upfront->fee;
 
 

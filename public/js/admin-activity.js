@@ -71,8 +71,6 @@ var table2 = $('#agentlist').on( 'error.dt', function ( e, settings, techNote, m
         {data: 'appcount', name: 'appcount'},
         {data: 'approveCount', name: 'approveCount'},
         {data: 'rejectCount', name: 'rejCount'},
-        
-
     ],
     
     dom: 'Blfrtip',

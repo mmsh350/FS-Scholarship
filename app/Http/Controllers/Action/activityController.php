@@ -110,7 +110,7 @@ class activityController extends Controller
                     'users.id',
                     'users.phone_number',
                     )                                
-            ->where('users.role', 'agent')->get();
+            ->where('role', 'agent')->get();
             return Datatables($data)
 
             ->editColumn('appcount', function ($row) {
@@ -138,13 +138,7 @@ class activityController extends Controller
                     <span class="badge rounded-circle badge-p-space border  border-danger text-dark f-14">'. $count.'</span></center>';
                     })->escapeColumns('rejectCount')
 
-                    ->editColumn('date', function ($row) 
-                {
                     
-                    $row2 = DB::table('applications')->select('created_at')
-                                                ->where('user_id',$row->id)->first();             
-                    return  $row2->created_at;
-                    })->escapeColumns('date')
                 
             ->addIndexColumn()->make(true);
 
